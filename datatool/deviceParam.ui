@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>deviceParam</class>
+ <widget class="QWidget" name="deviceParam">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>377</width>
+    <height>176</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_4">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBoxDev">
+     <property name="title">
+      <string>Input Device</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QGroupBox" name="groupBoxStart">
+        <property name="title">
+         <string>when Start Copy</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="1">
+          <widget class="QRadioButton" name="radioButtonNotRewind">
+           <property name="toolTip">
+            <string>NotRewind</string>
+           </property>
+           <property name="statusTip">
+            <string>NotRewind</string>
+           </property>
+           <property name="text">
+            <string>NotRewind</string>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QRadioButton" name="radioButtonRewind">
+           <property name="statusTip">
+            <string>rewind</string>
+           </property>
+           <property name="text">
+            <string>Rewind</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QGroupBox" name="groupBoxEnd">
+        <property name="title">
+         <string>when Finished Copy</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0">
+          <widget class="QRadioButton" name="radioButtonNotRewindEnd">
+           <property name="statusTip">
+            <string>Rewind&amp;Unload</string>
+           </property>
+           <property name="text">
+            <string>Rewind&amp; Unload</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QRadioButton" name="radioButtonRewindEnd">
+           <property name="statusTip">
+            <string>rewind</string>
+           </property>
+           <property name="text">
+            <string>Rewind</string>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QRadioButton" name="radioButtonRewindUnloadEnd">
+           <property name="toolTip">
+            <string>NotRewind</string>
+           </property>
+           <property name="statusTip">
+            <string>NotRewind</string>
+           </property>
+           <property name="text">
+            <string>NotRewind</string>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
