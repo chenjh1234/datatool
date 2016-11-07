@@ -17,6 +17,7 @@ using namespace std;
 #include <QList>
 #include <QString>
 #include <QFile>
+#include <QFileInfo>
 #include <QTextStream>
 #include <QStringList>
 
@@ -35,14 +36,16 @@ int saveMsgToFile(string fname,string de,vector<stringList> v_slist ,string comm
 #if 1
 /// get lines from file ,and each line contain list of items
 QList<QStringList> getMsgFromFile(QString f,QString de );
-/// savw lines to file ,and each line contain list of items
+/// save lines to file ,and each line contain list of items
 int saveMsgToFile(QString fname,QString  de,QList<QStringList> v_slist,QString comm);
+
 /// get lines from file
 QStringList getListFromFile(QString s);
 /// save lines from file
 int saveListToFile(QString file,QStringList slist);
 
 bool isComm(QString s); // is the string lead by "#"
+bool isFile(QString s); // if the file exist,s is the full path"
 
 QString getFileText(QString file);
 #endif
@@ -73,6 +76,7 @@ string mergeStr(stringList list);
 string toStr(int i);
 string toStr(float i);
 string toStr(double i);
+string qToStr(QString str );//{ return string(str.toUtf8().data());};
 /**
  * find files use "find -maxdepth 1"
 

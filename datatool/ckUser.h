@@ -46,6 +46,8 @@ public:
     string getLicPath();// lic file path
     void setLicPath(QString file);// lic file path
     void setLicPath(string file);
+    QString today();
+    QString nextYear();
 
     string getMID();// mid of local host
     string getLic();// get key string according to licfile contains;in:(user,mid,start,end ) out(key)

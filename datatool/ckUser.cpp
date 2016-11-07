@@ -146,36 +146,38 @@ void NodeID::setLicPath(string str)
 }
 string NodeID::getLicPath()
 {
-   string str;
-   //char *env;
-   //env = getenv(LIC_PATH);
-   if (licFile.length() == 0)  
+    // 1st: get what set
+    // 2nd: get current dir;
+    // 3rd: /tmp/ or c:
+
+    QString str,licf;
+    licf = licFile.c_str();
+    str = licf;
+
+   if ((licf.length() == 0 || !isFile(licf))) 
    {
 #if  !defined(WIN32) 
-       str =  string(LIC_PATH) + LIC_FILE; 
+       str =   LIC_FILE; 
 #else
-       str =  LIC_FILE;
+       str =   LIC_FILE;
 
 #endif
    }
-
-#if 0
-   else
+   if (!isFile(str)) 
    {
+       
 #if  !defined(WIN32) 
-       str = string(env) + "/" + LIC_FILE;  
+       str = QString("/tmp/") +  LIC_FILE;
 #else
-       str =  string(env) + "\\" + LIC_FILE;  
-#endif  
-   }
-#endif // end of 0
+       str = QString("c:\\") + LIC_FILE;
 
-   //cout << "lic file = " <<str <<endl;
-   return str;
+#endif
+   }
+   return qToStr(str);
 }
 map<string,string> NodeID::getLicInfoFromFile()
 {
-#if  !defined(WIN32)
+#if 0// !defined(WIN32)
    string str;
    char chh[256];
    map<string,string> mp;
@@ -183,11 +185,16 @@ map<string,string> NodeID::getLicInfoFromFile()
    char *line=NULL;
    size_t len;
    ssize_t ret;
+   // default:
+   mp[LIC_USER] = " default user";
+   mp[LIC_MID] = " default mid";
+   mp[LIC_START] = " default mid";
+   mp[LIC_END] = " default mid";
 
    int i;
    char *ch;
    ch = (char *)getLicPath().c_str();
-   //cout << "file path = " << ch  << endl;
+   cout << "file path = " << ch  << endl;
    //cout << "file path len = " << strlen(ch)  << endl;
 
    //strcpy(chh,"license.dat");
@@ -217,7 +224,7 @@ map<string,string> NodeID::getLicInfoFromFile()
    //cout << "in sub =" << mp[LIC_KEY] <<endl;
    //cout << "in sub =" << mp[LIC_MID] <<endl;
    return mp;
-#else
+#endif
     QStringList listS;
     QString qstr;
     
@@ -228,6 +235,11 @@ map<string,string> NodeID::getLicInfoFromFile()
    char *line=NULL;
    size_t len;
    ssize_t ret;
+
+   mp[LIC_USER] = "default_user";
+   mp[LIC_MID] = "default_mid";
+   mp[LIC_START] =  qToStr(today());
+   mp[LIC_END] = qToStr(nextYear());
 
    int i;
    char *ch;
@@ -247,12 +259,40 @@ map<string,string> NodeID::getLicInfoFromFile()
        
    }
    return mp;
-#endif
+//#endif
+}
+QString NodeID::nextYear()
+{
+    time_t lt;
+    char dt[256];
+    struct tm *tt;
+    time(&lt);
+    tt = localtime((const time_t *)&lt);
+    sprintf(dt,"%4d%02d%02d",
+           tt->tm_year+1900+1, tt->tm_mon+1, tt->tm_mday);
+    cout  << "nextYeary = " << dt << endl;
+    QString str;
+    str = dt;
+    return str;
+}
+QString NodeID::today()
+{
+    time_t lt;
+    char dt[256];
+    struct tm *tt;
+    time(&lt);
+    tt = localtime((const time_t *)&lt);
+    sprintf(dt,"%4d%02d%02d",
+           tt->tm_year+1900, tt->tm_mon+1, tt->tm_mday);
+    cout  << "toDay = " << dt << endl;
+    QString str;
+    str = dt;
+    return str;
 }
 bool NodeID::isValidUser()
 {
     string str,keyF,keyC,mid,sdt;
-    time_t lt;
+    
     char dt[256];
 
     map<string,string> mp;
@@ -278,14 +318,9 @@ bool NodeID::isValidUser()
     cout << "keyF = " << keyF <<endl;
     if(keyC != keyF)  return false;
 // date expired;
-    struct tm *tt;
-    time(&lt);
-    tt = localtime((const time_t *)&lt);
-    sprintf(dt,"%4d%02d%02d",
-           tt->tm_year+1900, tt->tm_mon+1, tt->tm_mday);
-    cout << "toDay = " << dt << endl;
-    cout << "endDay = " << mp[LIC_END] << endl;
-    sdt = string(dt);
+    QString qstr;
+    qstr = today();
+    sdt = qToStr(qstr);
     if(sdt > mp[LIC_END])  
         return false;
  

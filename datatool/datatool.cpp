@@ -4,6 +4,7 @@
 #include <Qt>
 #include <QApplication>// if we add it qDebug() cannot work
 #include <QDebug>
+#include <QDir>
 #include "dtapp.h"
 #include "dtdata.h"
 #include "dtmainwin.h"
@@ -17,9 +18,20 @@ int main(int argc, char *argv[])
     dtApp app(argc, argv);
     app.setOrganizationName(ORG_NAME);
     app.setApplicationName(APP_NAME);
-#if 0
+
+    dtData doc;
+    app.m_doc = &doc;
+ 
+    dtMainWin mainWin;
+    app.m_win = &mainWin;
+    qDebug() << "app dir = " << app.applicationDirPath() ;
+    qDebug() << "working dir = " << QDir::currentPath() ;
+#if 1
     
     NodeID id;
+    QString f;
+    f = doc.fileLicConfig();
+    id.setLicPath(f);
     if (!id.isValidUser())
     {
         qDebug() << "No license or License expired!!";
@@ -27,12 +39,6 @@ int main(int argc, char *argv[])
         exit(1);
     }
 #endif
-    dtData doc;
-    app.m_doc = &doc;
- 
-    dtMainWin mainWin;
-    app.m_win = &mainWin;
-
     dtOP wop;
     app.m_op = &wop;
     

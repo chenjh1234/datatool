@@ -10,12 +10,14 @@ QT += testlib
  
 # Input
 HEADERS += \
+	 md5.h\
 	 ckUser.h\
          comfun.h
  
 
 SOURCES +=  \ 
          mid.cpp \
+	 md5.cpp\
          comfun.cpp\
 	 ckUser.cpp
 	 

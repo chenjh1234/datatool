@@ -6,6 +6,12 @@ bool isComm(QString s)
     return true;
     else return false;
 }
+bool isFile(QString s)
+{ 
+    QFileInfo fi;
+    fi.setFile(s);
+    return fi.isFile();
+}
 QString getFileText(QString s)
 {
    QFile f;
@@ -237,7 +243,10 @@ string mergeStr(stringList slist)
     } 
     return s;
 }
-
+string qToStr(QString str)
+{ 
+    return string(str.toUtf8().data());
+} 
 string toStr(int id)
 {
     string str;

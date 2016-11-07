@@ -40,7 +40,7 @@
 #define TAPE_CONFIG "tape.conf" //$DATATOOL/etc/tape.conf
 #define JOBNUMBER_FILE "job.number" //$DATATOOL/etc/tape.conf
 #define PARA_CONFIG "parameters.conf"
-#define LIC_CONFIG "lic.conf"
+#define LIC_CONFIG "datatool.lic"
 //#define JOB_NUMBER "job.number"
 #if  !defined(WIN32)
 #define MARK_PATH "/"
