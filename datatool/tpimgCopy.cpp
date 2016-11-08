@@ -39,12 +39,28 @@ int tpimgCopy::openCopy(DEV in,DEV out)
         qDebug() << tpIn.tpErr[iret];
         return OPEN_READ_ERR ;
     }
+// in start param
+    if (in.type == DEV_TAPE )//||in.type ==DEV_TPIMG )
+    {
+        if (DOC->pStartIn == PARAM_REWIND)
+        {
+            tpIn.rewind();
+        }
+    }
     //out
     iret = tpOut.openDev(&out,1);
     if(iret !=OPENFILE_OK) 
     {
         qDebug() << tpOut.tpErr[iret];
         return OPEN_WRITE_ERR ;
+    }
+// out start  param
+    if (out.type == DEV_TAPE)// ||out.type ==DEV_TPIMG )
+    {
+        if (DOC->pStartOut== PARAM_REWIND)
+        {
+            tpOut.rewind();
+        }
     }
     // ok:
     return OPEN_OK;   
@@ -182,7 +198,34 @@ int tpimgCopy::copyRecord()
 */
 int tpimgCopy::closeCopy()
 {
+   // in end param:
+    if (tpIn.getType() == DEV_TAPE )//||in.type ==DEV_TPIMG )
+    {
+        if (DOC->pEndIn == PARAM_REWIND_UNLOAD)
+        {
+            tpIn.rewind();
+            tpIn.unload();
+        }
+        else if (DOC->pEndIn == PARAM_REWIND)
+        {
+            tpIn.rewind();
+        }
+    }
     tpIn.close();
+
+   // out end param:
+    if (tpOut.getType() == DEV_TAPE )//||in.type ==DEV_TPIMG )
+    {
+        if (DOC->pEndOut == PARAM_REWIND_UNLOAD)
+        {
+            tpOut.rewind();
+            tpOut.unload();
+        }
+        else if (DOC->pEndOut == PARAM_REWIND)
+        {
+            tpOut.rewind();
+        }
+    }
     tpOut.close();
 	return 0;
 }
