@@ -33,6 +33,12 @@ void dtData::init()
    sumAll = new sumInfo();
    logJ = new logFile();
    logS = new logFile();
+   pStartIn = PARAM_REWIND;
+   pEndIn = PARAM_REWIND_UNLOAD;
+   pStartOut = PARAM_REWIND;
+   pEndOut = PARAM_REWIND_UNLOAD;
+   pCopy = 1;
+
    //strcpy(ch,fileAppLog().Q2CH);
    //logS->setName(ch);
    str = fileAppLog();

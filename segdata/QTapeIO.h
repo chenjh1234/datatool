@@ -150,6 +150,7 @@ public:
 //
     bool isReady();// true if ready
 // close
+    int rewindClose(); //  for tape:
     int close();
     int read(BYTE *buf,int iby);
     int readLong(BYTE *buf,int iby);

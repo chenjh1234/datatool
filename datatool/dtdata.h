@@ -73,6 +73,11 @@
  // realFormat:
 #define COPYFMT_TPIMG
 #define COPYFMT_D2Y
+// param
+#define  PARAM_REWIND_UNLOAD 0
+#define  PARAM_REWIND 1
+#define  PARAM_NOT_REWIND 2
+
 #
 #define EQ50 60
 #define STR_EQ50 "=================================================="
@@ -136,7 +141,17 @@ public:
     //QString m_dataName;
     //int m_dataType;
     DEV *devIn,*devOut;
-    // auto analist file(tape) format // segd,segy...
+// param:
+//#define  PARAM_REWIND_UNLOAD 0
+//#define  PARAM_REWIND 1
+//#define  PARAM_NOT_REWIND 2
+    
+
+    int pStartIn,pEndIn;
+    int pStartOut,pEndOut,pCopy;
+
+
+// auto analist file(tape) format // segd,segy...
     int autoFormat(DEV in){ in.name = "" ; return 0;};
     int checkDev();
 // toFormat 
@@ -178,6 +193,7 @@ public:
     qint64 fileSize(QString f);
 // dtime:
     QString dTime(){return QDateTime::currentDateTime().toString();};
+    // "====" lines od n "="
     QString strEQ(int n){QString str;for(int i=0;i<n;i++) str.append("=");return str;};
    
  

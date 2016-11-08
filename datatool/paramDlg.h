@@ -20,10 +20,7 @@ public:
     ~paramDlg();
     void init();
 
- //   void setDev(QString in);
- //   void setTapes(QStringList list);
- //   void setOTapes(QStringList list);
- //   DEV getDev();
+    void getParam();
 public   slots:
  //   void slotFileOpen();
  //   void slotComBox(const QString);
@@ -36,6 +33,6 @@ private:
     //Ui::FormDev ui;
     Ui::DialogParam uiDlg;
     Ui::copyParam uiCopy;
-    Ui::deviceParam uiDev;
+    Ui::deviceParam uiDevIn,uiDevOut;
 };
 #endif

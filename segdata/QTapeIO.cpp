@@ -306,7 +306,7 @@ int dataIO::close()
    }
    if (devType == DEV_TAPE)
    {
-      rewind();
+      //rewind();
       myClose(iunit);
       iunit = 0;
    }

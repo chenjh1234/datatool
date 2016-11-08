@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>377</width>
-    <height>176</height>
+    <width>529</width>
+    <height>212</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -83,12 +83,15 @@
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="0">
-          <widget class="QRadioButton" name="radioButtonNotRewindEnd">
+          <widget class="QRadioButton" name="radioButtonRewindUnloadEnd">
+           <property name="toolTip">
+            <string>NotRewind</string>
+           </property>
            <property name="statusTip">
-            <string>Rewind&amp;Unload</string>
+            <string>NotRewind</string>
            </property>
            <property name="text">
-            <string>Rewind&amp; Unload</string>
+            <string>rewind_unload</string>
            </property>
            <property name="checked">
             <bool>true</bool>
@@ -109,15 +112,12 @@
           </widget>
          </item>
          <item row="0" column="2">
-          <widget class="QRadioButton" name="radioButtonRewindUnloadEnd">
-           <property name="toolTip">
-            <string>NotRewind</string>
-           </property>
+          <widget class="QRadioButton" name="radioButtonNotRewindEnd">
            <property name="statusTip">
-            <string>NotRewind</string>
+            <string>Rewind&amp;Unload</string>
            </property>
            <property name="text">
-            <string>NotRewind</string>
+            <string>not rewind</string>
            </property>
            <property name="checked">
             <bool>false</bool>

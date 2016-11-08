@@ -530,6 +530,7 @@ void dtMainWin::slotParaConfig()
 {
     qDebug() << "para";
     paramD->exec();
+    paramD->getParam();
 
 //moveData(MOVE_LAST);
 }
