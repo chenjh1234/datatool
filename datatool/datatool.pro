@@ -36,6 +36,7 @@ HEADERS += \
 	 comfun.h\
          md5.h\
 	 paramDlg.h\
+	 fileListDlg.h\
 #	 QTapeData.h\
          ../segdata/QTapeIO.h \
          ../segdata/QSegyADI.h \
@@ -59,6 +60,7 @@ SOURCES += datatool.cpp\
 	 comfun.cpp\
 	 sumInfo.cpp\
 	 paramDlg.cpp\
+	 fileListDlg.cpp\
 #	 QTapeData.cpp\
         ../segdata/QTapeIO.cpp \
         ../segdata/QSegyADI.cpp \
@@ -66,6 +68,7 @@ SOURCES += datatool.cpp\
 FORMS += inputoutput.ui\
 	paramDlg.ui\
 	deviceParam.ui\
+	fileList.ui\
 	copyParam.ui\
          textedit.ui
 RESOURCES     = datatool.qrc

@@ -95,14 +95,18 @@ void dtMainWin::errDlg(QString s1, QString s2)
 
 int dtMainWin::askDlg(QString str)
 {
-   return QMessageBox::warning(this, " ask ", str
-                               , QMessageBox::Ok, QMessageBox::Cancel);
+    return askDlg("ask:",str);
 }
 
 int dtMainWin::askDlg(QString s1, QString s2)
 {
-   return QMessageBox::warning(this, s1, s2
-                               , QMessageBox::Ok, QMessageBox::Cancel);
+
+    int i;
+    i =  QMessageBox::warning(this, s1, s2
+                                , QMessageBox::Ok, QMessageBox::Cancel);
+    if (i == QMessageBox::Ok) return 1;
+    else return 0;
+    
 }
 void dtMainWin::msgOut(QString s)
 {
@@ -642,13 +646,13 @@ void dtMainWin::slotJobStart()
 // format check
    copyITF pcp;
    int b;
-   b = DOC->checkDev();
+   b = DOC->checkDev();//in: is exist,out if exist ask;
    if (b != OPEN_OK) 
    {
        msgOut(pcp.cpErr[b]);
        return;
    }
-   b = startConform();
+   b = startConform();// display and ask:
    if (!b) return;
    qDebug() << "conform";
 //log: file open:
@@ -666,6 +670,7 @@ void dtMainWin::slotJobStart()
 }
 bool dtMainWin::startConform()
 {
+
    return true;
 }
 void dtMainWin::runJob()

@@ -282,6 +282,17 @@ int dataIO::openTPIMG(QString s, int id)
    return OPENFILE_ERR; // read | write
 }
 // close==================================
+int dataIO::rewindClose()
+{
+   if (devType == DEV_TAPE)
+   {
+      rewind();
+      myClose(iunit);
+      iunit = 0;
+   }
+
+   return 0;
+}
 int dataIO::close()
 {
    if (devType == DEV_DISK)

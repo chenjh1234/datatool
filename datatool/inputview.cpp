@@ -18,6 +18,7 @@ void inputView::init()
 {
    ui.setupUi(this);
    lastDir = "";
+   fDlg = new fileListDlg(this);
 
 // test tapelist:
    QStringList slist;
@@ -31,6 +32,7 @@ void inputView::init()
 // connect File:
    connect(ui.comboBoxTape, SIGNAL(	currentIndexChanged(const QString)), this, SLOT(slotComBox(const QString)));
    connect(ui.pushButtonFile, SIGNAL(clicked()), this, SLOT(slotFileOpen()));
+   connect(ui.pushButtonCheck, SIGNAL(clicked()), this, SLOT(slotFileList()));
 
 }
 void inputView::slotComBox(const QString str)
@@ -75,6 +77,34 @@ void inputView::setTapes(QStringList list)
     }
    // qDebug() <<"in setTapes bSetTape =" <<_bSetTape;
 }
+
+void inputView::slotFileList()
+{
+    QString filename,dir,filter,str;
+    QStringList slist;
+    if (m_id == 1) return ;// output device do nothing
+    int i;
+    #if 1
+    i = fDlg->exec();
+    qDebug()<<" fileDlg return=" << i;
+
+    if (i != 0) 
+    {
+        slist = fDlg->getList();
+        if (fDlg->listZF.size() > 0) 
+        {
+            qDebug() <<  "file size == 0, file=" << fDlg->listZF;
+            str = fDlg->listZF.join(" ");
+            str= "file size == 0 :" + str;
+            WIN->errDlg(str);
+        }
+        qDebug() << "files size = " << slist.size();
+        qDebug() << "files = " << slist;
+        DOC->devInFileList = slist;
+    }
+    #endif
+
+}
  
 void inputView::slotFileOpen()
 {
@@ -91,7 +121,8 @@ void inputView::slotFileOpen()
         filename = QFileDialog::getOpenFileName(this,
                    tr("Open File"), dir, filter);
     }
-    
+    QFileInfo fi(filename);
+    lastDir = fi.absolutePath();
     ui.lineEditDisk->setText(filename);
     ui.lineEditDisk->setToolTip(filename);
 }

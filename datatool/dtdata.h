@@ -141,12 +141,12 @@ public:
     //QString m_dataName;
     //int m_dataType;
     DEV *devIn,*devOut;
+    QStringList devInFileList;
 // param:
 //#define  PARAM_REWIND_UNLOAD 0
 //#define  PARAM_REWIND 1
 //#define  PARAM_NOT_REWIND 2
     
-
     int pStartIn,pEndIn;
     int pStartOut,pEndOut,pCopy;
 

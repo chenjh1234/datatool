@@ -7,11 +7,14 @@
 #include <QMap>
 #include <QStandardItemModel>
 #include <QFileDialog>
+#include <QFileInfo>
 #include "ui_inputoutput.h"
 #include "QTapeIO.h"
 #define DEVICE_DISK "DISKFILE"
 #define DEVICE_TPIMG "TPIMG"
 #define DEVICE_REEL "reel0000"
+
+#include "fileListDlg.h"
 
 class inputView :public QWidget
 {
@@ -28,18 +31,16 @@ public:
     DEV getDev();
 public   slots:
     void slotFileOpen();
+    void slotFileList();
     void slotComBox(const QString);
     
 protected:
 private:
+    fileListDlg *fDlg;
     QString lastDir;
     int m_id;
     //bool _bSetTape; 
      
     Ui::FormDev ui;
 };
-
-
-
-
 #endif
