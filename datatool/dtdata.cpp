@@ -13,7 +13,7 @@ dtData::~dtData()
    delete devOut;
    delete sumIn;
    delete sumOut;
-   delete sumAll;
+   delete sumFile;
 
    delete logS;
    delete logJ;
@@ -30,7 +30,8 @@ void dtData::init()
    devOut = new DEV();
    sumIn = new sumInfo();
    sumOut = new sumInfo();
-   sumAll = new sumInfo();
+   sumFile = new sumInfo();
+   sumReel = new sumInfo();
    logJ = new logFile();
    logS = new logFile();
    pStartIn = PARAM_REWIND;
@@ -273,7 +274,7 @@ QString dtData::newJobNumber()
 void dtData::sumStart()
 {   
    sumIn->clear();
-   sumAll->clear();
+   sumFile->clear();
    sumOut->clear();
 }
 QString dtData::jobname()
@@ -402,9 +403,9 @@ QString dtData::logF()
 {
    QString str;
    int file, record, bytes, recordAll;
-   file = sumAll->size();
-   record = sumAll->getFiles() - 1;
-   bytes = sumAll->getBytes();
+   file = sumFile->size();
+   record = sumFile->getFiles() - 1;
+   bytes = sumFile->getBytes();
    recordAll = sumOut->size() - file;
 
    str = QString("File: %1 , record: %2 , bytes: %3 , record All: %4").arg(file).arg(record).arg(bytes).arg(recordAll);
@@ -436,7 +437,7 @@ QString dtData::logSum()
    long h, m, s, all;
 
    int file, tm, ctm, bytes, record;
-   file = sumAll->size();  // files
+   file = sumFile->size();  // files
 
    str1 = QString("    Job Sumary:");
    str = str1 +  strEQ(EQ50 - str1.size()) +  STR_LR;

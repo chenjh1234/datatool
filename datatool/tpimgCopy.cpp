@@ -27,11 +27,10 @@ void tpimgCopy::initCopy()
 {
 	
 }
- 
-int tpimgCopy::openCopy(DEV in,DEV out)
+int tpimgCopy::openIn(DEV in)
 {
-	int iret;
-	initCopy();
+    int iret;
+	 
     // in
     iret = tpIn.openDev(&in,0);
     if(iret !=OPENFILE_OK) 
@@ -47,7 +46,14 @@ int tpimgCopy::openCopy(DEV in,DEV out)
             tpIn.rewind();
         }
     }
-    //out
+    DOC->sumReel->start();
+    return OPEN_OK;
+}
+int tpimgCopy::openOut(DEV out)
+{
+	int iret;
+ 
+//out
     iret = tpOut.openDev(&out,1);
     if(iret !=OPENFILE_OK) 
     {
@@ -62,6 +68,20 @@ int tpimgCopy::openCopy(DEV in,DEV out)
             tpOut.rewind();
         }
     }
+    // ok:
+    return OPEN_OK;   
+}
+int tpimgCopy::openCopy(DEV in,DEV out)
+{
+	int iret;
+	initCopy();// nothoing now
+
+    iret = openIn(in);
+    if (iret != OPEN_OK) return iret;
+ 
+    iret = openOut(out);
+    if (iret != OPEN_OK) return iret;
+     
     // ok:
     return OPEN_OK;   
 }
@@ -97,7 +117,7 @@ int tpimgCopy::copyFile()
 		if(iret == COPY_DOUBLE_EOF || iret == COPY_EOT)
 		{// end Of Reel;
 			//m_iReelCounter ++;
-            //DOC->sumAll->addFiles(1);
+            //DOC->sumFile->addFiles(1);
             break;
 		}
 //2: eof
@@ -105,7 +125,7 @@ int tpimgCopy::copyFile()
         if(iret == COPY_EOF)
 		{
             // EOF
-           // DOC->sumAll->addFiles(1);
+           // DOC->sumFile->addFiles(1);
 			break;
 		}
 //3:pause:           
@@ -196,7 +216,7 @@ int tpimgCopy::copyRecord()
 /*
 ========CloseTape=====================
 */
-int tpimgCopy::closeCopy()
+int tpimgCopy::closeIn()
 {
    // in end param:
     if (tpIn.getType() == DEV_TAPE )//||in.type ==DEV_TPIMG )
@@ -212,7 +232,11 @@ int tpimgCopy::closeCopy()
         }
     }
     tpIn.close();
-
+    DOC->sumReel->elapsed(); // rell counter:
+    return 0;
+}
+int tpimgCopy::closeOut()
+{
    // out end param:
     if (tpOut.getType() == DEV_TAPE )//||in.type ==DEV_TPIMG )
     {
@@ -227,6 +251,12 @@ int tpimgCopy::closeCopy()
         }
     }
     tpOut.close();
+	return 0;
+}
+int tpimgCopy::closeCopy()
+{
+    closeIn();
+    closeOut();
 	return 0;
 }
 #if 0

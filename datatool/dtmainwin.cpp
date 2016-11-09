@@ -632,11 +632,6 @@ void dtMainWin::slotJobStart()
    out = outputV->getDev();
 
 
-   qDebug() << "in.n,r=" << in.name << in.reel;
-   qDebug() << "out.n,r=" << out.name << out.reel;
-   qDebug() << "in.n,r=" << DOC->devIn->name << DOC->devIn->reel;
-   qDebug() << "out.n,r=" << DOC->devOut->name << DOC->devOut->reel;
-
    *DOC->devIn = in;
    *DOC->devOut = out;
 // job:
@@ -653,7 +648,11 @@ void dtMainWin::slotJobStart()
        return;
    }
    b = startConform();// display and ask:
-   if (!b) return;
+   if (!b) 
+   {
+       msgOut("Copy Canceled !!!");
+       return;
+   }
    qDebug() << "conform";
 //log: file open:
    DOC->logJ->setName(DOC->fileJobLog(jbname));
@@ -670,8 +669,73 @@ void dtMainWin::slotJobStart()
 }
 bool dtMainWin::startConform()
 {
+   QString msg,title,str;
+   int i,sz ;
+#if 0
+   qDebug() << "in.n,r=" << in.name << in.reel;
+   qDebug() << "out.n,r=" << out.name << out.reel;
+   qDebug() << "in.n,r=" << DOC->devIn->name << DOC->devIn->reel;
+   qDebug() << "out.n,r=" << DOC->devOut->name << DOC->devOut->reel;
+#endif
+   title = " JobMessages:";
+// input:
+   msg = "Input Device:\n";
+   //name
+   str = "  name : " + DOC->devIn->name + "\n";
+   msg += str;
+   //type
+   if (DOC->devIn->type == DEV_TPIMG) str = "  type : TPIMG\n";
+   if (DOC->devIn->type == DEV_TAPE) str = "  type : TAPE\n";
+   if (DOC->devIn->type == DEV_DISK) str = "  type : DISK\n";
+   msg += str;
+   //reel:
+    if (DOC->devIn->type == DEV_TAPE)
+    {  
+         str = "  reel : " + DOC->devIn->reel + "\n";
+         msg += str;
+    }
 
-   return true;
+   //if fileList:
+   sz = DOC->devInFileList.size();
+   if (sz >0) str = "Input Files:" + QString("%1\n").arg(sz);
+   
+   for (i = 0; i < sz; i++)
+   {
+       str = DOC->devInFileList[i] ;
+       msg += "  " + str + "\n";
+   }
+// Output:
+   str = "Output Device:\n";
+   msg += str;
+   //name
+   str = "  name : " + DOC->devOut->name + "\n";
+   msg += str;
+   //type
+   if (DOC->devOut->type == DEV_TPIMG) str = "  type : TPIMG\n";
+   if (DOC->devOut->type == DEV_TAPE) str = "  type : TAPE\n";
+   if (DOC->devOut->type == DEV_DISK) str = "  type : DISK\n";
+   msg += str;
+   //reel:
+   if (DOC->devOut->type == DEV_TAPE)
+   {  
+         str = "  reel : " + DOC->devIn->reel + "\n";
+         msg += str;
+   }
+//  Copy:
+   str = "Copy paramters:\n";
+   msg += str;
+   str = "  copy to:  Hard Copy\n";
+   msg += str;
+   if (DOC->devIn->type == DEV_TAPE)
+   {  
+       str = "  copy reels: " + QString("%1\n").arg(DOC->pCopy);
+       msg += str;
+   }
+   
+   str = "Please conform?\n " ;
+   msg += str;
+ 
+   return askDlg(title,msg);
 }
 void dtMainWin::runJob()
 {
@@ -684,6 +748,7 @@ void dtMainWin::runJob()
    if (pCopy != NULL) delete pCopy;
    pCopy = new tpimgCopy();
    connect(pCopy, SIGNAL(sigFileEnd(int)), this, SLOT(slotFileEnd(int)));
+//open Copy:
    i = pCopy->openCopy(*(DOC->devIn),*(DOC->devOut));
    if (i != OPEN_OK)
    {
@@ -694,10 +759,91 @@ void dtMainWin::runJob()
    }
    DOC->sumStart();//clear the 3 sums
    //WOP->btCMD.start();
+//jobview:
    jobV->jobStart(DOC->_jobname); // create items
+// tool buttons enable:
    WOP->btCMD.start(); // enable the buttons in toolbar
+// startCopy:
    tCopy->setCopy(pCopy);// set copy for thread;
    runFile();
+}
+void dtMainWin::runFile()
+{
+// start next file
+   
+   DOC->sumFile->start();
+   DOC->sumFile->setBytes(DOC->sumOut->getBytes());// get bytes of the file begin;
+   DOC->sumFile->setFiles(DOC->sumOut->size());// get record of file begin
+// run thread;
+   runThread();
+   //qDebug() << " is runing0 " << tCopy->isRunning();
+   //tCopy->start();
+   //qDebug() << " is runing " << tCopy->isRunning();
+}
+void dtMainWin::runThread()// begin sum and run thread
+{
+// run thread;
+   //qDebug() << " is runing0 " << tCopy->isRunning();
+   // wait
+   if(tCopy->isRunning())
+       tCopy->wait();
+
+   tCopy->start();
+   //qDebug() << " is runing " << tCopy->isRunning();
+}
+void dtMainWin::slotFileEnd(int sta)
+{
+   qDebug() << "file End st= " << sta << pCopy->cpErr[sta] << DOC->sumFile->size();
+   //sleep(1);
+   switch (sta)
+   {
+   case COPY_EOF:
+       fileEof();// file 
+       runFile();//continue 
+      break;
+   case COPY_EOT:
+   case COPY_DOUBLE_EOF:
+       if (DOC->devIn->type == DEV_DISK)
+       {
+           fileEof();
+           DOC->_iEOT = 0;
+       }
+       else
+           DOC->_iEOT =1;
+       //endJob(0);
+       endReel();
+      break;
+   case COPY_STOP_ERR:
+       qDebug() << "Job err = " << pCopy->cpErr[sta];
+       endJob(sta);
+      break;
+   case COPY_PAUSE_ERR:  
+       //endJob(); do nothing
+      break;
+   default:
+       qDebug() << "Job err = " << pCopy->cpErr[sta];
+       endJob(sta);
+      break;
+   }
+}
+void dtMainWin::fileEof()
+{
+     DOC->sumFile->elapsed();// size() ids the files
+     DOC->sumFile->setFiles(DOC->sumOut->size() - DOC->sumFile->getFiles());// record of this file
+     DOC->sumFile->setBytes(DOC->sumOut->getBytes() - DOC->sumFile->getBytes() );// bytes of this file
+     DOC->logF();
+     jobV->slotJobStat();
+    // qDebug() << "end of dtMainWin::fileEof()";
+     //sleep(1);
+
+}
+void dtMainWin::endReel()
+{
+   //  close,open,if continue:
+   // do sum ;
+   // / logEnd Reel'
+   // pass end job;
+
 }
 void dtMainWin::endJob(int ie)
 {
@@ -729,30 +875,7 @@ void dtMainWin::endJob(int ie)
 
  
 }
-void dtMainWin::runThread()// begin sum and run thread
-{
-// run thread;
-   //qDebug() << " is runing0 " << tCopy->isRunning();
-   // wait
-   if(tCopy->isRunning())
-       tCopy->wait();
 
-   tCopy->start();
-   //qDebug() << " is runing " << tCopy->isRunning();
-}
-void dtMainWin::runFile()
-{
-// start next file
-   
-   DOC->sumAll->start();
-   DOC->sumAll->setBytes(DOC->sumOut->getBytes());// get bytes of the file begin;
-   DOC->sumAll->setFiles(DOC->sumOut->size());// get record of file begin
-// run thread;
-   runThread();
-   //qDebug() << " is runing0 " << tCopy->isRunning();
-   //tCopy->start();
-   //qDebug() << " is runing " << tCopy->isRunning();
-}
 void dtMainWin::slotJobPause()
 {
      QString str;
@@ -787,49 +910,5 @@ void dtMainWin::slotJobStop()
    DOC->logStop();
    
 }
-void dtMainWin::fileEof()
-{
-     DOC->sumAll->elapsed();// size() ids the files
-     DOC->sumAll->setFiles(DOC->sumOut->size() - DOC->sumAll->getFiles());// record of thid file
-     DOC->sumAll->setBytes(DOC->sumOut->getBytes() - DOC->sumAll->getBytes() );// bytes of thid file
-     DOC->logF();
-     jobV->slotJobStat();
-    // qDebug() << "end of dtMainWin::fileEof()";
-     //sleep(1);
 
-}
-void dtMainWin::slotFileEnd(int sta)
-{
-   qDebug() << "file End st= " << sta << pCopy->cpErr[sta] << DOC->sumAll->size();
-   //sleep(1);
-   switch (sta)
-   {
-   case COPY_EOF:
-       fileEof();// file 
-       runFile();
-      break;
-   case COPY_EOT:
-   case COPY_DOUBLE_EOF:
-       if (DOC->devIn->type == DEV_DISK)
-       {
-           fileEof();
-           DOC->_iEOT = 0;
-       }
-       else
-           DOC->_iEOT =1;
-       endJob(0);
-      break;
-   case COPY_STOP_ERR:
-       qDebug() << "Job err = " << pCopy->cpErr[sta];
-       endJob(sta);
-      break;
-   case COPY_PAUSE_ERR:  
-       //endJob();
-      break;
-   default:
-       qDebug() << "Job err = " << pCopy->cpErr[sta];
-       endJob(sta);
-      break;
-   }
-}
 

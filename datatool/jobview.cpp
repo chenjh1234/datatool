@@ -35,7 +35,7 @@ void jobView::jobStart(QString j)
 void jobView::slotJobStat()
 {
     QString str;
-    str = QString("%1").arg(DOC->sumAll->size());
+    str = QString("%1").arg(DOC->sumFile->size());
     _job->setText(JOB_STAT,str);
     _job->setToolTip(JOB_STAT,str);
 }

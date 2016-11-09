@@ -1,5 +1,6 @@
 #include "inputview.h"
 #include "dtapp.h"
+#include <QPalette>
 inputView::inputView(QWidget *p,int id) : QWidget(p)
 {
     m_id = id;
@@ -93,13 +94,25 @@ void inputView::slotFileList()
         slist = fDlg->getList();
         if (fDlg->listZF.size() > 0) 
         {
-            qDebug() <<  "file size == 0, file=" << fDlg->listZF;
+            //qDebug() <<  "file size == 0, file=" << fDlg->listZF;
             str = fDlg->listZF.join(" ");
             str= "file size == 0 :" + str;
             WIN->errDlg(str);
         }
-        qDebug() << "files size = " << slist.size();
-        qDebug() << "files = " << slist;
+        //qDebug() << "files size = " << slist.size();
+        //qDebug() << "files = " << slist;
+        // this is default:
+        str = "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde";
+        if (slist.size() > 0)
+        {
+            
+            ui.pushButtonCheck->setStyleSheet("background-color:#993300"); 
+            //ui.pushButtonCheck->setBackgroundRole(1);//QPalette::Background);
+        }
+        else
+            ui.pushButtonCheck->setStyleSheet(str);
+
         DOC->devInFileList = slist;
     }
     #endif

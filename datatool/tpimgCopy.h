@@ -23,9 +23,13 @@ public:
 	void init();
 	void initCopy();
 	int openCopy(DEV in,DEV out);// tape to file
+    int openIn(DEV in); 
+    int openOut(DEV out);
 	int copyFile();// main loop of copy file,
 	int copyRecord();// main loop of copy record
 	int closeCopy();// close copy
+    int closeIn();
+    int closeOut();
 
 };
 

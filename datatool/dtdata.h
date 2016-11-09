@@ -128,7 +128,9 @@ public:
 
     logFile *logJ,*logS;
 // sum:===================
-    sumInfo *sumIn,*sumOut,*sumAll;
+    sumInfo *sumIn,*sumOut;// sum for input dev,output dev: time,cpu,record,bytes
+    sumInfo *sumFile; // sum for copy files  record, bytes 
+    sumInfo *sumReel; 
     QString _startT;// job start time
     int _iEOT ; // input type =DISK =0 else 1, when sum all record - iEOT;
     //QList<sumInfo> listSum;
@@ -140,15 +142,16 @@ public:
 // dev:=================
     //QString m_dataName;
     //int m_dataType;
-    DEV *devIn,*devOut;
-    QStringList devInFileList;
+    DEV *devIn,*devOut; //device for copy
+    QStringList devInFileList;// more input files defined in fileListDlg;
 // param:
 //#define  PARAM_REWIND_UNLOAD 0
 //#define  PARAM_REWIND 1
 //#define  PARAM_NOT_REWIND 2
     
-    int pStartIn,pEndIn;
-    int pStartOut,pEndOut,pCopy;
+    int pStartIn,pEndIn;   // parameters for input dev startcopy or end of copy ,the position of the tape
+    int pStartOut,pEndOut;
+    int pCopy;         // copy reels: default = 1;
 
 
 // auto analist file(tape) format // segd,segy...
@@ -187,10 +190,10 @@ public:
     QString newJobNumber();
 
     //QString fileJobData(QDtring f);
-    bool isFile(QString f);
-    bool isDir(QString f);
-    bool canOpen(QString s);
-    qint64 fileSize(QString f);
+    bool isFile(QString f); // is file exist
+    bool isDir(QString f); // is a directory
+    bool canOpen(QString s); // ia it open for read ok;
+    qint64 fileSize(QString f); // filesize;
 // dtime:
     QString dTime(){return QDateTime::currentDateTime().toString();};
     // "====" lines od n "="

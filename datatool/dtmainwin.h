@@ -145,6 +145,7 @@ public:
     void runFile();// start file sum and start Thread; 
     void runThread();// start thread only; 
     void fileEof(); // Eof file sum process; slotFileEnd call it when normal EOF end;
+    void endReel();
     void endJob(int );// end of job process;
     
 private slots:
