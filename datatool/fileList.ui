@@ -27,6 +27,9 @@
     <layout class="QGridLayout" name="gridLayout">
      <item row="2" column="1">
       <widget class="QPushButton" name="pushButtonUp">
+       <property name="toolTip">
+        <string>move selected items up</string>
+       </property>
        <property name="text">
         <string>up</string>
        </property>
@@ -34,6 +37,9 @@
      </item>
      <item row="3" column="1">
       <widget class="QPushButton" name="pushButtonDown">
+       <property name="toolTip">
+        <string>move selected items down</string>
+       </property>
        <property name="text">
         <string>down</string>
        </property>
@@ -41,6 +47,9 @@
      </item>
      <item row="9" column="1">
       <widget class="QPushButton" name="pushButtonClear">
+       <property name="toolTip">
+        <string>clear all items </string>
+       </property>
        <property name="text">
         <string>clear</string>
        </property>
@@ -62,6 +71,9 @@
      </item>
      <item row="8" column="1">
       <widget class="QPushButton" name="pushButtonRemove">
+       <property name="toolTip">
+        <string>remove selected items </string>
+       </property>
        <property name="text">
         <string>remove</string>
        </property>
@@ -76,6 +88,9 @@
      </item>
      <item row="0" column="1">
       <widget class="QPushButton" name="pushButtonAdd">
+       <property name="toolTip">
+        <string>input files and add to view</string>
+       </property>
        <property name="text">
         <string>add</string>
        </property>
@@ -83,6 +98,9 @@
      </item>
      <item row="11" column="1">
       <widget class="QPushButton" name="pushButtonUnselect">
+       <property name="toolTip">
+        <string>unselect and set sorting</string>
+       </property>
        <property name="text">
         <string>Unselect</string>
        </property>

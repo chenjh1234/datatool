@@ -66,7 +66,14 @@ QStringList fileListDlg::getList()
    }
    return slist;
 }
-
+void fileListDlg::setDir(QString dir)
+{
+   lastDir = dir;
+}
+QString fileListDlg::getDir()
+{
+   return lastDir;
+}
 void fileListDlg::slotAdd()
 {
    int i;
@@ -93,44 +100,43 @@ void fileListDlg::slotAdd()
       addItem(sList);
    }
 }
-
+int fileListDlg::files()
+{
+   return  ui.treeWidget->topLevelItemCount();
+}
 void fileListDlg::moveSelectedItem(int wh)
 {
-   int sz, ssz, i, idx,j;
+   int sz, ssz, i, idx, j;
    bool b;
    QList<QTreeWidgetItem *> listItem;
    QTreeWidgetItem * item,*item1;
 // selected items:
    listItem = ui.treeWidget->selectedItems();
-// ask if remove ?
-   if (wh == MOVE_REMOVE)
-   {
-
-   }
+// disable sort
    ui.treeWidget->setSortingEnabled(false);
 
    ssz = listItem.size();
    sz = ui.treeWidget->topLevelItemCount();
    qDebug() << "selections = " << ssz << sz;
 // sort the select by index;
-   QMap<int,QTreeWidgetItem *> mapItems;
+   QMap<int, QTreeWidgetItem *> mapItems;
    QList<int> listIdx;
    for (i = 0; i < ssz; i++)
    {
-       item = listItem[i];
-       idx = ui.treeWidget->indexOfTopLevelItem(item);
-       mapItems[idx] = item;
+      item = listItem[i];
+      idx = ui.treeWidget->indexOfTopLevelItem(item);
+      mapItems[idx] = item;
    }
    listIdx = mapItems.keys();
 // do the move:
    for (i = 0; i < ssz; i++)
    {
-// move UP  
+// move UP
       if (wh == MOVE_UP)
-      {   
+      {
          idx = 	listIdx[i];
          item = mapItems[idx];
-          qDebug() << "idx,where = " << idx << wh;
+         qDebug() << "idx,where = " << idx << wh;
          if (idx > 0)
          {
             ui.treeWidget->takeTopLevelItem(idx);
@@ -138,16 +144,15 @@ void fileListDlg::moveSelectedItem(int wh)
             //ui.treeWidget->setCurrentItem(item);
             item->setSelected(true);
          }
-         else
-             break;
+         else break;
       }
       if (wh == MOVE_DOWN)
       {
-          // FORM LARGE TO SMALL?
-         j = ssz -1 -i;
+         // FORM LARGE TO SMALL?
+         j = ssz - 1 - i;
          idx = 	listIdx[j];
          item = mapItems[idx];
-          qDebug() << "idx,where = " << idx << wh;
+         qDebug() << "idx,where = " << idx << wh;
 
          if (idx < sz - 1)
          {
@@ -161,22 +166,21 @@ void fileListDlg::moveSelectedItem(int wh)
             if (b)  item1->setSelected(true);
             //ui.treeWidget->setCurrentItem(item);
          }
-         else
-             break;
+         else break;
       }
-      if (wh == MOVE_REMOVE)      
+      if (wh == MOVE_REMOVE)
       {
-          if (i == 0)// 1st loop : ask if remove:
-          {  
-              j = WIN->askDlg("Remove Selected Items??");
-              if (j == 0) return;
-          }
-          //item = listItem[i];
-          //idx = ui.treeWidget->indexOfTopLevelItem(item); 
-          // FORM LARGE TO SMALL?
-          j = ssz -1 -i;
-          idx =  listIdx[j];
-          ui.treeWidget->takeTopLevelItem(idx);
+         if (i == 0) // 1st loop : ask if remove:
+         {
+            j = WIN->askDlg("Remove Selected Items??");
+            if (j == 0) return;
+         }
+         //item = listItem[i];
+         //idx = ui.treeWidget->indexOfTopLevelItem(item);
+         // FORM LARGE TO SMALL?
+         j = ssz - 1 - i;
+         idx =  listIdx[j];
+         ui.treeWidget->takeTopLevelItem(idx);
       }
    }
 }

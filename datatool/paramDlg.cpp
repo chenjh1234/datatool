@@ -40,39 +40,39 @@ void paramDlg::getParam()
 {
 // input start:
     if(uiDevIn.radioButtonRewind->isChecked())
-        DOC->pStartIn = PARAM_REWIND;
+        DOC->setParamDevInStart(PARAM_REWIND);
     else
-        DOC->pStartIn = PARAM_NOT_REWIND;
+        DOC->setParamDevInStart(PARAM_NOT_REWIND);
 
 // input end:
     if(uiDevIn.radioButtonRewindUnloadEnd->isChecked())
-        DOC->pEndIn = PARAM_REWIND_UNLOAD;
+        DOC->setParamDevInEnd(PARAM_REWIND_UNLOAD);
     else if (uiDevIn.radioButtonRewindEnd->isChecked())  
-        DOC->pEndIn = PARAM_REWIND; 
+        DOC->setParamDevInEnd(PARAM_REWIND); 
     else
-        DOC->pEndIn = PARAM_NOT_REWIND; 
+        DOC->setParamDevInEnd(PARAM_NOT_REWIND); 
 
 // output start:
     if(uiDevOut.radioButtonRewind->isChecked())
-        DOC->pStartOut = PARAM_REWIND;
+        DOC->setParamDevOutStart(PARAM_REWIND);
     else
-        DOC->pStartOut = PARAM_NOT_REWIND;
+        DOC->setParamDevOutStart(PARAM_NOT_REWIND);
 
 // output end:
     if(uiDevOut.radioButtonRewindUnloadEnd->isChecked())
-        DOC->pEndOut = PARAM_REWIND_UNLOAD;
+        DOC->setParamDevOutEnd(PARAM_REWIND_UNLOAD);
     else if (uiDevOut.radioButtonRewindEnd->isChecked())  
-        DOC->pEndOut = PARAM_REWIND; 
+        DOC->setParamDevOutEnd(PARAM_REWIND); 
     else
-        DOC->pEndOut = PARAM_NOT_REWIND; 
+        DOC->setParamDevOutEnd(PARAM_NOT_REWIND); 
 // copy:
     QString str;
     str = uiCopy.lineEdit->text();
-    DOC->pCopy  = str.toInt();
+    DOC->setParamReel(str.toInt());
 
-    qDebug() << "devIn Param = "<< DOC->pStartIn << DOC->pEndIn ;
-    qDebug() << "devOut Param = "<< DOC->pStartOut << DOC->pEndOut ;
-    qDebug() << "copy Param = "<< DOC->pCopy;
+    qDebug() << "devIn Param = "<< DOC->getParamDevInStart() << DOC->getParamDevInEnd() ;
+    qDebug() << "devOut Param = "<< DOC->getParamDevOutStart() << DOC->getParamDevOutEnd();
+    qDebug() << "copy Param = "<< DOC->getParamReel();
 
 
 }

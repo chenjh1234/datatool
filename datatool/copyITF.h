@@ -65,9 +65,13 @@ public:
 
 	virtual void snit(){};
 	virtual int openCopy(DEV in,DEV out){in.name = ""; out.name = "";return 0;};// tape to file
+    virtual int openIn(DEV in){return 0;}; 
+    virtual int openOut(DEV in){return 0;}; 
 	virtual int copyFile(){return 0;};// main loop of copy file,
 	virtual int copyRecord(){return 0;};// main loop of copy record
 	virtual int closeCopy(){return 0;};// close copy
+    virtual int closeIn(){return 0;};
+    virtual int closeOut(){return 0;};
 
     QMap<int,QString> cpErr;
     QString m_status ;

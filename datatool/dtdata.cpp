@@ -14,6 +14,7 @@ dtData::~dtData()
    delete sumIn;
    delete sumOut;
    delete sumFile;
+   delete sumReel;
 
    delete logS;
    delete logJ;
@@ -28,17 +29,19 @@ void dtData::init()
 
    devIn = new DEV();
    devOut = new DEV();
+
    sumIn = new sumInfo();
    sumOut = new sumInfo();
    sumFile = new sumInfo();
    sumReel = new sumInfo();
+
    logJ = new logFile();
    logS = new logFile();
-   pStartIn = PARAM_REWIND;
-   pEndIn = PARAM_REWIND_UNLOAD;
-   pStartOut = PARAM_REWIND;
-   pEndOut = PARAM_REWIND_UNLOAD;
-   pCopy = 1;
+   setParamDevInStart(PARAM_REWIND);
+   setParamDevInEnd(PARAM_REWIND_UNLOAD);
+   setParamDevOutStart(PARAM_REWIND);
+   setParamDevOutEnd(PARAM_REWIND_UNLOAD);
+   setParamReel(1);
 
    //strcpy(ch,fileAppLog().Q2CH);
    //logS->setName(ch);
@@ -276,6 +279,7 @@ void dtData::sumStart()
    sumIn->clear();
    sumFile->clear();
    sumOut->clear();
+   sumReel->clear();
 }
 QString dtData::jobname()
 {
@@ -328,7 +332,16 @@ QString dtData::logDev()
 }
 QString dtData::logInput()
 {
+    QString str;
+    str = getDevInStr();
+    logJ->line(str.Q2CH);
+    return str;
+
+}
+QString dtData::getDevInStr()
+{
    QString str, str1;
+   int i;
    str1 = QString("Device Input message:");
    str = str1 +  strEQ(EQ50 - str1.size()) +  STR_LR;
    str += QString(" name: ") +  devIn->name +  STR_LR;
@@ -338,13 +351,41 @@ QString dtData::logInput()
 
    str += QString(" type: ") +  str1 +  STR_LR;
    str += QString("   id: ") +  devIn->id +  STR_LR;
-   str += QString(" reel: ") +  devIn->reel +  STR_LR;
    str += QString(" size: ") +  str1.number(devIn->size) +  STR_LR;
-   logJ->line(str.Q2CH);
+   //logJ->line(str.Q2CH);
+    //if fileList:
+   if (devIn->type == DEV_TAPE) 
+   {
+       str += QString(" reel: ") +  devIn->reel +  STR_LR;
+       str += getDevPositionStr(0);
+       return str;
+   }
+   int sz;
+   sz = DOC->getDevInFileList().size();
+   if (sz > 0) 
+   {
+       str += QString("  Input Files:") + QString("%1\n").arg(sz);
+   }
+   qDebug() << "sz = " << sz;
+   for (i = 0; i < sz; i++)
+   {
+      str += QString("    %1:").arg(i+1) + DOC->getDevInFileList()[i] + "\n";  
+   }
+
+   //logJ->line(str.Q2CH);
    return str;
 
 }
 QString dtData::logOutput()
+{
+   
+    QString str;
+    //return str;
+    str = getDevOutStr();
+    logJ->line(str.Q2CH);
+    return str;
+}
+QString dtData::getDevOutStr()
 {
    QString str, str1;
    str1 = QString("Device Output message:");
@@ -355,9 +396,12 @@ QString dtData::logOutput()
    if (devOut->type == DEV_TAPE) str1 = "TAPE";
    str += QString(" type: ") +  str1 +  STR_LR;
    str += QString("   id: ") +  devOut->id +  STR_LR;
-   str += QString(" reel: ") +  devOut->reel +  STR_LR;
    str += QString(" size: ") +  str1.number(devOut->size) +  STR_LR;
-   logJ->line(str.Q2CH);
+   if (devOut->type == DEV_TAPE) 
+   {
+       str += QString(" reel: ") +  devOut->reel +  STR_LR;
+       str += getDevPositionStr(1);
+   }  
    return str;
 }
 QString dtData::logCMD()
@@ -409,6 +453,17 @@ QString dtData::logF()
    recordAll = sumOut->size() - file;
 
    str = QString("File: %1 , record: %2 , bytes: %3 , record All: %4").arg(file).arg(record).arg(bytes).arg(recordAll);
+   logJ->line(str);
+   return str;
+
+}
+QString dtData::logReel()
+{
+    QString str,str1;
+   int reel ;
+   reel = sumReel->size();
+   str1 = QString("Reel: %1  complete").arg(reel+1);
+   str = str1 +  strEQ(EQ50 - str1.size()) +  STR_LR;
    logJ->line(str);
    return str;
 
@@ -635,3 +690,81 @@ qint64 dtData::fileSize(QString s)
    }
    return -1;
 }
+QStringList dtData::getDevInFileList()
+{
+    return devInFileList;
+}
+void dtData::setDevInFileList(QStringList list)
+{
+    devInFileList = list;
+}
+QString dtData::getParamStr(int p)
+    {
+        if(p == PARAM_REWIND) return "REWIND";
+        if(p == PARAM_NOT_REWIND) return "NOT REWIND";
+        if(p == PARAM_REWIND_UNLOAD) return "REWIND_UNLOAD";
+        return "";
+    }
+    int  dtData::getParamReel()
+    {
+        return paramReel;
+
+    }
+    void dtData::setParamReel(int i)
+    {
+        paramReel = i;
+
+    }
+//
+    int  dtData::getParamDevInStart()
+    {
+        return paramInStart;
+    }
+    void dtData::setParamDevInStart(int i)
+    {
+        paramInStart = i;
+    }
+    int  dtData::getParamDevInEnd()
+    {
+        return paramInEnd;
+    }
+    void dtData::setParamDevInEnd(int i)
+    {
+        paramInEnd =i;
+    }
+//
+    int  dtData::getParamDevOutStart()
+    {
+        return paramOutStart;
+    }
+    void dtData::setParamDevOutStart(int i)
+    {
+        paramOutStart = i;
+    }
+    int  dtData::getParamDevOutEnd()
+    {
+        return paramOutEnd;
+    }
+    void dtData::setParamDevOutEnd(int i)
+    {
+         paramOutEnd = i;
+    }
+    QString dtData::getDevPositionStr(int dev)
+    {
+        QString str,str1;
+    
+        str += QString(" tape position: \n");
+        if (dev == 0) 
+            str1 = getParamStr(getParamDevInStart()); 
+        else
+            str1 = getParamStr(getParamDevOutStart()); 
+
+        str += "  start:" + str1 + "\n";
+
+        if (dev == 0) 
+            str1 = getParamStr(getParamDevInEnd()); 
+        else
+            str1 = getParamStr(getParamDevOutEnd());
+        str += "   end:" + str1 + "\n"; 
+        return str;
+    }

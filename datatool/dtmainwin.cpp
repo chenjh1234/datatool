@@ -13,7 +13,7 @@
 #include <QDockWidget>
 #include <QFileInfo>
 #include <QGridLayout>
- 
+
 dtMainWin::dtMainWin() : QMainWindow()
 {
    mMain = new QTextEdit(this);
@@ -38,20 +38,20 @@ dtMainWin::dtMainWin() : QMainWindow()
 
 
    inputV = new inputView(this);
-   outputV = new inputView(this,1);
+   outputV = new inputView(this, 1);
    paramD = new paramDlg(this);
 
    QStringList slist;
-  // slist = DOC->getTapeConfig();
+   // slist = DOC->getTapeConfig();
 
-  // inputV->setTapes(slist);
-  // outputV->setTapes(slist);
+   // inputV->setTapes(slist);
+   // outputV->setTapes(slist);
 
- 
+
    jobV = new  jobView(this);
    connect(jobV, SIGNAL( itemDoubleClicked(QTreeWidgetItem * , int  )), this, SLOT(slotLogView(QTreeWidgetItem * , int  )));
-   
- 
+
+
 
    outputV->setDev("Output");
 
@@ -95,33 +95,33 @@ void dtMainWin::errDlg(QString s1, QString s2)
 
 int dtMainWin::askDlg(QString str)
 {
-    return askDlg("ask:",str);
+   return askDlg("ask:", str);
 }
 
 int dtMainWin::askDlg(QString s1, QString s2)
 {
 
-    int i;
-    i =  QMessageBox::warning(this, s1, s2
-                                , QMessageBox::Ok, QMessageBox::Cancel);
-    if (i == QMessageBox::Ok) return 1;
-    else return 0;
-    
+   int i;
+   i =  QMessageBox::warning(this, s1, s2
+                             , QMessageBox::Ok, QMessageBox::Cancel);
+   if (i == QMessageBox::Ok) return 1;
+   else return 0;
+
 }
 void dtMainWin::msgOut(QString s)
 {
-    qDebug() << "msg = " << s << mMain;
-    mMain->append(s);
-    DOC->logS->tline(s);
+   qDebug() << "msg = " << s << mMain;
+   mMain->append(s);
+   DOC->logS->tline(s);
    // mMain->append("\n");
 }
 void dtMainWin::msgClear()
 {
-     mMain->clear();
+   mMain->clear();
 }
 #if 0
 void dtMainWin::addJob(QString)
-{ 
+{
 }
 #endif
 void dtMainWin::readSettings()
@@ -215,7 +215,7 @@ void dtMainWin::createActions()
    licConfigAct->setStatusTip(tr("register"));
    connect(licConfigAct, SIGNAL(triggered()), this, SLOT(slotTapeConfig()));
 #if 0
-      logConfigAct = new QAction(QIcon(":/images/logconfig.png"), tr("log"), this);
+   logConfigAct = new QAction(QIcon(":/images/logconfig.png"), tr("log"), this);
    //moveFirstAct->setShortcuts(QKeySequence::Quit);
    logConfigAct->setStatusTip(tr("log"));
    connect(logConfigAct, SIGNAL(triggered()), this, SLOT(slotLogConfig()));
@@ -267,9 +267,9 @@ void dtMainWin::createMenus()
 
    fileMenu->addSeparator();
    fileMenu->addAction(tapeConfigAct);
-   
+
    //fileMenu->addAction(logConfigAct);
-  // fileMenu->addAction(licConfigAct);
+   // fileMenu->addAction(licConfigAct);
 
    fileMenu->addAction(paraConfigAct);
 
@@ -306,7 +306,7 @@ void dtMainWin::createToolBars()
    fileToolBar = addToolBar(tr("File"));
    //fileToolBar->addAction(openSegyAct);
    fileToolBar->hide();
-   
+
 
 //location:
 #if 0
@@ -470,10 +470,10 @@ void dtMainWin::slotOpenFile()
 }
 
 void dtMainWin::slotHelp()
-{   
+{
    QString cmd, str;
    //cmd = SHOWPDF;
-   cmd = SHOW_PDF + DOC->pathConfig()+ MARK_PATH + APP_DOC;
+   cmd = SHOW_PDF + DOC->pathConfig() + MARK_PATH + APP_DOC;
    //cmd = "ls";
    qDebug() << "cmd=" << cmd;
    hrun.start(cmd);
@@ -484,82 +484,81 @@ void dtMainWin::slotAbout()
    title = ORG_NAME;
    str1 = __DATE__;
    str = QString("App name : ") + QString(APP_NAME) + "\n" +
-         QString("App version : ") + QString(APP_VERSION) + "\n" +
-         QString("App Build Date : ") + str1;
+      QString("App version : ") + QString(APP_VERSION) + "\n" +
+      QString("App Build Date : ") + str1;
    QMessageBox::about(this, title, str);
 }
- 
+
 void dtMainWin::slotTapeConfig()
 {
 //moveData(MOVE_LAST);
-    QStringList slist;
-    QString str;
-    int i;
-    slist = DOC->getTapeConfig();
-    qDebug() << " get tape Config = " << slist;
+   QStringList slist;
+   QString str;
+   int i;
+   slist = DOC->getTapeConfig();
+   qDebug() << " get tape Config = " << slist;
 
-    dlgE->setTitle("Tape Config");
-    dlgE->resize(TAPE_SIZE);
+   dlgE->setTitle("Tape Config");
+   dlgE->resize(TAPE_SIZE);
 
-    slist.insert(0,TAPE_COMM);
-    dlgE->setList(slist);
-    i = dlgE->exec();
-    if (i == 1)
-    {
-        qDebug() << "yes ";
-        slist.clear();
-        slist = dlgE->getList();
-        //slist.insert(0,TAPE_COMM);
-        qDebug() << "list = " << slist;
-        DOC->saveTapeConfig(slist);
+   slist.insert(0, TAPE_COMM);
+   dlgE->setList(slist);
+   i = dlgE->exec();
+   if (i == 1)
+   {
+      qDebug() << "yes ";
+      slist.clear();
+      slist = dlgE->getList();
+      //slist.insert(0,TAPE_COMM);
+      qDebug() << "list = " << slist;
+      DOC->saveTapeConfig(slist);
 
-        for (i = slist.size()-1 ;i >= 0;i--)
-        {
-            str = slist[i];
-            if (isComm(str))
-            {
-                slist.removeAt(i);
-            }
-        }
-        inputV->setTapes(slist);
-        outputV->setTapes(slist);
-    }
-    else
-         qDebug() << "No ";
+      for (i = slist.size() - 1; i >= 0; i--)
+      {
+         str = slist[i];
+         if (isComm(str))
+         {
+            slist.removeAt(i);
+         }
+      }
+      inputV->setTapes(slist);
+      outputV->setTapes(slist);
+   }
+   else qDebug() << "No ";
 
 
-    qDebug() << "tape";
+   qDebug() << "tape";
 }
 void dtMainWin::slotParaConfig()
 {
-    qDebug() << "para";
-    paramD->exec();
-    paramD->getParam();
+   qDebug() << "para";
+   paramD->exec();
+   paramD->getParam();
 
 //moveData(MOVE_LAST);
 }
 
-void dtMainWin::slotLogView(QTreeWidgetItem * item , int col )
+void dtMainWin::slotLogView(QTreeWidgetItem *item, int col)
 {
-    qDebug() << "slotLogView";
-    //moveData(MOVE_LAST);
-    QString str,jname;
-    int i;
-    jname = item->text(JOB_NAME);
+   qDebug() << "slotLogView";
+   //moveData(MOVE_LAST);
+   QString str, jname;
+   int i;
+   jname = item->text(JOB_NAME);
 
-    str= "LOG -" + jname;
-    dlgE->setTitle(str);
-    dlgE->resize(LOG_SIZE);
+   str = "LOG -" + jname;
+   dlgE->setTitle(str);
+   dlgE->resize(LOG_SIZE);
 
-    str = getFileText(DOC->fileJobLog(jname));
-    dlgE->setText(str);
-    i = dlgE->exec();
-    //qDebug() << "log";
+   str = getFileText(DOC->fileJobLog(jname));
+   dlgE->setText(str);
+   i = dlgE->exec();
+   //qDebug() << "log";
 //moveData(MOVE_LAST);
 }
 void dtMainWin::slotLicConfig()
 {
-    qDebug() << "lic";
+   qDebug() << "lic";
 //moveData(MOVE_LAST);
 }
 void dtMainWin::slotMoveFirst()
@@ -601,8 +600,8 @@ void dtMainWin::setTitle()
 
    QString str;
    str = "";
-   str = str + APP_NAME + "-" + APP_VERSION + "-" + __DATE__;// + "-";
-   //str = str + DOC->m_dataName;
+   str = str + APP_NAME + "-" + APP_VERSION + "-" + __DATE__; // + "-";
+                                                              //str = str + DOC->m_dataName;
    setWindowTitle(str);
 
 }
@@ -641,17 +640,17 @@ void dtMainWin::slotJobStart()
 // format check
    copyITF pcp;
    int b;
-   b = DOC->checkDev();//in: is exist,out if exist ask;
-   if (b != OPEN_OK) 
+   b = DOC->checkDev(); //in: is exist,out if exist ask;
+   if (b != OPEN_OK)
    {
-       msgOut(pcp.cpErr[b]);
-       return;
+      msgOut(pcp.cpErr[b]);
+      return;
    }
-   b = startConform();// display and ask:
-   if (!b) 
+   b = startConform(); // display and ask:
+   if (!b)
    {
-       msgOut("Copy Canceled !!!");
-       return;
+      msgOut("Copy Canceled !!!");
+      return;
    }
    qDebug() << "conform";
 //log: file open:
@@ -661,16 +660,21 @@ void dtMainWin::slotJobStart()
    DOC->logApp();
    DOC->logJob();
    DOC->logDev();
+    qDebug() << "logDev " ;
    DOC->logInput();
+    qDebug() << "logInput" ;
    DOC->logOutput();
+   qDebug() << "logOut" ;
    DOC->logCMD();
+   qDebug() << "logCMD" ;
    runJob();
 
 }
 bool dtMainWin::startConform()
 {
-   QString msg,title,str;
-   int i,sz ;
+   QString msg, title, str;
+   int i, sz;
+   //return 1;
 #if 0
    qDebug() << "in.n,r=" << in.name << in.reel;
    qDebug() << "out.n,r=" << out.name << out.reel;
@@ -678,115 +682,70 @@ bool dtMainWin::startConform()
    qDebug() << "out.n,r=" << DOC->devOut->name << DOC->devOut->reel;
 #endif
    title = " JobMessages:";
-// input:
-   msg = "Input Device:\n";
-   //name
-   str = "  name : " + DOC->devIn->name + "\n";
-   msg += str;
-   //type
-   if (DOC->devIn->type == DEV_TPIMG) str = "  type : TPIMG\n";
-   if (DOC->devIn->type == DEV_TAPE) str = "  type : TAPE\n";
-   if (DOC->devIn->type == DEV_DISK) str = "  type : DISK\n";
-   msg += str;
-   //reel:
-    if (DOC->devIn->type == DEV_TAPE)
-    {  
-         str = "  reel : " + DOC->devIn->reel + "\n";
-         msg += str;
-    }
 
-   //if fileList:
-   sz = DOC->devInFileList.size();
-   if (sz >0) str = "Input Files:" + QString("%1\n").arg(sz);
-   
-   for (i = 0; i < sz; i++)
-   {
-       str = DOC->devInFileList[i] ;
-       msg += "  " + str + "\n";
-   }
-// Output:
-   str = "Output Device:\n";
+   str = DOC->getDevInStr();
    msg += str;
-   //name
-   str = "  name : " + DOC->devOut->name + "\n";
+   str = DOC->getDevOutStr();
    msg += str;
-   //type
-   if (DOC->devOut->type == DEV_TPIMG) str = "  type : TPIMG\n";
-   if (DOC->devOut->type == DEV_TAPE) str = "  type : TAPE\n";
-   if (DOC->devOut->type == DEV_DISK) str = "  type : DISK\n";
+
+   str = "=====================\n ";
    msg += str;
-   //reel:
-   if (DOC->devOut->type == DEV_TAPE)
-   {  
-         str = "  reel : " + DOC->devIn->reel + "\n";
-         msg += str;
-   }
-//  Copy:
-   str = "Copy paramters:\n";
+   str = "Please conform?\n ";
    msg += str;
-   str = "  copy to:  Hard Copy\n";
-   msg += str;
-   if (DOC->devIn->type == DEV_TAPE)
-   {  
-       str = "  copy reels: " + QString("%1\n").arg(DOC->pCopy);
-       msg += str;
-   }
-   
-   str = "Please conform?\n " ;
-   msg += str;
- 
-   return askDlg(title,msg);
+
+   return askDlg(title, msg);
 }
 void dtMainWin::runJob()
 {
    int i;
    QString str;
    qDebug() <<  "runjob====";
-   str = QString("Job Start = ")  +  DOC->_jobname;
+   str = QString("Job Start = ") +  DOC->_jobname;
    msgOut(str);
 
    if (pCopy != NULL) delete pCopy;
    pCopy = new tpimgCopy();
    connect(pCopy, SIGNAL(sigFileEnd(int)), this, SLOT(slotFileEnd(int)));
 //open Copy:
-   i = pCopy->openCopy(*(DOC->devIn),*(DOC->devOut));
+   i = pCopy->openCopy(*(DOC->devIn), *(DOC->devOut));
    if (i != OPEN_OK)
    {
-       str   = pCopy->cpErr[i];
-       qDebug() << " openCopy err = " << str;
-       errDlg(str);
-       return;
+      str   = pCopy->cpErr[i];
+      qDebug() << " openCopy err = " << str;
+      errDlg(str);
+      return;
    }
-   DOC->sumStart();//clear the 3 sums
-   //WOP->btCMD.start();
+   DOC->sumStart(); //clear the 4 sums
+                    //WOP->btCMD.start();
 //jobview:
    jobV->jobStart(DOC->_jobname); // create items
 // tool buttons enable:
    WOP->btCMD.start(); // enable the buttons in toolbar
+   qDebug() << "setCopy =" << pCopy << tCopy;
 // startCopy:
-   tCopy->setCopy(pCopy);// set copy for thread;
+   tCopy->setCopy(pCopy); // set copy for thread;
+   qDebug() << "runFile 0";
    runFile();
 }
 void dtMainWin::runFile()
 {
 // start next file
-   
+
    DOC->sumFile->start();
-   DOC->sumFile->setBytes(DOC->sumOut->getBytes());// get bytes of the file begin;
-   DOC->sumFile->setFiles(DOC->sumOut->size());// get record of file begin
+   DOC->sumFile->setBytes(DOC->sumOut->getBytes()); // get bytes of the file begin;
+   DOC->sumFile->setFiles(DOC->sumOut->size()); // get record of file begin
 // run thread;
    runThread();
    //qDebug() << " is runing0 " << tCopy->isRunning();
    //tCopy->start();
    //qDebug() << " is runing " << tCopy->isRunning();
 }
-void dtMainWin::runThread()// begin sum and run thread
+void dtMainWin::runThread() // begin sum and run thread
 {
 // run thread;
-   //qDebug() << " is runing0 " << tCopy->isRunning();
-   // wait
-   if(tCopy->isRunning())
-       tCopy->wait();
+//qDebug() << " is runing0 " << tCopy->isRunning();
+// wait
+   if (tCopy->isRunning()) tCopy->wait();
 
    tCopy->start();
    //qDebug() << " is runing " << tCopy->isRunning();
@@ -798,72 +757,122 @@ void dtMainWin::slotFileEnd(int sta)
    switch (sta)
    {
    case COPY_EOF:
-       fileEof();// file 
-       runFile();//continue 
+      fileEof(); // file
+      runFile(); //continue
       break;
    case COPY_EOT:
    case COPY_DOUBLE_EOF:
-       if (DOC->devIn->type == DEV_DISK)
-       {
-           fileEof();
-           DOC->_iEOT = 0;
-       }
-       else
-           DOC->_iEOT =1;
-       //endJob(0);
-       endReel();
+      if (DOC->devIn->type == DEV_DISK)
+      {
+         fileEof();
+         DOC->_iEOT = 0;
+      }
+      else DOC->_iEOT = 1;
+      //endJob(0);
+      if(endReel() < 0)
+          endJob(-1);
       break;
    case COPY_STOP_ERR:
-       qDebug() << "Job err = " << pCopy->cpErr[sta];
-       endJob(sta);
+      qDebug() << "Job err = " << pCopy->cpErr[sta];
+      endJob(sta);
       break;
-   case COPY_PAUSE_ERR:  
-       //endJob(); do nothing
+   case COPY_PAUSE_ERR:
+      //endJob(); do nothing
       break;
    default:
-       qDebug() << "Job err = " << pCopy->cpErr[sta];
-       endJob(sta);
+      qDebug() << "Job err = " << pCopy->cpErr[sta];
+      endJob(sta);
       break;
    }
 }
 void dtMainWin::fileEof()
 {
-     DOC->sumFile->elapsed();// size() ids the files
-     DOC->sumFile->setFiles(DOC->sumOut->size() - DOC->sumFile->getFiles());// record of this file
-     DOC->sumFile->setBytes(DOC->sumOut->getBytes() - DOC->sumFile->getBytes() );// bytes of this file
-     DOC->logF();
-     jobV->slotJobStat();
-    // qDebug() << "end of dtMainWin::fileEof()";
-     //sleep(1);
+   DOC->sumFile->elapsed(); // size() ids the files
+   DOC->sumFile->setFiles(DOC->sumOut->size() - DOC->sumFile->getFiles()); // record of this file
+   DOC->sumFile->setBytes(DOC->sumOut->getBytes() - DOC->sumFile->getBytes()); // bytes of this file
+   DOC->logF();
+   jobV->slotJobStat();
+   // qDebug() << "end of dtMainWin::fileEof()";
+   //sleep(1);
 
 }
-void dtMainWin::endReel()
+int dtMainWin::endReel()
 {
-   //  close,open,if continue:
-   // do sum ;
-   // / logEnd Reel'
-   // pass end job;
+   int i;
 
+   QString str, str1;
+
+// end of job:
+   if (DOC->getDevInFileList().size() <= 1)
+   {
+      endReelTape();
+      return 0;
+   }
+// multiple file input:
+// log reel:
+   DOC->logReel();
+// if all input down:
+   if (DOC->sumReel->size() + 1 >= DOC->getDevInFileList().size()) // not closeed so +1
+   {
+      endJob(0);
+      return 0;
+   }
+    qDebug() << "reelEnd  " ;
+// close in and open:
+   if (pCopy != NULL)
+   {
+      pCopy->closeIn();
+      //  log mark:
+      DOC->devIn->name = DOC->getDevInFileList()[DOC->sumReel->size()];
+      //qDebug() << "reelEnd ="   <<pCopy;
+      //str = pCopy->cpErr[ie];
+     
+      i = pCopy->openIn(*DOC->devIn);
+      if (i != OPEN_OK) return i;
+   }
+   runFile();// go next file;
+   return 0;
+}
+int dtMainWin::endReelTape()
+{
+   int i,sz;
+   QString str, str1;
+   sz = DOC->getParamReel();
+   qDebug() << "endReelTape reels = " << sz <<DOC->sumReel->size() + 1;
+   if (DOC->sumReel->size() + 1 >= sz ) 
+   {
+       endJob(0);
+       return 0;
+   }
+   DOC->logReel(); 
+
+   qDebug() << "reelMore  " ;
+// close in and open:
+   if (pCopy != NULL)
+   {
+      DOC->sumReel->elapsed();
+      DOC->sumReel->start();   
+   }
+   runFile();// go next file;
+   return 0;
 }
 void dtMainWin::endJob(int ie)
 {
-   QString str,str1;
+   QString str, str1;
    DOC->logEnd();
-   qDebug() << "jobEnd =" << ie <<pCopy;
+   qDebug() << "jobEnd =" << ie << pCopy;
    str = pCopy->cpErr[ie];
-   qDebug() << "jobEnd = " <<str;
-   
-   if (pCopy != NULL) 
+   qDebug() << "jobEnd = " << str;
+
+   if (pCopy != NULL)
    {
-       pCopy->closeCopy();
-       delete pCopy;
-       pCopy = NULL;
+      pCopy->closeCopy();
+      delete pCopy;
+      pCopy = NULL;
    }
- 
-   if (ie ==0)  
-       DOC->logJobEnd("OK"); 
-   else
-       DOC->logJobEnd("ERR"); 
+
+   if (ie == 0)  DOC->logJobEnd("OK");
+   else DOC->logJobEnd("ERR");
 
    DOC->logSum();
    DOC->logClose();
@@ -873,42 +882,42 @@ void dtMainWin::endJob(int ie)
    msgOut(str);
    jobV->jobEnd(ie);
 
- 
+
 }
 
 void dtMainWin::slotJobPause()
 {
-     QString str;
-   if(WOP->btCMD.isPause())// status is pause, so continue to copy file
+   QString str;
+   if (WOP->btCMD.isPause()) // status is pause, so continue to copy file
    {
-       qDebug() << "job conninue ";
-       str = QString("Job continued = ")  +  DOC->_jobname;
-       msgOut(str);
-       WOP->btCMD.goon();
-       DOC->logGoon();
-       jobV->jobSta("Continued");
-       runThread();
+      qDebug() << "job conninue ";
+      str = QString("Job continued = ") +  DOC->_jobname;
+      msgOut(str);
+      WOP->btCMD.goon();
+      DOC->logGoon();
+      jobV->jobSta("Continued");
+      runThread();
    }
    else // is runing so pause;
-   {   
-       qDebug() << "job pause ";
-       str = QString("Job Paused = ")  +  DOC->_jobname;
-       msgOut(str);
-       
-       WOP->btCMD.pause();
-       DOC->logPause();
-       jobV->jobSta("Paused");
+   {
+      qDebug() << "job pause ";
+      str = QString("Job Paused = ") +  DOC->_jobname;
+      msgOut(str);
+
+      WOP->btCMD.pause();
+      DOC->logPause();
+      jobV->jobSta("Paused");
    }
 }
 void dtMainWin::slotJobStop()
 {
-    QString str;
+   QString str;
    qDebug() << "job stop ";
-   str = QString("Job Stoped = ")  +  DOC->_jobname;
+   str = QString("Job Stoped = ") +  DOC->_jobname;
    msgOut(str);
    WOP->btCMD.stop();
    DOC->logStop();
-   
+
 }
 
 

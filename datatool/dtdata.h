@@ -14,7 +14,11 @@
 
 #define ORG_NAME "DATATOOL"
 #define APP_NAME "DataTool"
-#define APP_VERSION "V1.01"
+#define APP_VERSION "V1.02"
+///2016.11.10:v1.02:  
+//  1: add tape position parmeter: rewind/unload ,not rewind,before abd finished copy
+//  2: muiltyple file input , adjust the file position in the fileList
+//  support more tape copy into one, can get a reel from more reel tape;
 
 /// 2016.10.15:v1.01: change TAPE_BLOCK = 256000 #define TP_UNLOAD "uld" in QTapeIO.h
 ///    add sumStart() in dtdata.cpp     apply in mainwindow::jobrun();
@@ -114,7 +118,9 @@ public:
      
     QString logCMD();
     QString logF();
+    QString logReel();
     QString logEnd();
+    
     QString logJobEnd(QString s);
     QString logSum();
 
@@ -149,10 +155,31 @@ public:
 //#define  PARAM_REWIND 1
 //#define  PARAM_NOT_REWIND 2
     
-    int pStartIn,pEndIn;   // parameters for input dev startcopy or end of copy ,the position of the tape
-    int pStartOut,pEndOut;
-    int pCopy;         // copy reels: default = 1;
+    int paramInStart,paramInEnd;   // parameters for input dev startcopy or end of copy ,the position of the tape
+    int paramOutStart,paramOutEnd;
+    int paramReel;         // copy reels: default = 1;
 
+    QStringList getDevInFileList(); 
+    void setDevInFileList(QStringList list);
+    QString getParamStr(int p);
+    int  getParamReel();
+    void setParamReel(int i);
+//
+    int  getParamDevInStart();
+    void setParamDevInStart(int i);
+    int  getParamDevInEnd();
+    void setParamDevInEnd(int i);
+//
+    int  getParamDevOutStart();
+    void setParamDevOutStart(int i);
+    int  getParamDevOutEnd();
+    void setParamDevOutEnd(int i);
+    //
+    QString getDevPositionStr(int dev);// 0:in,1 :out
+    QString getDevInStr();
+    QString getDevOutStr();
+
+ 
 
 // auto analist file(tape) format // segd,segy...
     int autoFormat(DEV in){ in.name = "" ; return 0;};

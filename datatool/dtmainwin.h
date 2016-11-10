@@ -145,7 +145,8 @@ public:
     void runFile();// start file sum and start Thread; 
     void runThread();// start thread only; 
     void fileEof(); // Eof file sum process; slotFileEnd call it when normal EOF end;
-    void endReel();
+    int endReel(); // for more input file of TPIMG
+    int endReelTape();// for one TPIMG(or tape) which is more reel data;
     void endJob(int );// end of job process;
     
 private slots:

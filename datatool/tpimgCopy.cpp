@@ -41,7 +41,7 @@ int tpimgCopy::openIn(DEV in)
 // in start param
     if (in.type == DEV_TAPE )//||in.type ==DEV_TPIMG )
     {
-        if (DOC->pStartIn == PARAM_REWIND)
+        if (DOC->getParamDevInStart() == PARAM_REWIND)
         {
             tpIn.rewind();
         }
@@ -63,7 +63,7 @@ int tpimgCopy::openOut(DEV out)
 // out start  param
     if (out.type == DEV_TAPE)// ||out.type ==DEV_TPIMG )
     {
-        if (DOC->pStartOut== PARAM_REWIND)
+        if (DOC->getParamDevOutStart()== PARAM_REWIND)
         {
             tpOut.rewind();
         }
@@ -196,6 +196,7 @@ int tpimgCopy::copyRecord()
     iby = iret;
     DOC->sumOut->start();
     iret = tpOut.write(DOC->buf,iby);
+    qDebug() << "iret = " <<iret;
     DOC->sumOut->elapsed();
     DOC->sumOut->addBytes(iret);
 
@@ -221,12 +222,12 @@ int tpimgCopy::closeIn()
    // in end param:
     if (tpIn.getType() == DEV_TAPE )//||in.type ==DEV_TPIMG )
     {
-        if (DOC->pEndIn == PARAM_REWIND_UNLOAD)
+        if (DOC->getParamDevInEnd() == PARAM_REWIND_UNLOAD)
         {
             tpIn.rewind();
             tpIn.unload();
         }
-        else if (DOC->pEndIn == PARAM_REWIND)
+        else if (DOC->getParamDevInStart() == PARAM_REWIND)
         {
             tpIn.rewind();
         }
@@ -240,12 +241,12 @@ int tpimgCopy::closeOut()
    // out end param:
     if (tpOut.getType() == DEV_TAPE )//||in.type ==DEV_TPIMG )
     {
-        if (DOC->pEndOut == PARAM_REWIND_UNLOAD)
+        if (DOC->getParamDevOutEnd() == PARAM_REWIND_UNLOAD)
         {
             tpOut.rewind();
             tpOut.unload();
         }
-        else if (DOC->pEndOut == PARAM_REWIND)
+        else if (DOC->getParamDevOutEnd() == PARAM_REWIND)
         {
             tpOut.rewind();
         }

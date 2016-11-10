@@ -71,7 +71,7 @@ public:
     void addBytes(int by){bytes += by;};
     void setBytes(int by){bytes = by;};
     /// couner of file;
-    long getFiles(){return files;};;
+    long getFiles(){return files;};
     void addFiles(int by){files += by;};
     void setFiles(int by){files = by;};
 

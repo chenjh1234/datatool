@@ -26,6 +26,9 @@ public:
     void addItem(QStringList it);
     QStringList getList();
     void moveSelectedItem(int where);
+    void setDir(QString dir);
+    int files();
+    QString getDir();
     QStringList listZF;  
 
 public   slots:
