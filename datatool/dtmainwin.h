@@ -148,6 +148,12 @@ public:
     int endReel(); // for more input file of TPIMG
     int endReelTape();// for one TPIMG(or tape) which is more reel data;
     void endJob(int );// end of job process;
+
+    int createNextFile();// copy more reel ,create next file to output:
+    /// 0:ok <0 stop;
+    int appendReel();// locate the position of the tape wehen parameter append != 0;
+    int fromReel();
+    int skipReel(dataIO *d,int);
     
 private slots:
    

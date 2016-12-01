@@ -715,6 +715,31 @@ void dtMainWin::runJob()
       errDlg(str);
       return;
    }
+   i = fromReel();
+   if (i != 0) 
+   {
+       DOC->logFrom(i);
+       str = "cannot found append position";
+       errDlg(str);
+       return;
+   }
+   else
+   {
+       DOC->logFrom(i);
+   }
+
+   i = appendReel();
+   if (i != 0) 
+   {
+       DOC->logAppend(i);
+       str = "cannot found append position";
+       errDlg(str);
+       return;
+   }
+   else
+   {
+       DOC->logAppend(i);
+   }
    DOC->sumStart(); //clear the 4 sums
                     //WOP->btCMD.start();
 //jobview:
@@ -837,7 +862,7 @@ int dtMainWin::endReelTape()
 {
    int i,sz;
    QString str, str1;
-   sz = DOC->getParamReel();
+   sz = DOC->getParamCopyReels();
    qDebug() << "endReelTape reels = " << sz <<DOC->sumReel->size() + 1;
    if (DOC->sumReel->size() + 1 >= sz ) 
    {
@@ -919,5 +944,107 @@ void dtMainWin::slotJobStop()
    DOC->logStop();
 
 }
+int dtMainWin::createNextFile()// copy more reel ,create next file to output:
+{
+    QString name,nname,str;
+    int ic,i;
+    DEV dev;
+    dev = *DOC->devOut;
+    ic = DOC->sumReel->size();
+    name = dev.name;
+    nname =  DOC->getNextName(name,ic);
+    i = pCopy->closeOut();
+    if (i != 0) return -1; 
+    i = pCopy->openOut(dev);
+    if (i != OPEN_OK) return -1;
+    return 0;
+}
+int dtMainWin::fromReel()
+{
+    int from;
+    from = DOC->getParamCopyFrom() -1 ;
+    return skipReel(&pCopy->tpIn,from);
+}
+int dtMainWin::appendReel()
+{
+    int app;
+    app = DOC->getParamCopyAppend();
+    return skipReel(&pCopy->tpOut,app);
+    #if 0
+    int app,ic,ie,i;
+    int len;
+    char buf[TAPE_BLOCK];
+    len = 100;// tape will change to TAPE_BLOCK
+    app = DOC->getParamCopyAppend();
+    if (app <= 0) return 0;
+//
+    if (DOC->devOut->type != DEV_TAPE) return 0;// not tape device;
+// position
+    ic = 0;
+    ie = 0;
+    while (ic == app) 
+    {
+        // skip eof:
+        i = pCopy->tpOut.fileForword();
+        if (i != 0) 
+        {
+            ie = -1;
+            break;
+        }
+        //read a record :
+        i = pCopy->tpOut.read(buf,len);
+        if (i <0 ) 
+        {
+            ie = -1;
+            return;
+        }
+        else if (i == 0) 
+        {// if eof: a reel end (2EOFS)
+            ic++;
+        }
+        //i >0  ,not a 2EOFS continue to find;
+    }
+    return ie; 
+    #endif
+}
+int dtMainWin::skipReel(dataIO *io,int n)
+{
+    int app,ic,ie,i;
+    int len;
+    unsigned char buf[TAPE_BLOCK];
+    DEV dev;
+    dev = io->dev;
 
+    app = n;
+    len = 100;// tape will change to TAPE_BLOCK
+    if (app <= 0) return 0;
+//
+    if (dev.type != DEV_TAPE) return 0;// not tape device;
+// position
+    ic = 0;
+    ie = 0;
+    while (ic == app) 
+    {
+        // skip eof:
+        i = io->fileForword();
+        if (i != 0) 
+        {
+            ie = -1;
+            break;
+        }
+        //read a record :
+        i = io->read(buf,len);
+        if (i <0 ) 
+        {
+            ie = -1;
+            break;
+        }
+        else if (i == 0) 
+        {// if eof: a reel end (2EOFS)
+            ic++;
+        }
+        //i >0  ,not a 2EOFS continue to find;
+    }
+    return ie; 
+}
 

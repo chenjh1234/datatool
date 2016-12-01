@@ -41,7 +41,9 @@ void dtData::init()
    setParamDevInEnd(PARAM_REWIND_UNLOAD);
    setParamDevOutStart(PARAM_REWIND);
    setParamDevOutEnd(PARAM_REWIND_UNLOAD);
-   setParamReel(1);
+   setParamCopyReels(1);
+   setParamCopyFrom(1);
+   setParamCopyReels(0);
 
    //strcpy(ch,fileAppLog().Q2CH);
    //logS->setName(ch);
@@ -55,7 +57,7 @@ void dtData::init()
 }
 int dtData::checkDev()
 {
-   QString str1, str2, str,dfile;
+   QString str1, str2, str, dfile;
    QString err;
    QFile f;
    int ir;
@@ -132,7 +134,7 @@ int dtData::saveTapeConfig(QList<QStringList> sllist)
    QFile f;
    QString s,str,de,comm;
    int i;
-   
+
    s = fileTapeConfig();
    comm = TAPE_COMM;
    de = " ";
@@ -141,15 +143,15 @@ int dtData::saveTapeConfig(QList<QStringList> sllist)
 }
 #endif
 
-int dtData::saveTapeConfig( QStringList slist)
+int dtData::saveTapeConfig(QStringList slist)
 {
    QFile f;
-   QString s;//,str;
-   //int i;
+   QString s; //,str;
+              //int i;
    s = fileTapeConfig();
    qDebug() << "tape config =" << s;
-   return saveListToFile(s,slist);
-    
+   return saveListToFile(s, slist);
+
 }
 #if 0
 QLIst<QStringList> dtData::getTapeConfig()
@@ -168,7 +170,7 @@ QLIst<QStringList> dtData::getTapeConfig()
 QStringList dtData::getTapeConfig()
 {
    QFile f;
-   QString str,s;
+   QString str, s;
    QStringList slist;
 
    s = fileTapeConfig();
@@ -177,105 +179,105 @@ QStringList dtData::getTapeConfig()
 
 #if 0
    f.setFileName(s);
-   if (f.open(QIODevice::ReadOnly |QIODevice::Text )) 
+   if (f.open(QIODevice::ReadOnly |QIODevice::Text ))
    {
-       QTextStream in(&f);     
-       do
-       {
-           in >> str;
-           if (str[0] == "#") continue;          
-           if (str.isNull())
-               slist << str; 
+      QTextStream in(&f);
+      do
+      {
+         in >> str;
+         if (str[0] == "#") continue;
+         if (str.isNull())
+         slist << str;
 
-       }while(!str.isNull());
-       f.close();
+      }while(!str.isNull());
+      f.close();
    }
-   return slist; 
+   return slist;
 #endif
 }
 QString dtData::getLicConfig()
 {
    QFile f;
-   QString s,str;
+   QString s, str;
    QString slist;
-   
+
    s = fileLicConfig();
    f.setFileName(s);
-   if (f.open(QIODevice::ReadOnly |QIODevice::Text )) 
+   if (f.open(QIODevice::ReadOnly | QIODevice::Text))
    {
-       QTextStream in(&f);     
-       //do
+      QTextStream in(&f);
+      //do
       // {
-           in >> str;
-           //if (str.isNull())  
-           //    slist << str; 
+      in >> str;
+      //if (str.isNull())
+      //    slist << str;
       // }while(!str.isNull());
-       f.close();
+      f.close();
    }
-   return str; 
+   return str;
 }
 int dtData::saveLicConfig(QString s)
 {
    QFile f;
    QString str;
    int i = -1;
-   
+
    s = fileLicConfig();
    f.setFileName(s);
-   if (f.open(QIODevice::WriteOnly |QIODevice::Text |QIODevice::Truncate)) 
+   if (f.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
    {
-       QTextStream out(&f);     
-      // for (i =0; i< slist.size(); i++) 
+      QTextStream out(&f);
+      // for (i =0; i< slist.size(); i++)
       // {
-           str = s ;
-           out << str; 
-      // } 
-       f.close();
-       i = 1;
+      str = s;
+      out << str;
+      // }
+      f.close();
+      i = 1;
    }
-   return i; 
+   return i;
 }
 QString dtData::getJobNumber()
 {
    QFile f;
-   QString s,str;
+   QString s, str;
    s = fileJobNumber();
    f.setFileName(s);
-   if (f.open(QIODevice::ReadOnly |QIODevice::Text )) 
+   if (f.open(QIODevice::ReadOnly | QIODevice::Text))
    {
-       QTextStream in(&f);
-       in >> str;
-       f.close();
+      QTextStream in(&f);
+      in >> str;
+      f.close();
    }
-   return str; 
+   return str;
 }
 QString dtData::newJobNumber()
 {
    QFile f;
-   QString s,str;
+   QString s, str;
    int i;
-    
+
    str = getJobNumber();
-   qDebug() << "jobNumber = " <<str;
+   qDebug() << "jobNumber = " << str;
    i = str.toInt();
    if (i >= 9999) i = 0;
    //
-   str = QString("%1").arg(i+1,4,10, QLatin1Char( '0' ));
+   str = QString("%1").arg(i + 1, 4, 10, QLatin1Char('0'));
 
    s = fileJobNumber();
 
    f.setFileName(s);
-   if (f.open(QIODevice::ReadWrite |QIODevice::Text )) 
+   if (f.open(QIODevice::ReadWrite | QIODevice::Text))
    {
-       QTextStream out(&f);
-       out << str;
-       f.close();
+      QTextStream out(&f);
+      out << str;
+      f.close();
    }
-    qDebug() << "new jobNumber = " <<str << s;
-   return str; 
+   qDebug() << "new jobNumber = " << str << s;
+   return str;
 }
 void dtData::sumStart()
-{   
+{
    sumIn->clear();
    sumFile->clear();
    sumOut->clear();
@@ -332,10 +334,10 @@ QString dtData::logDev()
 }
 QString dtData::logInput()
 {
-    QString str;
-    str = getDevInStr();
-    logJ->line(str.Q2CH);
-    return str;
+   QString str;
+   str = getDevInStr();
+   logJ->line(str.Q2CH);
+   return str;
 
 }
 QString dtData::getDevInStr()
@@ -353,23 +355,23 @@ QString dtData::getDevInStr()
    str += QString("   id: ") +  devIn->id +  STR_LR;
    str += QString(" size: ") +  str1.number(devIn->size) +  STR_LR;
    //logJ->line(str.Q2CH);
-    //if fileList:
-   if (devIn->type == DEV_TAPE) 
+   //if fileList:
+   if (devIn->type == DEV_TAPE)
    {
-       str += QString(" reel: ") +  devIn->reel +  STR_LR;
-       str += getDevPositionStr(0);
-       return str;
+      str += QString(" reel: ") +  devIn->reel +  STR_LR;
+      str += getDevPositionStr(0);
+      return str;
    }
    int sz;
    sz = DOC->getDevInFileList().size();
-   if (sz > 0) 
+   if (sz > 0)
    {
-       str += QString("  Input Files:") + QString("%1\n").arg(sz);
+      str += QString("  Input Files:") + QString("%1\n").arg(sz);
    }
    qDebug() << "sz = " << sz;
    for (i = 0; i < sz; i++)
    {
-      str += QString("    %1:").arg(i+1) + DOC->getDevInFileList()[i] + "\n";  
+      str += QString("    %1:").arg(i + 1) + DOC->getDevInFileList()[i] + "\n";
    }
 
    //logJ->line(str.Q2CH);
@@ -378,12 +380,12 @@ QString dtData::getDevInStr()
 }
 QString dtData::logOutput()
 {
-   
-    QString str;
-    //return str;
-    str = getDevOutStr();
-    logJ->line(str.Q2CH);
-    return str;
+
+   QString str;
+   //return str;
+   str = getDevOutStr();
+   logJ->line(str.Q2CH);
+   return str;
 }
 QString dtData::getDevOutStr()
 {
@@ -397,11 +399,11 @@ QString dtData::getDevOutStr()
    str += QString(" type: ") +  str1 +  STR_LR;
    str += QString("   id: ") +  devOut->id +  STR_LR;
    str += QString(" size: ") +  str1.number(devOut->size) +  STR_LR;
-   if (devOut->type == DEV_TAPE) 
+   if (devOut->type == DEV_TAPE)
    {
-       str += QString(" reel: ") +  devOut->reel +  STR_LR;
-       str += getDevPositionStr(1);
-   }  
+      str += QString(" reel: ") +  devOut->reel +  STR_LR;
+      str += getDevPositionStr(1);
+   }
    return str;
 }
 QString dtData::logCMD()
@@ -414,6 +416,34 @@ QString dtData::logCMD()
    return str;
 
 }
+QString dtData::logFrom(int i)
+{
+   QString str, str1;
+   if (getParamCopyFrom() == 1)  return str;
+
+   if (i == 0) 
+       str1 = QString("Append to %1 Reel OK:\n").arg(paramCopyAppend); 
+   else
+       str1 = QString("Append to %1 Reel Failed!!!:\n").arg(paramCopyAppend);
+   logJ->line(str1);
+   logJ->flush();
+   return str1;
+}
+QString dtData::logAppend(int i)
+{
+   QString str, str1;
+   if (getParamCopyAppend() == 1)  return str;
+
+   if (i == 0)
+       str1 = QString("Append to %1 Reel OK:\n").arg(paramCopyAppend); 
+   else
+       str1 = QString("Append to %1 Reel Failed!!!:\n").arg(paramCopyAppend);
+   logJ->line(str1);
+   logJ->flush();
+   return str1;
+
+}
+
 QString dtData::logStop()
 {
    QString str, str1;
@@ -459,10 +489,10 @@ QString dtData::logF()
 }
 QString dtData::logReel()
 {
-    QString str,str1;
-   int reel ;
+   QString str, str1;
+   int reel;
    reel = sumReel->size();
-   str1 = QString("Reel: %1  complete").arg(reel+1);
+   str1 = QString("Reel: %1  complete").arg(reel + 1);
    str = str1 +  strEQ(EQ50 - str1.size()) +  STR_LR;
    logJ->line(str);
    return str;
@@ -540,7 +570,7 @@ QString dtData::logSum()
 }
 void dtData::logClose()
 {
-    logJ->close();
+   logJ->close();
 }
 //app==========================================
 QString dtData::pathApp()
@@ -634,7 +664,7 @@ QString dtData::fileJob(QString f)
 QString dtData::fileTapeConfig()
 {
    QString s;
-   s = pathConfig() ; 
+   s = pathConfig();
    mkdir(s);
    s = s + +MARK_PATH + TAPE_CONFIG;
    return s;
@@ -642,7 +672,7 @@ QString dtData::fileTapeConfig()
 QString dtData::fileParaConfig()
 {
    QString s;
-   s = pathConfig() ; 
+   s = pathConfig();
    mkdir(s);
    s = s + +MARK_PATH + PARA_CONFIG;
    return s;
@@ -650,7 +680,7 @@ QString dtData::fileParaConfig()
 QString dtData::fileLicConfig()
 {
    QString s;
-   s = pathConfig() ; 
+   s = pathConfig();
    mkdir(s);
    s = s + +MARK_PATH + LIC_CONFIG;
    return s;
@@ -658,7 +688,7 @@ QString dtData::fileLicConfig()
 QString dtData::fileJobNumber()
 {
    QString s;
-   s = pathConfig() ; 
+   s = pathConfig();
    mkdir(s);
    s = s + +MARK_PATH + JOBNUMBER_FILE;
    return s;
@@ -692,79 +722,109 @@ qint64 dtData::fileSize(QString s)
 }
 QStringList dtData::getDevInFileList()
 {
-    return devInFileList;
+   return devInFileList;
 }
 void dtData::setDevInFileList(QStringList list)
 {
-    devInFileList = list;
+   devInFileList = list;
 }
 QString dtData::getParamStr(int p)
-    {
-        if(p == PARAM_REWIND) return "REWIND";
-        if(p == PARAM_NOT_REWIND) return "NOT REWIND";
-        if(p == PARAM_REWIND_UNLOAD) return "REWIND_UNLOAD";
-        return "";
-    }
-    int  dtData::getParamReel()
-    {
-        return paramReel;
+{
+   if (p == PARAM_REWIND) return "REWIND";
+   if (p == PARAM_NOT_REWIND) return "NOT REWIND";
+   if (p == PARAM_REWIND_UNLOAD) return "REWIND_UNLOAD";
+   return "";
+}
+//=============copy parameters:======================
+// reels
+void  dtData::setParamCopyReels(int i)
+{
+   paramCopyReels = i;
 
-    }
-    void dtData::setParamReel(int i)
-    {
-        paramReel = i;
+}
+int  dtData::getParamCopyReels()
+{
+   return paramCopyReels;
 
-    }
+}
+//from
+void dtData::setParamCopyFrom(int i)
+{
+   paramCopyFrom = i;
+
+}
+int  dtData::getParamCopyFrom()
+{
+   return paramCopyFrom;
+
+}
+//append
+void dtData::setParamCopyAppend(int i)
+{
+   paramCopyAppend = i;
+
+}
+int  dtData::getParamCopyAppend()
+{
+   return paramCopyAppend;
+
+}
+
+//===========end of copy 
+//===========start of dev================
+int  dtData::getParamDevInStart()
+{
+   return paramInStart;
+}
+void dtData::setParamDevInStart(int i)
+{
+   paramInStart = i;
+}
+int  dtData::getParamDevInEnd()
+{
+   return paramInEnd;
+}
+void dtData::setParamDevInEnd(int i)
+{
+   paramInEnd = i;
+}
 //
-    int  dtData::getParamDevInStart()
-    {
-        return paramInStart;
-    }
-    void dtData::setParamDevInStart(int i)
-    {
-        paramInStart = i;
-    }
-    int  dtData::getParamDevInEnd()
-    {
-        return paramInEnd;
-    }
-    void dtData::setParamDevInEnd(int i)
-    {
-        paramInEnd =i;
-    }
-//
-    int  dtData::getParamDevOutStart()
-    {
-        return paramOutStart;
-    }
-    void dtData::setParamDevOutStart(int i)
-    {
-        paramOutStart = i;
-    }
-    int  dtData::getParamDevOutEnd()
-    {
-        return paramOutEnd;
-    }
-    void dtData::setParamDevOutEnd(int i)
-    {
-         paramOutEnd = i;
-    }
-    QString dtData::getDevPositionStr(int dev)
-    {
-        QString str,str1;
-    
-        str += QString(" tape position: \n");
-        if (dev == 0) 
-            str1 = getParamStr(getParamDevInStart()); 
-        else
-            str1 = getParamStr(getParamDevOutStart()); 
+int  dtData::getParamDevOutStart()
+{
+   return paramOutStart;
+}
+void dtData::setParamDevOutStart(int i)
+{
+   paramOutStart = i;
+}
+int  dtData::getParamDevOutEnd()
+{
+   return paramOutEnd;
+}
+void dtData::setParamDevOutEnd(int i)
+{
+   paramOutEnd = i;
+}
+QString dtData::getDevPositionStr(int dev)
+{
+   QString str, str1;
 
-        str += "  start:" + str1 + "\n";
+   str += QString(" tape position: \n");
+   if (dev == 0) str1 = getParamStr(getParamDevInStart());
+   else str1 = getParamStr(getParamDevOutStart());
 
-        if (dev == 0) 
-            str1 = getParamStr(getParamDevInEnd()); 
-        else
-            str1 = getParamStr(getParamDevOutEnd());
-        str += "   end:" + str1 + "\n"; 
-        return str;
-    }
+   str += "  start:" + str1 + "\n";
+
+   if (dev == 0) str1 = getParamStr(getParamDevInEnd());
+   else str1 = getParamStr(getParamDevOutEnd());
+   str += "   end:" + str1 + "\n";
+   return str;
+}
+QString dtData::getNextName(QString baseName,int id)
+{
+    QString str,rt;
+    str = QString("%1").arg(id,3,10,QLatin1Char('0'));
+    rt = baseName + "_"+str;
+    qDebug() << " getNextName = " << baseName << rt;
+    return rt;
+}

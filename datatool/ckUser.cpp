@@ -114,7 +114,8 @@ string NodeID::getMID()
    filen[j] = 0; j++;
 
 
-   i = dd.getFileID(filen);
+   //i = dd.getFileID(filen);
+   i = dd.getFileTID(filen);
    sprintf(ch, "%08X", i);
    nid3 = ch;
    str = str + ch;
@@ -127,7 +128,8 @@ string NodeID::getMID()
    filen[j] = 'n'; j++;
    filen[j] = 0; j++;
 
-   i = dd.getFileTID(filen);
+   //i = dd.getFileTID(filen);
+   i = dd.getFileID(filen);// found /sbin time changed sometimes:
    sprintf(ch, "%08X", i);
    tid = ch;
    str = str + ch;

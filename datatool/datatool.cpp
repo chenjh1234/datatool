@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
 
     dtData doc;
     app.m_doc = &doc;
+    doc.getNextName("2222",3);
  
     dtMainWin mainWin;
     app.m_win = &mainWin;

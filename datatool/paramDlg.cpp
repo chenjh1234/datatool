@@ -67,12 +67,18 @@ void paramDlg::getParam()
         DOC->setParamDevOutEnd(PARAM_NOT_REWIND); 
 // copy:
     QString str;
-    str = uiCopy.lineEdit->text();
-    DOC->setParamReel(str.toInt());
+    str = uiCopy.lineEditFrom->text();
+    DOC->setParamCopyFrom(str.toInt());
+
+    str = uiCopy.lineEditCopy->text();
+    DOC->setParamCopyReels(str.toInt());
+
+    str = uiCopy.lineEditAppend->text();
+    DOC->setParamCopyAppend(str.toInt());
 
     qDebug() << "devIn Param = "<< DOC->getParamDevInStart() << DOC->getParamDevInEnd() ;
     qDebug() << "devOut Param = "<< DOC->getParamDevOutStart() << DOC->getParamDevOutEnd();
-    qDebug() << "copy Param = "<< DOC->getParamReel();
+    qDebug() << "copy Param = "<< DOC->getParamCopyFrom() <<DOC->getParamCopyReels() <<DOC->getParamCopyAppend();
 
 
 }

@@ -14,20 +14,27 @@
 
 #define ORG_NAME "DATATOOL"
 #define APP_NAME "DataTool"
-#define APP_VERSION "V1.02"
-///2016.11.10:v1.02:  
-//  1: add tape position parmeter: rewind/unload ,not rewind,before abd finished copy
-//  2: muiltyple file input , adjust the file position in the fileList
-//  support more tape copy into one, can get a reel from more reel tape;
+#define APP_VERSION "V1.03"
+#if 0
+2016.12.01:v1.03:  
+   1: add append to parameter:n(0: not append,1:append to 1st reel), copy the data to end of output tape device.
+   2: add copy from paramters:n(1: from first), which reel start to copy( from input device) .
+   3: change mean of copy reel:n(1):copy from multiple reel input device,if n>1 ,copy n reels ,output seprated n files(not a file contain mutiple reels);
+2016.11.10:v1.02:  
+   1: add tape position parmeter: rewind/unload ,not rewind,before abd finished copy
+   2: muiltyple file input , adjust the file position in the fileList
+   3:support more tape copy into one, can get a reel from more reel tape;
 
-/// 2016.10.15:v1.01: change TAPE_BLOCK = 256000 #define TP_UNLOAD "uld" in QTapeIO.h
-///    add sumStart() in dtdata.cpp     apply in mainwindow::jobrun();
-///    DataIO::read  when DEV_TAPE: # //if (ret != iby) ret =  READFILE_ERR; 
-///    sumInfo::clear()
-///    dtmainwin::runThread() :  add wait(), if thread is runing
-///    runPause,runContinue: add runThread(); fix bugs
-///    jobView : insert jobItem at 0 row not append not work why?
-///     QTapeIO: add TPF file
+2016.10.15:v1.01: 
+   1: change TAPE_BLOCK = 256000 #define TP_UNLOAD "uld" in QTapeIO.h
+   2: add sumStart() in dtdata.cpp     apply in mainwindow::jobrun();
+   3: DataIO::read  when DEV_TAPE: # //if (ret != iby) ret =  READFILE_ERR; 
+   4: sumInfo::clear()
+   5: dtmainwin::runThread() :  add wait(), if thread is runing
+   6: runPause,runContinue: add runThread(); fix bugs
+   7: jobView : insert jobItem at 0 row not append not work why?
+   8:  QTapeIO: add TPF file
+#endif
 #define APP_DOC "datatool.pdf"
 #define SHOW_PDF "evince "
 //#define APP_DATE "1.00_2016.09"
@@ -115,6 +122,8 @@ public:
     QString logDev();
     QString logInput();
     QString logOutput();
+    QString logAppend(int i);
+    QString logFrom(int i);
      
     QString logCMD();
     QString logF();
@@ -154,16 +163,27 @@ public:
 //#define  PARAM_REWIND_UNLOAD 0
 //#define  PARAM_REWIND 1
 //#define  PARAM_NOT_REWIND 2
-    
-    int paramInStart,paramInEnd;   // parameters for input dev startcopy or end of copy ,the position of the tape
+
+//device position parameters:
+// parameters for input dev startcopy or end of copy ,the position of the tape
+    int paramInStart,paramInEnd;   
     int paramOutStart,paramOutEnd;
-    int paramReel;         // copy reels: default = 1;
+// copy paramters :
+    int paramCopyFrom;         // copy from which reel (1:defasult)in input device(multyple reel tape device) 
+    int paramCopyReels;         // copy reels: default = 1;  input device(multyple reel tape device)  
+    int paramCopyAppend;    // default = 0;  where to output,override which reel in  output device( is a big tape)
+                            // 0:from start ogf the tape:
+                            // 1:skip first reel (mark 2 eof),output is second reel;
 
     QStringList getDevInFileList(); 
     void setDevInFileList(QStringList list);
     QString getParamStr(int p);
-    int  getParamReel();
-    void setParamReel(int i);
+    int  getParamCopyFrom();
+    void setParamCopyFrom(int i);
+    int  getParamCopyReels();
+    void setParamCopyReels(int i);
+    int  getParamCopyAppend();
+    void setParamCopyAppend(int i);
 //
     int  getParamDevInStart();
     void setParamDevInStart(int i);
@@ -178,6 +198,8 @@ public:
     QString getDevPositionStr(int dev);// 0:in,1 :out
     QString getDevInStr();
     QString getDevOutStr();
+
+    QString getNextName(QString baseName,int id);
 
  
 

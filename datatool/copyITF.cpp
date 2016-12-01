@@ -26,6 +26,8 @@ void copyITF::init()
 }
 void copyITF::wastTime()
 {
+    //return;
+
     int i,num,j;
     num = 123456;//6789;
     for (int i = 0; i <num ;i++)

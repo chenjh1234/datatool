@@ -95,7 +95,7 @@ public:
     qint64 size; //capasity, filesize
     int type;// tape,disk,tapeimg
     QString reel;
-    #if 0
+    #if 1
     DEV  operator = (DEV p)
     {
         name = p.name;
@@ -198,6 +198,7 @@ public:
     qint64 pos();
     int eofFlag ,eotFlag; 
     QMap<int,QString> tpErr;
+    DEV dev;
 private:
    
     int  tapeio(int *iunit,char *opkey);
@@ -214,7 +215,7 @@ private:
     int ifileLen; // read: intLen of the file,write: length of lbuf;
     int ifilePtr;// pointer for ibuf;
     int *ibuf; // pointer to ifileBuf (int of);
-    DEV dev;
+  
     TPF tpf;
 
 };
