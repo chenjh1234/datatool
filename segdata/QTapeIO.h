@@ -69,8 +69,8 @@ tpErr[WRITEFILE_BYTE_ERR] = "WRITEFILE_BYTE_ERR";\
 tpErr[WRITEFILE_TYPE_ERR] = "WRITEFILE_TYPE_ERR";\
 
 
-#define IBLOCK 3 * sizeof(int) // a test
-//#define IBLOCK 200 * 1000 * sizeof(int)
+//#define IBLOCK 3 * sizeof(int) // a test
+#define IBLOCK 200 * 1000 * sizeof(int)
 #define BYTE unsigned char
 // device type:
 
@@ -196,7 +196,7 @@ public:
     qint64  size();
     qint64 seek(qint64 l);
     qint64 pos();
-    int eofFlag ,eotFlag; 
+    int eofFlag, eof2Flag,eotFlag; 
     QMap<int,QString> tpErr;
     DEV dev;
 private:

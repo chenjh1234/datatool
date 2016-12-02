@@ -45,7 +45,7 @@
 #define APP_LOG "log"       //$DATATOOL/APP_CONFIG
 #define APP_LIC "etc"       //$DATATOOL/APP_CONFIG
 // files:
-
+#define TPIMG_M_REEL 0
 #define APP_LOG_FILE "datatool.log" 
 
 #define TAPE_CONFIG "tape.conf" //$DATATOOL/etc/tape.conf
@@ -128,7 +128,10 @@ public:
     QString logCMD();
     QString logF();
     QString logReel();
+    QString logNewReel();
     QString logEnd();
+    QString logErr(QString s);
+    QString logMsg(QString s);
     
     QString logJobEnd(QString s);
     QString logSum();
@@ -198,6 +201,8 @@ public:
     QString getDevPositionStr(int dev);// 0:in,1 :out
     QString getDevInStr();
     QString getDevOutStr();
+    QString getCopyParamStr();
+
 
     QString getNextName(QString baseName,int id);
 

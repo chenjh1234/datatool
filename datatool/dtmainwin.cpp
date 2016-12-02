@@ -687,6 +687,8 @@ bool dtMainWin::startConform()
    msg += str;
    str = DOC->getDevOutStr();
    msg += str;
+   str = DOC->getCopyParamStr();
+   msg += str;
 
    str = "=====================\n ";
    msg += str;
@@ -777,25 +779,35 @@ void dtMainWin::runThread() // begin sum and run thread
 }
 void dtMainWin::slotFileEnd(int sta)
 {
-   qDebug() << "file End st= " << sta << pCopy->cpErr[sta] << DOC->sumFile->size();
+   qDebug() << "slotFileEnd st= " << sta << pCopy->cpErr[sta] << DOC->sumFile->size();
+   int i;
    //sleep(1);
    switch (sta)
    {
    case COPY_EOF:
-      fileEof(); // file
+      fileEof(); // file sumary
       runFile(); //continue
       break;
    case COPY_EOT:
-   case COPY_DOUBLE_EOF:
+   case COPY_EOF2:
+ #if 0
       if (DOC->devIn->type == DEV_DISK)
       {
          fileEof();
          DOC->_iEOT = 0;
       }
       else DOC->_iEOT = 1;
+#endif
       //endJob(0);
-      if(endReel() < 0)
-          endJob(-1);
+      DOC->logReel();
+ 
+// still more reel to input:
+      i = endReel(sta); 
+
+      if(i < 0)  endJob(-1);
+      else if (i ==0)  endJob(0);
+      else if (i > 0) runFile();
+
       break;
    case COPY_STOP_ERR:
       qDebug() << "Job err = " << pCopy->cpErr[sta];
@@ -821,32 +833,36 @@ void dtMainWin::fileEof()
    //sleep(1);
 
 }
-int dtMainWin::endReel()
+int dtMainWin::endReel(int sta)
 {
    int i;
 
    QString str, str1;
 
+ 
 // end of job:
    if (DOC->getDevInFileList().size() <= 1)
    {
-      endReelTape();
-      return 0;
+       // not a multyfile input:
+      return endReelTape(sta);
+      //return 0;
    }
 // multiple file input:
 // log reel:
-   DOC->logReel();
+   
 // if all input down:
    if (DOC->sumReel->size() + 1 >= DOC->getDevInFileList().size()) // not closeed so +1
    {
-      endJob(0);
-      return 0;
+      //DOC->sumReel->elapsed(); in copyclose()
+      //endJob(0);
+      return 0;//endof file 0
    }
     qDebug() << "reelEnd  " ;
 // close in and open:
-   if (pCopy != NULL)
+   if (pCopy != NULL) // new input reel
    {
       pCopy->closeIn();
+      DOC->sumReel->elapsed();
       //  log mark:
       DOC->devIn->name = DOC->getDevInFileList()[DOC->sumReel->size()];
       //qDebug() << "reelEnd ="   <<pCopy;
@@ -854,23 +870,34 @@ int dtMainWin::endReel()
      
       i = pCopy->openIn(*DOC->devIn);
       if (i != OPEN_OK) return i;
+      DOC->sumReel->start();
    }
-   runFile();// go next file;
-   return 0;
+   //runFile();// go next file;
+   return 1;//runFile >0;
 }
-int dtMainWin::endReelTape()
+// multi reel tape input
+int dtMainWin::endReelTape(int sta)
 {
    int i,sz;
    QString str, str1;
    sz = DOC->getParamCopyReels();
-   qDebug() << "endReelTape reels = " << sz <<DOC->sumReel->size() + 1;
-   if (DOC->sumReel->size() + 1 >= sz ) 
+
+   qDebug() << "endReelTape ;Copy reels,current reel = " << sz <<DOC->sumReel->size();
+// if EOT: must be a error,even sz == DOC->sumReel->size()
+   if (sta == COPY_EOT) 
    {
-       endJob(0);
+       str = "No more reel data in input device";
+       DOC->logErr(str);
+       return -1;
+   }
+// end of input tape( int multi reel tape or TPIMG) down:
+  // all thing 
+ 
+   if (DOC->sumReel->size() +1 >= sz) 
+   {
        return 0;
    }
-   DOC->logReel(); 
-
+//  
    qDebug() << "reelMore  " ;
 // close in and open:
    if (pCopy != NULL)
@@ -878,8 +905,18 @@ int dtMainWin::endReelTape()
       DOC->sumReel->elapsed();
       DOC->sumReel->start();   
    }
-   runFile();// go next file;
-   return 0;
+   //DOC->logReel(); 
+   //open new file  
+   i = newOutputReel();
+   if (i <0) 
+   {
+       return i;
+   }
+   // log new file
+   DOC->logNewReel();
+   // go
+   //runFile(); // go next file;
+   return 1;
 }
 void dtMainWin::endJob(int ie)
 {
@@ -944,17 +981,23 @@ void dtMainWin::slotJobStop()
    DOC->logStop();
 
 }
-int dtMainWin::createNextFile()// copy more reel ,create next file to output:
+int dtMainWin::newOutputReel()// copy more reel ,create next file to output:
 {
     QString name,nname,str;
     int ic,i;
     DEV dev;
-    dev = *DOC->devOut;
-    ic = DOC->sumReel->size();
+ 
+    dev = *DOC->devOut; 
+    if (dev.type == DEV_TAPE) return 0;
+    if (TPIMG_M_REEL) return 0;
+
+    ic = DOC->sumReel->size(); 
     name = dev.name;
     nname =  DOC->getNextName(name,ic);
+    
     i = pCopy->closeOut();
     if (i != 0) return -1; 
+    dev.name = nname;
     i = pCopy->openOut(dev);
     if (i != OPEN_OK) return -1;
     return 0;
@@ -1017,16 +1060,18 @@ int dtMainWin::skipReel(dataIO *io,int n)
 
     app = n;
     len = 100;// tape will change to TAPE_BLOCK
+    qDebug() << "skipReels n=" << app;
     if (app <= 0) return 0;
 //
-    if (dev.type != DEV_TAPE) return 0;// not tape device;
+    if (dev.type == DEV_DISK) return 0;// not tape device;
 // position
     ic = 0;
     ie = 0;
-    while (ic == app) 
+    while (ic != app) 
     {
         // skip eof:
         i = io->fileForword();
+        qDebug() << "file forword = " << i;
         if (i != 0) 
         {
             ie = -1;
@@ -1034,6 +1079,7 @@ int dtMainWin::skipReel(dataIO *io,int n)
         }
         //read a record :
         i = io->read(buf,len);
+        qDebug() << "file read = " << i;
         if (i <0 ) 
         {
             ie = -1;

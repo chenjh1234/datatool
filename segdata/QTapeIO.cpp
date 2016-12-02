@@ -107,6 +107,7 @@ void dataIO::init()
    devType = 0;
    eofFlag = 0;
    eotFlag = 0;
+   eof2Flag = 0;
    ifileLen = 0;
    ifileBuf = NULL;
    ifilePtr = 0;
@@ -267,7 +268,8 @@ int dataIO::openTPIMG(QString s, int id)
    qDebug() << "idret =" << ret;
    if (!ret) return OPENFILE_INDEX_ERR;
    qDebug() << "start iopen";
-   if (id == FILEOPEN_READ)
+
+   if (id == FILEOPEN_READ )//|| id == FILEOPEN_RW)
    {
       i =  iOpenRead();
       qDebug() << " iopen read =" << i;
@@ -334,6 +336,7 @@ int dataIO::iNext()
 {
    int bytes;
    //eofFlag = 0;
+   //qDebug() << "iNext ptr,len = " << ifilePtr <<ifileLen ;
    if (ifilePtr >= ifileLen)
    {
       eotFlag = 1;
@@ -367,6 +370,7 @@ qint64 dataIO::iNextF() // point to record after EOF
       if (bytes == 0) return sum;
       sum = sum + bytes;
    }
+   //return sum;
 }
 qint64 dataIO::iPreF() // point to record at EOF
 {
@@ -473,6 +477,7 @@ int dataIO::read(BYTE *buf, int iby)
             {
                eotFlag = 1;
                eofFlag = 1;
+               eof2Flag = 1;
             }
             else ret =  READFILE_ERR;
          }
@@ -492,14 +497,15 @@ int dataIO::read(BYTE *buf, int iby)
          // data block;
          eofFlag = 0;
          eotFlag = 0;
+         eof2Flag = 0;
          // iby = TAPEBLOCK; iret < iby
          //if (ret != iby) ret =  READFILE_ERR;
       }
       else if (bytes == 0)
       {
          // eof: not read data
-         if (eofFlag == 1) eotFlag = 1;
-         eofFlag = 1;
+         if (eofFlag == 1) eof2Flag = 1;
+         //eofFlag = 1;
       }
       else if (bytes < 0) ret = READFILE_BYTE_ERR;
       return ret;
@@ -512,7 +518,7 @@ int dataIO::read(BYTE *buf, int iby)
       //if (ret != sizeof(int)) return READFILE_INDEX_ERR;
       // ifile ptr:
       bytes = iNext();
-      //qDebug() << "iNext bytes = " << bytes;
+      //qDebug() << "iNext read bytes = " << bytes;
 //data:
       if (bytes > 0)
       {
@@ -520,13 +526,16 @@ int dataIO::read(BYTE *buf, int iby)
          //qDebug() << "in read normal = " << eofFlag << eotFlag;
          eofFlag = 0;
          eotFlag = 0;
+         eof2Flag = 0;
+        
          ret = file.read((char *)buf, bytes);
+         // qDebug() << ": read file pos = " << file.pos();
          if (ret != bytes) ret = READFILE_ERR;
       }
       else if (bytes == 0)
       {
          // eof: not read data
-         if (eofFlag == 1) eotFlag = 1;
+         if (eofFlag == 1) eof2Flag = 1;
          eofFlag = 1;
          //qDebug() << "in read eof,eot = " << eofFlag << eotFlag;
          ret = 0;
@@ -605,13 +614,14 @@ int dataIO::write(BYTE *buf, int iby)
       tpf.writeBytes(bytes);
       //ret = ifile.write((char *)&bytes, sizeof(int));
       ret = iWrite((BYTE *)&bytes, sizeof(int)); //TPIMAGfile write                                            //TPF file write;
-      //qDebug() << "after write";
+      //qDebug() << "after write bytes = " << bytes;
       if (ret != sizeof(int)) return WRITEFILE_INDEX_ERR;
 
       if (bytes > 0)
       {
          // data block;
          ret = file.write((char *)buf, bytes);
+         //qDebug() << ": write file pos = " << file.pos();
          if (ret != bytes) return WRITEFILE_ERR;
       }
       else if (bytes == 0)
@@ -698,11 +708,13 @@ int dataIO::fileForword()
       // read ifile util bytes == 0;
 
       bytes = iNextF();
+      qDebug() << "file forword ret = " << bytes;
       if (bytes > 0)
       {
          // data block;
          eofFlag = 0;
          eotFlag = 0;
+         eof2Flag = 0;
          file.seek(file.pos() + bytes);
       }
       if (bytes < 0) return -1;
@@ -746,13 +758,14 @@ int dataIO::recordForword()
       {
          // data block;
          eofFlag = 0;
+         eof2Flag = 0;
          eotFlag = 0;
          file.seek(file.pos() + bytes);
       }
       else if (bytes == 0)
       {
          // eof: not read data
-         if (eofFlag == 1) eotFlag = 1;
+         if (eofFlag == 1) eof2Flag = 1;
          eofFlag = 1;
          ret = 0;
       }
@@ -789,6 +802,7 @@ int dataIO::recordBackword()
       {
          // data block;
          eofFlag = 0;
+         eof2Flag = 0;
          eotFlag = 0;
          file.seek(file.pos() - bytes); // void
 

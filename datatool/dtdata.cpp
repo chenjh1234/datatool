@@ -406,12 +406,26 @@ QString dtData::getDevOutStr()
    }
    return str;
 }
+QString dtData::getCopyParamStr()
+{
+   QString  str,str1;
+   // copy parameters:
+   str1 = "Copy parameters:\n";
+   str = str1 +  strEQ(EQ50 - str1.size()) +  STR_LR;
+   str += QString("Copy reel from: %1\n").arg(getParamCopyFrom());
+   str += QString("Copy reel numbers: %1\n").arg(getParamCopyReels());
+   str += QString("Copy output reel from: %1\n").arg(getParamCopyAppend());
+   return str;
+}
 QString dtData::logCMD()
 {
    QString str, str1;
    str1 = QString("Command:");
    str = str1 +  strEQ(EQ50 - str1.size()) +  STR_LR;
    str += "TPIMG copy\n";
+   // copy parameters:
+   str1 =  getCopyParamStr();
+   str += str1;
    logJ->line(str);
    return str;
 
@@ -432,7 +446,7 @@ QString dtData::logFrom(int i)
 QString dtData::logAppend(int i)
 {
    QString str, str1;
-   if (getParamCopyAppend() == 1)  return str;
+   if (getParamCopyAppend() == 0)  return str;
 
    if (i == 0)
        str1 = QString("Append to %1 Reel OK:\n").arg(paramCopyAppend); 
@@ -476,11 +490,12 @@ QString dtData::logGoon()
 QString dtData::logF()
 {
    QString str;
-   int file, record, bytes, recordAll;
+   int reel,file, record, bytes, recordAll;
+   reel = sumReel->size();
    file = sumFile->size();
    record = sumFile->getFiles() - 1;
    bytes = sumFile->getBytes();
-   recordAll = sumOut->size() - file;
+   recordAll = sumOut->size() - file - reel;
 
    str = QString("File: %1 , record: %2 , bytes: %3 , record All: %4").arg(file).arg(record).arg(bytes).arg(recordAll);
    logJ->line(str);
@@ -492,8 +507,25 @@ QString dtData::logReel()
    QString str, str1;
    int reel;
    reel = sumReel->size();
-   str1 = QString("Reel: %1  complete").arg(reel + 1);
+   str1 = QString("Reel: %1  complete").arg(reel+1);
    str = str1 +  strEQ(EQ50 - str1.size()) +  STR_LR;
+   logJ->line(str);
+   return str;
+
+}
+QString dtData::logNewReel()
+{
+  
+   DEV dev;
+   QString str, str1;
+   int reel;
+   dev = WIN->getCopy()->tpOut.dev;
+   qDebug() << "logNewReel name = " << dev.name;
+   reel = sumReel->size();
+   str1 = QString("Reel: %1  start\n").arg(reel+1);
+   str = str1;
+   str1 = QString("Output Name is : %1  \n").arg(dev.name);
+   str += str1;
    logJ->line(str);
    return str;
 
@@ -516,19 +548,36 @@ QString dtData::logJobEnd(QString s)
    logJ->line(str);
    return str;
 }
+QString dtData::logErr(QString s)
+{
+   QString str ;
+   str  =  QString("Error: ") ;
+   str += s;  
+   logJ->line(str);
+   return str;
+}
+QString dtData::logMsg(QString s)
+{
+    QString str ;
+    str  =  QString("Msg: ") ;
+    str += s;  
+    logJ->line(str);
+}
 QString dtData::logSum()
 {
    QString str, str1;
    long h, m, s, all;
 
-   int file, tm, ctm, bytes, record;
+   int reel,file, tm, ctm, bytes, record;
+   reel = sumReel->size();  // files
    file = sumFile->size();  // files
 
    str1 = QString("    Job Sumary:");
    str = str1 +  strEQ(EQ50 - str1.size()) +  STR_LR;
-   str += QString(" Copy Allfiles: %1").arg(file) +  STR_LR;
+   str += QString(" Copy All Reels: %1").arg(reel) +  STR_LR;
+   str += QString(" Copy All files: %1").arg(file) +  STR_LR;
 
-   record = sumIn->size() - file - _iEOT;
+   record = sumIn->size() - file - reel;// - _iEOT;
    tm = sumIn->getTime();
    ctm = sumIn->getCpu();
    bytes = sumIn->getBytes();
@@ -536,7 +585,7 @@ QString dtData::logSum()
    str += QString(" Input  record: %1 , bytes: %2 , time: %3 , cputime: %4\n")
       .arg(record).arg(bytes).arg(tm).arg(ctm);
 
-   record = sumOut->size() - file - _iEOT;
+   record = sumOut->size() - file - reel;//_iEOT;
 
    tm = sumOut->getTime();
    ctm = sumOut->getCpu();

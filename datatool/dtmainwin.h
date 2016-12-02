@@ -117,6 +117,7 @@ public:
     QAction *helpAct;
 
     QLineEdit *agcEdit ;
+    copyITF  *getCopy(){return pCopy;};
 
  
 protected:
@@ -145,11 +146,11 @@ public:
     void runFile();// start file sum and start Thread; 
     void runThread();// start thread only; 
     void fileEof(); // Eof file sum process; slotFileEnd call it when normal EOF end;
-    int endReel(); // for more input file of TPIMG
-    int endReelTape();// for one TPIMG(or tape) which is more reel data;
+    int endReel(int sta); // for more input file of TPIMG
+    int endReelTape(int sta);// for one TPIMG(or tape) which is more reel data;
     void endJob(int );// end of job process;
 
-    int createNextFile();// copy more reel ,create next file to output:
+    int newOutputReel();// copy more reel ,create next file to output:
     /// 0:ok <0 stop;
     int appendReel();// locate the position of the tape wehen parameter append != 0;
     int fromReel();

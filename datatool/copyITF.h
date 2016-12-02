@@ -8,7 +8,7 @@
 #define COPY_OK 0
 #define COPY_READ_ERR -1
 #define COPY_WRITE_ERR -2
-#define COPY_DOUBLE_EOF -3
+#define COPY_EOF2 -3
 #define COPY_EOT -4
 #define COPY_SKIPED -5
 #define COPY_PAUSE_ERR -6
@@ -25,7 +25,7 @@
 cpErr[COPY_OK] = "OK";\
 cpErr[COPY_READ_ERR] = "COPY_READ_ERR";\
 cpErr[COPY_WRITE_ERR] = "COPY_WRITE_ERR";\
-cpErr[COPY_DOUBLE_EOF] = "COPY_DOUBLE_EOF";\
+cpErr[COPY_EOF2] = "COPY_DOUBLE_EOF";\
 cpErr[COPY_EOT] = "COPY_EOT";\
 cpErr[COPY_SKIPED] = "COPY_SKIPED";\
 cpErr[COPY_PAUSE_ERR] = "COPY_PAUSE_ERR";\
