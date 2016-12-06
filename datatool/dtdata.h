@@ -14,8 +14,12 @@
 
 #define ORG_NAME "DATATOOL"
 #define APP_NAME "DataTool"
-#define APP_VERSION "V1.03"
+#define APP_VERSION "V1.04"
+
 #if 0
+2016.12 :v1.04:  
+   1: add tape analysis
+   2: add  location  toolbars;add dump functions
 2016.12.01:v1.03:  
    1: add append to parameter:n(0: not append,1:append to 1st reel), copy the data to end of output tape device.
    2: add copy from paramters:n(1: from first), which reel start to copy( from input device) .
@@ -44,8 +48,12 @@
 #define APP_CONFIG "etc"       //$DATATOOL/APP_CONFIG
 #define APP_LOG "log"       //$DATATOOL/APP_CONFIG
 #define APP_LIC "etc"       //$DATATOOL/APP_CONFIG
-// files:
+// config:
+//when output device multyple reel(TPIMG) ,if we seprate the output to one file ,or serval files:1: a big file ,0:seprated files
 #define TPIMG_M_REEL 0
+
+// end
+// files:
 #define APP_LOG_FILE "datatool.log" 
 
 #define TAPE_CONFIG "tape.conf" //$DATATOOL/etc/tape.conf

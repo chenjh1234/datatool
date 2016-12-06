@@ -562,6 +562,7 @@ QString dtData::logMsg(QString s)
     str  =  QString("Msg: ") ;
     str += s;  
     logJ->line(str);
+    return str;
 }
 QString dtData::logSum()
 {

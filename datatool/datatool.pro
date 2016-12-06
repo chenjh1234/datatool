@@ -37,6 +37,7 @@ HEADERS += \
          md5.h\
 	 paramDlg.h\
 	 fileListDlg.h\
+	 anaTape.h\
 #	 QTapeData.h\
          ../segdata/QTapeIO.h \
          ../segdata/QSegyADI.h \
@@ -61,6 +62,7 @@ SOURCES += datatool.cpp\
 	 sumInfo.cpp\
 	 paramDlg.cpp\
 	 fileListDlg.cpp\
+	 anaTape.cpp\
 #	 QTapeData.cpp\
         ../segdata/QTapeIO.cpp \
         ../segdata/QSegyADI.cpp \

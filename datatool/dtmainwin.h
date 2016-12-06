@@ -46,6 +46,7 @@
 #include "editdlg.h"
 #include "jobview.h"
 #include "paramDlg.h"
+#include "anaTape.h"
 using namespace std;
 
 class dtMainWin;
@@ -87,12 +88,15 @@ public:
     QMenu *fileMenu;
     QMenu *locationMenu;
     QMenu *runMenu;
+    QMenu *dumpMenu;
     QMenu *helpMenu;
    
 
     QToolBar *fileToolBar;
     QToolBar *locationToolBar;
+    QToolBar *dumpToolBar;
     QToolBar *runToolBar;
+    QToolBar *configToolBar;
     QToolBar *helpToolBar;
   
     QAction *openSegyAct;
@@ -118,6 +122,8 @@ public:
 
     QLineEdit *agcEdit ;
     copyITF  *getCopy(){return pCopy;};
+    anaTape  ana;
+    void addAnaTape();
 
  
 protected:

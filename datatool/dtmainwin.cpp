@@ -70,6 +70,7 @@ dtMainWin::dtMainWin() : QMainWindow()
    createMenus();
    createToolBars();
    createStatusBar();
+   addAnaTape();
 
    readSettings();
 
@@ -302,10 +303,6 @@ void dtMainWin::updateMenus()
 void dtMainWin::createToolBars()
 {
    QString str;
-//file:
-   fileToolBar = addToolBar(tr("File"));
-   //fileToolBar->addAction(openSegyAct);
-   fileToolBar->hide();
 
 
 //location:
@@ -322,6 +319,13 @@ void dtMainWin::createToolBars()
    runToolBar->addAction(runStartAct);
    runToolBar->addAction(runPauseAct);
    runToolBar->addAction(runStopAct);
+   //config:
+      configToolBar = addToolBar(tr("Config"));
+      //fileToolBar->addAction(openSegyAct);
+      //configToolBar->hide();
+      configToolBar->addAction(tapeConfigAct);
+      configToolBar->addAction(paraConfigAct);
+
 //help:
    helpToolBar = addToolBar(tr("Help"));
    helpToolBar->addAction(aboutAct);
@@ -1092,5 +1096,18 @@ int dtMainWin::skipReel(dataIO *io,int n)
         //i >0  ,not a 2EOFS continue to find;
     }
     return ie; 
+}
+void dtMainWin::addAnaTape()
+{
+    locationToolBar  = addToolBar(tr("Location"));
+    dumpToolBar  = addToolBar(tr("Dump"));
+
+    dumpMenu = menuBar()->addMenu(tr("&Dump"));
+ 
+      
+    ana.createActions();
+    ana.createLocationToolBar(locationToolBar);
+    ana.createDumpToolBar(dumpToolBar);
+    ana.createMenus(dumpMenu);
 }
 
