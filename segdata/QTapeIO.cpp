@@ -505,7 +505,7 @@ int dataIO::read(BYTE *buf, int iby)
       {
          // eof: not read data
          if (eofFlag == 1) eof2Flag = 1;
-         //eofFlag = 1;
+         eofFlag = 1;
       }
       else if (bytes < 0) ret = READFILE_BYTE_ERR;
       return ret;
