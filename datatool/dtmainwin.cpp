@@ -71,6 +71,7 @@ dtMainWin::dtMainWin() : QMainWindow()
    createToolBars();
    createStatusBar();
    addAnaTape();
+   addHelp();
 
    readSettings();
 
@@ -261,6 +262,17 @@ void dtMainWin::createActions()
    qDebug() << "create actions ok";
 
 }
+void dtMainWin::addHelp()
+{
+    helpMenu = menuBar()->addMenu(tr("&Help"));
+    helpMenu->addAction(helpAct);
+    helpMenu->addAction(aboutAct);
+
+    //help:
+    helpToolBar = addToolBar(tr("Help"));
+    helpToolBar->addAction(aboutAct);
+}
+
 void dtMainWin::createMenus()
 {
    fileMenu = menuBar()->addMenu(tr("&File"));
@@ -289,9 +301,6 @@ void dtMainWin::createMenus()
    locationMenu->addAction(moveNextAct);
 #endif
 
-   helpMenu = menuBar()->addMenu(tr("&Help"));
-   helpMenu->addAction(helpAct);
-   helpMenu->addAction(aboutAct);
    qDebug() << "create menu";
 
 }
@@ -326,9 +335,6 @@ void dtMainWin::createToolBars()
       configToolBar->addAction(tapeConfigAct);
       configToolBar->addAction(paraConfigAct);
 
-//help:
-   helpToolBar = addToolBar(tr("Help"));
-   helpToolBar->addAction(aboutAct);
 
 #if 0 //  AGC TEST
    str = "AGC window(ms) 0:no AGC";
@@ -1102,12 +1108,12 @@ void dtMainWin::addAnaTape()
     locationToolBar  = addToolBar(tr("Location"));
     dumpToolBar  = addToolBar(tr("Dump"));
 
-    dumpMenu = menuBar()->addMenu(tr("&Dump"));
- 
-      
+    anaMenu = menuBar()->addMenu(tr("&Analisys"));
     ana.createActions();
     ana.createLocationToolBar(locationToolBar);
     ana.createDumpToolBar(dumpToolBar);
-    ana.createMenus(dumpMenu);
+    ana.createMenus(anaMenu);
+
+
 }
 

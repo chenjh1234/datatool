@@ -198,8 +198,9 @@ int tpimgCopy::copyRecord()
       if (tpIn.eotFlag) ist = COPY_EOT;
       qDebug() << "copyRecord EOF ist = " << cpErr[ist];
       //eof : continue  to write:
+      if (tpIn.eotFlag) return ist;// eot not write
    }
-// yes write: data or EOF ,EOT
+// yes write: data or EOF ,not EOT
    iby = iret;
    DOC->sumOut->start();
    iret = tpOut.write(DOC->buf, iby);

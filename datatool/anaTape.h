@@ -24,11 +24,12 @@ public:
     QAction *bSkipRAct;
     QAction *rewindAct;
     QAction *unloadAct;
+    QAction *statusAct;
 // dump:
     QAction *dumpAct;
     QAction *dumpOnlyAct;
 public slots:
-    void slotLocation();
+    //void slotLocation();
     void slotDump();
     void slotDumpOnly();
     void slotSkipF();
@@ -37,6 +38,7 @@ public slots:
     void slotBSkipR();
     void slotRewind();
     void slotUnload();
+    void slotStatus();
      
 private:
     

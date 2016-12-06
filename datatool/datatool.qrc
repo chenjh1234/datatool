@@ -16,6 +16,7 @@
     <file>images/bskipf.png</file>
     <file>images/bskipr.png</file>
     <file>images/rewind.png</file>
+    <file>images/status.png</file>
     <file>images/unload.png</file>
     <file>images/help.png</file>
 </qresource>

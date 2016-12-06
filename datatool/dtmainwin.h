@@ -88,7 +88,7 @@ public:
     QMenu *fileMenu;
     QMenu *locationMenu;
     QMenu *runMenu;
-    QMenu *dumpMenu;
+    QMenu *anaMenu;
     QMenu *helpMenu;
    
 
@@ -124,6 +124,7 @@ public:
     copyITF  *getCopy(){return pCopy;};
     anaTape  ana;
     void addAnaTape();
+    void addHelp();
 
  
 protected:
