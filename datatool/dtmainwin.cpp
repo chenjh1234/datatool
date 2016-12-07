@@ -851,7 +851,8 @@ int dtMainWin::endReel(int sta)
 
  
 // end of job:
-   if (DOC->getDevInFileList().size() <= 1)
+   //if (DOC->getDevInFileList().size() <= 1)   // this is not proper,test failed:
+   if (pCopy->tpIn.dev.type == DEV_TAPE) 
    {
        // not a multyfile input:
       return endReelTape(sta);

@@ -506,7 +506,7 @@ int dataIO::read(BYTE *buf, int iby)
          // eof: not read data
          if (eofFlag == 1) eof2Flag = 1;
          eofFlag = 1;
-         qDebug() << "Tape write EOF ,eofFlag, eof2Flag =" << eofFlag << eof2Flag;
+         qDebug() << "Tape read EOF ,eofFlag, eof2Flag =" << eofFlag << eof2Flag;
       }
       else if (bytes < 0) ret = READFILE_BYTE_ERR;
       return ret;
