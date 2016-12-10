@@ -149,6 +149,7 @@ public:
     int openDev(DEV*d,int mode);
 //
     bool isReady();// true if ready
+    bool isOpen();
 // close
     int rewindClose(); //  for tape:
     int close();
@@ -174,6 +175,8 @@ public:
 
     int recordBackword();//0:ok
     int recordBackword(int num);// treat EOF as a record
+
+    int status();// 0:ok
 
     int setType(int i);
     int getType();

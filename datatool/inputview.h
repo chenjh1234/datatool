@@ -29,10 +29,12 @@ public:
     void setTapes(QStringList list);
     void setOTapes(QStringList list);
     DEV getDev();
+    void setBT(int i);// i==0 normal,i == 1 red;
 public   slots:
     void slotFileOpen();
     void slotFileList();
     void slotComBox(const QString);
+    //void slotOpenDev();
     
 protected:
 private:
@@ -40,7 +42,7 @@ private:
     QString lastDir;
     int m_id;
     //bool _bSetTape; 
-     
+public:
     Ui::FormDev ui;
 };
 #endif

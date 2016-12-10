@@ -125,6 +125,7 @@ public:
     anaTape  ana;
     void addAnaTape();
     void addHelp();
+    void setStatus(QString str);
 
  
 protected:
@@ -162,7 +163,14 @@ public:
     int appendReel();// locate the position of the tape wehen parameter append != 0;
     int fromReel();
     int skipReel(dataIO *d,int);
-    
+//
+    void deviceBT(inputView *v);
+    void deviceClose();
+
+private slots:
+    void slotInputBT();
+    void slotOutputBT();
+      
 private slots:
    
     void slotOpenFile();
@@ -177,10 +185,7 @@ private slots:
     void slotLogView(QTreeWidgetItem * , int  );
     //void slotLog(QString);
     void slotParaConfig();
-
-
-
-     
+  
  
 /**
      * create a compare win,the data is the current data,and 
@@ -192,12 +197,7 @@ private slots:
      * @param  
 */
  
-
-    void slotMoveFirst();
-    void slotMoveLast();
-    void slotMovePre();
-    void slotMoveNext();
-  
+ 
     void slotHelp();
     void slotAbout();
 

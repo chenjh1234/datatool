@@ -138,7 +138,6 @@ int dataIO::openDev(DEV *d, int mode)
       break;
    case DEV_TPIMG:
       return openTPIMG(d->name, mode);
-
    }
    return 0;
 
@@ -295,6 +294,7 @@ int dataIO::rewindClose()
 
    return 0;
 }
+
 int dataIO::close()
 {
    if (devType == DEV_DISK)
@@ -667,6 +667,15 @@ int dataIO::unload()
    }
    return 0;
 }
+// unload:=============================
+int dataIO::status()
+{
+   if (devType == DEV_TAPE)
+   {
+      return tapeio(&iunit, TP_STA);
+   }
+   return 0;
+}
 //eof:================================
 
 int dataIO::writeEOF()
@@ -689,7 +698,10 @@ int dataIO::writeEOF()
    }
    return 0;
 }
-
+bool dataIO::isOpen()
+{
+   return isReady();
+}
 bool dataIO::isReady()
 {
    if (devType != DEV_TAPE)  return file.isOpen();

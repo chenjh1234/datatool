@@ -64,6 +64,7 @@ QStringList fileListDlg::getList()
          listZF << str;
       }
    }
+   qDebug() << " end of getList()";
    return slist;
 }
 void fileListDlg::setDir(QString dir)

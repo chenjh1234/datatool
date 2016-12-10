@@ -33,7 +33,8 @@ void inputView::init()
 // connect File:
    connect(ui.comboBoxTape, SIGNAL(currentIndexChanged(const QString)), this, SLOT(slotComBox(const QString)));
    connect(ui.pushButtonFile, SIGNAL(clicked()), this, SLOT(slotFileOpen()));
-   //connect(ui.pushButtonCheck, SIGNAL(clicked()), this, SLOT(slotFileList()));
+   //connect(ui.pushButtonCheck, SIGNAL(clicked()), this, SLOT(slotOpenDev()));
+   //connect(ui.pushButtonCheck, SIGNAL(clicked()), WIN, SLOT(slotDeviceBT()));
 
 }
 void inputView::slotComBox(const QString str)
@@ -83,10 +84,12 @@ void inputView::slotFileList()
    QString filename, dir, filter, str;
    QStringList slist;
    if (m_id == 1) return; // output device do nothing
+
+
    int i;
 #if 1
    i = fDlg->exec();
-   qDebug() << " fileDlg return=" << i;
+   //qDebug() << " fileDlg return=" << i;
 
    if (i != 0)
    {
@@ -101,8 +104,7 @@ void inputView::slotFileList()
       //qDebug() << "files size = " << slist.size();
       //qDebug() << "files = " << slist;
       // this is default:
-      str = "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-                                      stop: 0 #f6f7fa, stop: 1 #dadbde";
+#if 0
       if (slist.size() > 1)
       {
 
@@ -110,18 +112,43 @@ void inputView::slotFileList()
          //ui.pushButtonCheck->setBackgroundRole(1);//QPalette::Background);
       }
       else ui.pushButtonCheck->setStyleSheet(str);
-
+       
+#endif
       DOC->setDevInFileList(slist);
+       
    }
 #endif
 
 }
+void inputView::setBT(int i)
+{
+    QString str,str1;
+     
+    str = "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde";
+    str1 = "background-color:#993300";
+    if (i == 0) 
+        ui.pushButtonCheck->setStyleSheet(str);
+    else
+        ui.pushButtonCheck->setStyleSheet(str1);
+}
 
 void inputView::slotFileOpen()
 {
-   QString filename, dir, filter;
+   QString filename, dir, filter,ty;
    dir = lastDir;
    filename = "";
+   ty = ui.comboBoxTape->currentText();
+   if (ty != DEVICE_TPIMG) 
+   {
+       ty = "Device type is not a TPIMG";
+       WIN->setStatus(ty);
+
+       return ;// not a disk
+   }
+   ty = "OK";
+   WIN->setStatus(ty);
+ 
 
    filter =  tr("SegFiles (*.sgy *.sgd *.TPIMG);; Allfiles(*.*)");
    if (m_id == 1)
@@ -145,15 +172,17 @@ void inputView::slotFileOpen()
          else if (fDlg->files() > 1)
          {
             slotFileList();
-            filename = fDlg->getList()[0];
+            if (fDlg->files() >0)
+                filename = fDlg->getList()[0];
          }
       }
       else
       {
          slotFileList();
-         filename = fDlg->getList()[0];
+         if (fDlg->files() >0)
+               filename = fDlg->getList()[0];
+          
       }
-
    }
    QFileInfo fi(filename);
    lastDir = fi.absolutePath();
@@ -194,4 +223,4 @@ DEV inputView::getDev()
    }
    return d;
 }
-
+ 

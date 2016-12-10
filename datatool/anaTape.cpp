@@ -98,30 +98,86 @@ void anaTape::slotDumpOnly()
 }
 void anaTape::slotSkipF()
 {
-    qDebug() << "skipF slot";
+    int i,n;
+    QString st;
+    st = "skipF OK";
+    n = 1;
+    i = dio.fileForword(n);
+    if (i != 0)
+        st = "skipF ERR";
+    WIN->msgOut(st);
+    qDebug() << st;
 }
 void anaTape::slotSkipR()
 {
-    qDebug() << "skipR slot";
+    int i,n;
+    QString st;
+    st = "skipR OK";
+    n = 1;
+    i = dio.recordForword(n);
+    if (i != 0)
+        st = "skipR ERR";
+    WIN->msgOut(st);
+    qDebug() << st;
 }
 void anaTape::slotBSkipF()
 {
-    qDebug() << "bskipF slot";
+    int i,n;
+    QString st;
+    st = "back skipF OK";
+    n = 1;
+    i = dio.fileBackword(n);
+    if (i != 0)
+        st = "back skipF ERR";
+    WIN->msgOut(st);
+    qDebug() << st;
 }
 void anaTape::slotBSkipR()
 {
-    qDebug() << "bskipR slot";
+    int i,n;
+    QString st;
+    st = "back skipR OK";
+    n = 1;
+    i = dio.fileBackword(n);
+    if (i != 0)
+        st = "back skipR ERR";
+    WIN->msgOut(st);
+    qDebug() << st;
 }
 void anaTape::slotRewind()
 {
-    qDebug() << "rewind slot";
+    int i,n;
+    QString st;
+    st = "rewind OK";
+    n = 1;
+    i = dio.rewind();
+    if (i != 0)
+        st = "rewind ERR";
+    WIN->msgOut(st);
+    qDebug() << st;
 }
 void anaTape::slotUnload()
 {
-    qDebug() << "unload slot";
+    int i,n;
+    QString st;
+    st = "unload OK";
+    n = 1;
+    i = dio.unload();
+    if (i != 0)
+        st = "unload ERR";
+    WIN->msgOut(st);
+    qDebug() << st;
 }
 void anaTape::slotStatus()
 {
-    qDebug() << "unload slot";
+    int i,n;
+    QString st;
+    st = "status OK";
+    n = 1;
+    i = dio.status();
+    if (i != 0)
+        st = "status ERR";
+    WIN->msgOut(st);
+    qDebug() << st;
 }
 

@@ -6,7 +6,7 @@
 #include <QAction>
 #include <QToolBar>
 #include <QDebug>
-
+#include "QTapeIO.h"
 class anaTape :public QObject
 {
     Q_OBJECT
@@ -28,6 +28,10 @@ public:
 // dump:
     QAction *dumpAct;
     QAction *dumpOnlyAct;
+// dataIO:
+    dataIO dio;
+    DEV dev;
+
 public slots:
     //void slotLocation();
     void slotDump();

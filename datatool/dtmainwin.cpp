@@ -39,6 +39,9 @@ dtMainWin::dtMainWin() : QMainWindow()
 
    inputV = new inputView(this);
    outputV = new inputView(this, 1);
+
+   connect(inputV->ui.pushButtonCheck, SIGNAL(clicked()), this, SLOT(slotInputBT()));
+   connect(outputV->ui.pushButtonCheck, SIGNAL(clicked()), this, SLOT(slotOutputBT()));
    paramD = new paramDlg(this);
 
    QStringList slist;
@@ -460,6 +463,11 @@ void dtMainWin::createStatusBar()
    statusBar()->showMessage(tr("Ready"));
    //qDebug() << "create StatusBar";
 }
+void dtMainWin::setStatus(QString st)
+{
+   statusBar()->showMessage(st);
+   //qDebug() << "create StatusBar";
+}
 
 void dtMainWin::slotOpenFile()
 {
@@ -571,26 +579,49 @@ void dtMainWin::slotLicConfig()
    qDebug() << "lic";
 //moveData(MOVE_LAST);
 }
-void dtMainWin::slotMoveFirst()
+ 
+void dtMainWin::slotInputBT()
 {
-//moveData(MOVE_LAST);
+ 
+     deviceBT(inputV);
 }
-
-void dtMainWin::slotMoveLast()
+void dtMainWin::slotOutputBT()
 {
-//moveData(MOVE_LAST);
+
+     deviceBT(outputV);
 }
-void dtMainWin::slotMovePre()
+void dtMainWin::deviceClose()
 {
-   //(MOVE_PRE);
+   if(ana.dio.isOpen())
+        ana.dio.close();
 
+   inputV->setBT(0);
+   outputV->setBT(0);
 }
-void dtMainWin::slotMoveNext()
+void dtMainWin::deviceBT(inputView *v)
 {
-   //(MOVE_NEXT);
+   int iret;
+   QString st;
+   st = "OK";
+
+   deviceClose();
+
+   ana.dev = v->getDev();
+
+ 
+   iret = ana.dio.openDev(&ana.dev, 0);
+   if (iret != OPENFILE_OK)
+   {
+      
+      st = "open dev error dev = " + ana.dev.name ;
+      qDebug() << "open dev return = " << st;
+   }
+   else
+   {
+       v->setBT(1);
+   }
+   setStatus(st);
 }
-
-
 void dtMainWin::slotParam(int i)
 {
    QString x, y;
@@ -663,6 +694,7 @@ void dtMainWin::slotJobStart()
       return;
    }
    qDebug() << "conform";
+   deviceClose();// close the device if opened for anaTape;
 //log: file open:
    DOC->logJ->setName(DOC->fileJobLog(jbname));
 // begin:
