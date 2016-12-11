@@ -90,21 +90,24 @@ void anaTape::createMenus(QMenu *bar)
 }
 void anaTape::slotDump()
 {
+    if(!isDeviceOpen()) return;
     qDebug() << "dump slot";
 }
 void anaTape::slotDumpOnly()
 {
+    if(!isDeviceOpen()) return;
     qDebug() << "dumpOnly slot";
 }
 void anaTape::slotSkipF()
 {
     int i,n;
     QString st;
+    if(!isDeviceOpen()) return;
     st = "skipF OK";
     n = 1;
     i = dio.fileForword(n);
-    if (i != 0)
-        st = "skipF ERR";
+    if (i < n)
+        st = QString("skipF ERR ret = %1").arg(i);
     WIN->msgOut(st);
     qDebug() << st;
 }
@@ -112,11 +115,12 @@ void anaTape::slotSkipR()
 {
     int i,n;
     QString st;
+    if(!isDeviceOpen()) return;
     st = "skipR OK";
     n = 1;
     i = dio.recordForword(n);
-    if (i != 0)
-        st = "skipR ERR";
+    if (i < n)
+        st = QString("skipR ERR ret = %1").arg(i);
     WIN->msgOut(st);
     qDebug() << st;
 }
@@ -124,23 +128,38 @@ void anaTape::slotBSkipF()
 {
     int i,n;
     QString st;
+    if(!isDeviceOpen()) return;
     st = "back skipF OK";
     n = 1;
     i = dio.fileBackword(n);
-    if (i != 0)
-        st = "back skipF ERR";
+    if (i < n)
+        st = QString("back skipF ERR ret = %1").arg(i);
     WIN->msgOut(st);
     qDebug() << st;
+}
+bool anaTape::isDeviceOpen()
+{
+    
+    QString st;
+    if(!dio.isOpen())
+    {
+        st = "No device opened!!";
+        WIN->msgOut(st);
+        return false;
+    }
+    return true;
 }
 void anaTape::slotBSkipR()
 {
     int i,n;
     QString st;
+    if(!isDeviceOpen()) return;
+      
     st = "back skipR OK";
     n = 1;
     i = dio.fileBackword(n);
-    if (i != 0)
-        st = "back skipR ERR";
+    if (i < n)
+        st = QString("back skipR ERR ret = %1").arg(i);
     WIN->msgOut(st);
     qDebug() << st;
 }
@@ -148,10 +167,11 @@ void anaTape::slotRewind()
 {
     int i,n;
     QString st;
+    if(!isDeviceOpen()) return;
     st = "rewind OK";
     n = 1;
     i = dio.rewind();
-    if (i != 0)
+    if (i == 0)
         st = "rewind ERR";
     WIN->msgOut(st);
     qDebug() << st;
@@ -160,6 +180,7 @@ void anaTape::slotUnload()
 {
     int i,n;
     QString st;
+    if(!isDeviceOpen()) return;
     st = "unload OK";
     n = 1;
     i = dio.unload();
@@ -172,6 +193,7 @@ void anaTape::slotStatus()
 {
     int i,n;
     QString st;
+    if(!isDeviceOpen()) return;
     st = "status OK";
     n = 1;
     i = dio.status();

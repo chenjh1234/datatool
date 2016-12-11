@@ -17,6 +17,7 @@ public:
     void createMenus(QMenu *m);
     void createLocationToolBar(QToolBar *b);
     void createDumpToolBar(QToolBar *b);
+    bool isDeviceOpen();
 // location:
     QAction *skipFAct;
     QAction *skipRAct;
