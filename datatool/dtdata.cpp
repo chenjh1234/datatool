@@ -878,3 +878,73 @@ QString dtData::getNextName(QString baseName,int id)
     qDebug() << " getNextName = " << baseName << rt;
     return rt;
 }
+QString dtData::hexOut( unsigned char *buf,int rby,int line) 
+{
+	// TODO: Add your command handler code here
+	QString out;
+
+	int all_lines,i,j,print_lines;
+	char str[80];
+	int ichs = 16;
+	all_lines = rby/ichs+1;
+//	printf("ic = %d\n",ic);
+	print_lines = line;
+//	if(all_lines < print_lines ) print_lines = all_lines;
+// print hex code
+	if(print_lines <=0) print_lines = 1;
+//	printf("print_lines=%d\n",print_lines);
+
+	for(i = 0;i<print_lines;i++)
+	{
+		//sprintf(str,"%06d | ",rby+i*ichs);
+// adress:
+		sprintf(str,"%06d | ", i*ichs);
+		hexOutStrN(str,out);
+//  hex data :
+		for(j = 0;j<ichs;j++)
+		{
+			if(j != 7 )
+			{
+				sprintf(str,"%02X ",buf[i*ichs+j]);
+				hexOutStrN(str,out);
+			}
+			else
+			{// in middle:
+				sprintf(str,"%02X-",buf[i*ichs+j]);
+				hexOutStrN(str,out);
+			}
+
+		}
+		sprintf(str," | ");
+		hexOutStrN(str,out);
+// ascii code
+		for(j = 0;j<ichs;j++)
+		{
+			if(buf[i*ichs+j] >= 0 && buf[i*ichs+j] <= ichs +1)
+			{
+				sprintf(str,".");
+				hexOutStrN(str,out);
+			}
+			else
+			{
+				sprintf(str,"%1C",buf[i*ichs+j]);
+				hexOutStrN(str,out);
+			}
+		}
+		sprintf(str," ");
+		hexOutStr(str,out);
+	}	// all lines:
+	
+	return out;
+}
+void dtData::hexOutStr(char *str,QString &out)
+{
+	//printf("%s\n",str);
+	out = out + str + "\n";
+}
+void dtData::hexOutStrN(char *str,QString &out)
+{
+	//printf("%s",str);
+	out = out + str ;
+}
+

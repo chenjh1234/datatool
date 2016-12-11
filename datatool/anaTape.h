@@ -18,6 +18,7 @@ public:
     void createLocationToolBar(QToolBar *b);
     void createDumpToolBar(QToolBar *b);
     bool isDeviceOpen();
+    int getOPNumber();
 // location:
     QAction *skipFAct;
     QAction *skipRAct;

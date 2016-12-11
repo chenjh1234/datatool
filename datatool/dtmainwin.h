@@ -87,7 +87,7 @@ public:
 
     QMenu *fileMenu;
     QMenu *locationMenu;
-    QMenu *runMenu;
+    QMenu *jobMenu;
     QMenu *anaMenu;
     QMenu *helpMenu;
    
@@ -95,14 +95,14 @@ public:
     QToolBar *fileToolBar;
     QToolBar *locationToolBar;
     QToolBar *dumpToolBar;
-    QToolBar *runToolBar;
+    QToolBar *jobToolBar;
     QToolBar *configToolBar;
     QToolBar *helpToolBar;
   
     QAction *openSegyAct;
     QAction *tapeConfigAct;
     QAction *licConfigAct;
-    QAction *paraConfigAct;
+    QAction *jobConfigAct;
     QAction *logConfigAct;
  
     QAction *exitAct;
@@ -184,7 +184,7 @@ private slots:
     //void slotLogConfig();
     void slotLogView(QTreeWidgetItem * , int  );
     //void slotLog(QString);
-    void slotParaConfig();
+    void slotJobConfig();
   
  
 /**

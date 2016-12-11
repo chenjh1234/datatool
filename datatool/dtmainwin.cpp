@@ -225,10 +225,10 @@ void dtMainWin::createActions()
    logConfigAct->setStatusTip(tr("log"));
    connect(logConfigAct, SIGNAL(triggered()), this, SLOT(slotLogConfig()));
 #endif
-   paraConfigAct = new QAction(QIcon(":/images/paraconfig.png"), tr("paraConfig"), this);
+   jobConfigAct = new QAction(QIcon(":/images/paraconfig.png"), tr("jobConfig"), this);
    //moveFirstAct->setShortcuts(QKeySequence::Quit);
-   paraConfigAct->setStatusTip(tr("parameters"));
-   connect(paraConfigAct, SIGNAL(triggered()), this, SLOT(slotParaConfig()));
+   jobConfigAct->setStatusTip(tr("parameters"));
+   connect(jobConfigAct, SIGNAL(triggered()), this, SLOT(slotJobConfig()));
 
 
 //location:
@@ -287,15 +287,15 @@ void dtMainWin::createMenus()
    //fileMenu->addAction(logConfigAct);
    // fileMenu->addAction(licConfigAct);
 
-   fileMenu->addAction(paraConfigAct);
+   fileMenu->addAction(jobConfigAct);
 
    fileMenu->addAction(exitAct);
 
 
-   runMenu = menuBar()->addMenu(tr("&Run"));
-   runMenu->addAction(runStartAct);
-   runMenu->addAction(runPauseAct);
-   runMenu->addAction(runStopAct);
+   jobMenu = menuBar()->addMenu(tr("&Job"));
+   jobMenu->addAction(runStartAct);
+   jobMenu->addAction(runPauseAct);
+   jobMenu->addAction(runStopAct);
 #if 0
    locationMenu = menuBar()->addMenu(tr("&Location"));
    locationMenu->addAction(moveFirstAct);
@@ -326,17 +326,17 @@ void dtMainWin::createToolBars()
    locationToolBar->addAction(moveLastAct);
 #endif
 //run:
-   runToolBar = addToolBar(tr("Run"));
+   jobToolBar = addToolBar(tr("Job"));
    //qDebug()<< runStartAct;
-   runToolBar->addAction(runStartAct);
-   runToolBar->addAction(runPauseAct);
-   runToolBar->addAction(runStopAct);
+   jobToolBar->addAction(runStartAct);
+   jobToolBar->addAction(runPauseAct);
+   jobToolBar->addAction(runStopAct);
    //config:
       configToolBar = addToolBar(tr("Config"));
       //fileToolBar->addAction(openSegyAct);
       //configToolBar->hide();
       configToolBar->addAction(tapeConfigAct);
-      configToolBar->addAction(paraConfigAct);
+      configToolBar->addAction(jobConfigAct);
 
 
 #if 0 //  AGC TEST
@@ -547,7 +547,7 @@ void dtMainWin::slotTapeConfig()
 
    qDebug() << "tape";
 }
-void dtMainWin::slotParaConfig()
+void dtMainWin::slotJobConfig()
 {
    qDebug() << "para";
    paramD->exec();

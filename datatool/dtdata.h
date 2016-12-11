@@ -150,6 +150,9 @@ public:
     void logClose();
 
     void sumStart();//clear sums
+    QString hexOut( unsigned char *buf,int rby,int line);
+    void hexOutStr(char *str,QString &out);// append str with \n
+    void hexOutStrN(char *str,QString &out); // append no \n
  
 
     logFile *logJ,*logS;
@@ -179,7 +182,7 @@ public:
 // parameters for input dev startcopy or end of copy ,the position of the tape
     int paramInStart,paramInEnd;   
     int paramOutStart,paramOutEnd;
-// copy paramters :
+// job paramters :
     int paramCopyFrom;         // copy from which reel (1:defasult)in input device(multyple reel tape device) 
     int paramCopyReels;         // copy reels: default = 1;  input device(multyple reel tape device)  
     int paramCopyAppend;    // default = 0;  where to output,override which reel in  output device( is a big tape)
@@ -210,7 +213,6 @@ public:
     QString getDevInStr();
     QString getDevOutStr();
     QString getCopyParamStr();
-
 
     QString getNextName(QString baseName,int id);
 
