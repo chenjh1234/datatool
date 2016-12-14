@@ -7,7 +7,9 @@ anaTape::anaTape()
 }
 void anaTape::init()
 {
-   
+   dioIn = new dataIO();
+   dioOut = new dataIO();
+   dio = NULL;
 }
 void anaTape::createActions()
 {
@@ -48,7 +50,22 @@ void anaTape::createActions()
 // stat
     statusAct = new QAction(QIcon(":/images/status.png"), tr("status"), WIN);
     statusAct->setStatusTip(tr("tape status"));
-    connect( statusAct, SIGNAL(triggered()), this, SLOT(slotStat()));
+    connect( statusAct, SIGNAL(triggered()), this, SLOT(slotStatus()));
+// copy
+ 
+    copyfAct = new QAction(QIcon(":/images/copyf.png"), tr("copy file"), WIN);
+    copyfAct->setStatusTip(tr("copy file"));
+    connect( copyfAct, SIGNAL(triggered()), this, SLOT(slotCopyf()));
+// copr
+ 
+    copyrAct = new QAction(QIcon(":/images/copyr.png"), tr("copy record"), WIN);
+    copyrAct->setStatusTip(tr("copy record"));
+    connect( copyrAct, SIGNAL(triggered()), this, SLOT(slotCopyr()));
+// write eof
+ 
+    eofAct = new QAction(QIcon(":/images/eof.png"), tr("write eof"), WIN);
+    eofAct->setStatusTip(tr("write eof"));
+    connect( eofAct, SIGNAL(triggered()), this, SLOT(slotEof()));
 
 
 }
@@ -68,9 +85,14 @@ void anaTape::createDumpToolBar(QToolBar *bar)
 {
     bar->addAction(dumpAct);
     bar->addAction(dumpOnlyAct);
-    bar->addAction(statusAct);
-     
-   
+    //bar->addAction(statusAct);     
+}
+void anaTape::createCopyToolBar(QToolBar *bar)
+{
+    bar->addAction(copyfAct);
+    bar->addAction(copyrAct);
+    bar->addAction(eofAct);
+    //bar->addAction(statusAct);     
 }
 void anaTape::createMenus(QMenu *bar)
 {
@@ -90,13 +112,29 @@ void anaTape::createMenus(QMenu *bar)
 }
 int anaTape::getOPNumber()
 {
-    return 1;
+    return DOC->opNumber;
 }
+bool anaTape::isCopyDeviceOpen()
+{
+    DEV devIn,devOut;
+    devIn = WIN->inputV->getDev();
+    devOut = WIN->outputV->getDev();
+    QString st;
+    if(!dio->isOpen())
+    {
+        st = "No device opened!!";
+        WIN->msgOut(st);
+        return false;
+    }
+    return true;
+}
+
+
 bool anaTape::isDeviceOpen()
 {
     
     QString st;
-    if(!dio.isOpen())
+    if(!dio->isOpen())
     {
         st = "No device opened!!";
         WIN->msgOut(st);
@@ -108,20 +146,19 @@ void anaTape::slotDump()
 {
     int i,n,iret,iby,line;
     QString st;
-    unsigned char buf[TAPE_BLOCK];
-    
     st = "OK";
-    line = 10;
+    line = DOC->dumpLines;
     if(!isDeviceOpen()) return;
+
     iby = TAPE_BLOCK;
     n = getOPNumber();
     for (i = 0; i < n ; i++)
     {
-        memset(buf,'\0',TAPE_BLOCK);
-        iret = dio.read(buf,iby);
+        memset(buf,'\0',iby);
+        iret = dio->read(buf,iby);
         if (iret == 0)
         {
-            if (dio.eotFlag)
+            if (dio->eotFlag)
                 st = "EOT";
             else
                 st = QString("EOF");
@@ -138,17 +175,25 @@ void anaTape::slotDump()
         {
             st = QString("ERR,ret = %1\n").arg(iret);
             WIN->msgOut(st);
-        }
-         
-
+        }    
     }
 
     qDebug() << "dump slot";
 }
 void anaTape::slotDumpOnly()
 {
-    if(!isDeviceOpen()) return;
-    qDebug() << "dumpOnly slot";
+    
+    int i,iby,line;
+    QString st;   
+    st = "OK";
+    line = DOC->dumpLines;
+    iby = TAPE_BLOCK;
+ 
+    st = QString("dump last read \n");
+    WIN->msgOut(st);
+    st = DOC->hexOut(buf,iby,line);
+    WIN->msgOut(st);
+
 }
 void anaTape::slotSkipF()
 {
@@ -157,7 +202,7 @@ void anaTape::slotSkipF()
     if(!isDeviceOpen()) return;
     st = "skipF OK";
     n = getOPNumber();
-    i = dio.fileForword(n);
+    i = dio->fileForword(n);
     if (i < n)
         st = QString("skipF ERR ret = %1").arg(i);
     WIN->msgOut(st);
@@ -170,7 +215,7 @@ void anaTape::slotSkipR()
     if(!isDeviceOpen()) return;
     st = "skipR OK";
     n = getOPNumber();
-    i = dio.recordForword(n);
+    i = dio->recordForword(n);
     if (i < n)
         st = QString("skipR ERR ret = %1").arg(i);
     WIN->msgOut(st);
@@ -183,7 +228,7 @@ void anaTape::slotBSkipF()
     if(!isDeviceOpen()) return;
     st = "back skipF OK";
     n = getOPNumber();
-    i = dio.fileBackword(n);
+    i = dio->fileBackword(n);
     if (i < n)
         st = QString("back skipF ERR ret = %1").arg(i);
     WIN->msgOut(st);
@@ -198,7 +243,7 @@ void anaTape::slotBSkipR()
       
     st = "back skipR OK";
     n = getOPNumber();
-    i = dio.recordBackword(n);
+    i = dio->recordBackword(n);
     if (i < n)
         st = QString("back skipR ERR ret = %1").arg(i);
     WIN->msgOut(st);
@@ -210,7 +255,7 @@ void anaTape::slotRewind()
     QString st;
     if(!isDeviceOpen()) return;
     st = "rewind OK";
-    i = dio.rewind();
+    i = dio->rewind();
     if (i == 0)
         st = "rewind ERR";
     WIN->msgOut(st);
@@ -222,7 +267,7 @@ void anaTape::slotUnload()
     QString st;
     if(!isDeviceOpen()) return;
     st = "unload OK";
-    i = dio.unload();
+    i = dio->unload();
     if (i != 0)
         st = "unload ERR";
     WIN->msgOut(st);
@@ -234,9 +279,37 @@ void anaTape::slotStatus()
     QString st;
     if(!isDeviceOpen()) return;
     st = "status OK";
-    i = dio.status();
+    i = dio->status();
     if (i != 0)
         st = "status ERR";
+    WIN->msgOut(st);
+    qDebug() << st;
+}
+void anaTape::slotEof()
+{
+    int i;
+    QString st;
+    
+    st = "EOF";
+    WIN->msgOut(st);
+    qDebug() << st;
+}
+void anaTape::slotCopyf()
+{
+    int i;
+    QString st;
+  
+    st = "copyf";
+    WIN->msgOut(st);
+    qDebug() << st;
+}
+void anaTape::slotCopyr()
+{
+    int i;
+    QString st;
+    if(!isDeviceOpen()) return;
+     
+    st = "copyr";
     WIN->msgOut(st);
     qDebug() << st;
 }

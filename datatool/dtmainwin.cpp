@@ -75,6 +75,8 @@ dtMainWin::dtMainWin() : QMainWindow()
    createStatusBar();
    addAnaTape();
    addHelp();
+   connect(windowMapper, SIGNAL(mapped(int)),
+           this, SLOT(slotParam(int)));
 
    readSettings();
 
@@ -337,7 +339,13 @@ void dtMainWin::createToolBars()
       //configToolBar->hide();
       configToolBar->addAction(tapeConfigAct);
       configToolBar->addAction(jobConfigAct);
-
+      //
+     numberToolBar = addToolBar(tr("Number"));
+     str = "OP NUmber:";
+     numberToolBar->addWidget(createSpinWidget("NUmber", str, PARAM_NUMBER_OP, 1, 1, 100, 1));
+     str = "Dump lines:";
+     numberToolBar->addWidget(createSpinWidget("Lines", str, PARAM_NUMBER_LINE, 10, 1, 100, 1));
+      
 
 #if 0 //  AGC TEST
    str = "AGC window(ms) 0:no AGC";
@@ -582,38 +590,37 @@ void dtMainWin::slotLicConfig()
  
 void dtMainWin::slotInputBT()
 {
- 
+     ana.dio = ana.dioIn;
      deviceBT(inputV);
 }
 void dtMainWin::slotOutputBT()
 {
-
+     ana.dio = ana.dioOut;
      deviceBT(outputV);
 }
 void dtMainWin::deviceClose()
 {
-   if(ana.dio.isOpen())
-        ana.dio.close();
+   if(ana.dio->isOpen())
+        ana.dio->close();
 
    inputV->setBT(0);
-   outputV->setBT(0);
+   outputV->setBT(0);// color 
 }
 void dtMainWin::deviceBT(inputView *v)
 {
    int iret;
    QString st;
    st = "OK";
+   DEV dev;
 
    deviceClose();
 
-   ana.dev = v->getDev();
-
- 
-   iret = ana.dio.openDev(&ana.dev, 0);
+   dev = v->getDev();
+   iret = ana.dio->openDev(&dev, 0);
    if (iret != OPENFILE_OK)
    {
       
-      st = "open dev error dev = " + ana.dev.name ;
+      st = "open dev error dev = " + dev.name ;
       qDebug() << "open dev return = " << st;
    }
    else
@@ -627,7 +634,22 @@ void dtMainWin::slotParam(int i)
    QString x, y;
    //bool b;
    // int num, j;
-
+   //#define PARAM_NUMBER_OP 10
+   if (i == PARAM_NUMBER_OP)
+   {
+        QSpinBox *b = (QSpinBox *)windowMapper->mapping(PARAM_NUMBER_OP);
+         //qDebug() << " rmx text = " << b->value();
+        DOC->opNumber = b->value();   
+         qDebug() << "number = " <<DOC->opNumber ;
+     
+   }
+   if (i == PARAM_NUMBER_LINE)
+   {
+        QSpinBox *b = (QSpinBox *)windowMapper->mapping(PARAM_NUMBER_LINE);
+         //qDebug() << " rmx text = " << b->value();
+        DOC->dumpLines = b->value();   
+         qDebug() << "lines = " <<DOC->dumpLines ;
+   }
    if (i == PARAM_AMP_AGC)
    {
       //qDebug() << "agc idx = " << i << agcEdit;
@@ -1140,12 +1162,14 @@ void dtMainWin::addAnaTape()
 {
     locationToolBar  = addToolBar(tr("Location"));
     dumpToolBar  = addToolBar(tr("Dump"));
+    copyToolBar  = addToolBar(tr("Copy"));
 
     anaMenu = menuBar()->addMenu(tr("&Analisys"));
     ana.createActions();
     ana.createLocationToolBar(locationToolBar);
     ana.createDumpToolBar(dumpToolBar);
     ana.createMenus(anaMenu);
+    ana.createCopyToolBar(copyToolBar);
 
 
 }

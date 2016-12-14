@@ -188,7 +188,8 @@ public:
     int paramCopyAppend;    // default = 0;  where to output,override which reel in  output device( is a big tape)
                             // 0:from start ogf the tape:
                             // 1:skip first reel (mark 2 eof),output is second reel;
-
+//number:
+    int opNumber,dumpLines;
     QStringList getDevInFileList(); 
     void setDevInFileList(QStringList list);
     QString getParamStr(int p);

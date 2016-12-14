@@ -35,6 +35,9 @@
 #define MOVE_NEXT 3
 
 #define PARAM_AMP_AGC 44
+
+#define PARAM_NUMBER_OP 10
+#define PARAM_NUMBER_LINE 11
  
 #define LINEEDIT_WIDTH 32
 
@@ -95,9 +98,11 @@ public:
     QToolBar *fileToolBar;
     QToolBar *locationToolBar;
     QToolBar *dumpToolBar;
+    QToolBar *copyToolBar;
     QToolBar *jobToolBar;
     QToolBar *configToolBar;
     QToolBar *helpToolBar;
+    QToolBar *numberToolBar;
   
     QAction *openSegyAct;
     QAction *tapeConfigAct;
@@ -139,7 +144,7 @@ protected:
 
     QGridLayout *devLay;
     QWidget *devV;
-    inputView *inputV,*outputV;
+    
     paramDlg *paramD;
 
     jobView *jobV;
@@ -149,6 +154,7 @@ protected:
     copyITF  *pCopy;
     QProcess hrun;
 public:
+    inputView *inputV,*outputV;
     bool startConform();// not completed
     void runJob();// new a thread, start run job
     void runFile();// start file sum and start Thread; 

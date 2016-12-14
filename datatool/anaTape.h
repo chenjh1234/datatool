@@ -17,7 +17,9 @@ public:
     void createMenus(QMenu *m);
     void createLocationToolBar(QToolBar *b);
     void createDumpToolBar(QToolBar *b);
+    void createCopyToolBar(QToolBar *b);
     bool isDeviceOpen();
+    bool isCopyDeviceOpen();
     int getOPNumber();
 // location:
     QAction *skipFAct;
@@ -30,14 +32,27 @@ public:
 // dump:
     QAction *dumpAct;
     QAction *dumpOnlyAct;
+// copy:
+    QAction *copyfAct;
+    QAction *copyrAct;
+    QAction *eofAct;
 // dataIO:
-    dataIO dio;
-    DEV dev;
+    dataIO *dio,*dioIn,*dioOut;
+   // DEV dev;
+   // DEV devIn,devOut;
+    unsigned char buf[TAPE_BLOCK];
 
 public slots:
     //void slotLocation();
+// dump
     void slotDump();
     void slotDumpOnly();
+//copy
+    void slotCopyf();
+    void slotCopyr();
+    void slotEof();
+
+//location
     void slotSkipF();
     void slotSkipR();
     void slotBSkipF();

@@ -26,6 +26,8 @@ void dtData::init()
    //m_dataName = "";
    // m_dataType = 0;
    // char ch[256];
+   opNumber = 1;
+   dumpLines = 10;
 
    devIn = new DEV();
    devOut = new DEV();
