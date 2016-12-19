@@ -30,6 +30,9 @@ public:
     void setOTapes(QStringList list);
     DEV getDev();
     void setBT(int i);// i==0 normal,i == 1 red;
+    bool isInput();
+    bool isOutput();
+ 
 public   slots:
     void slotFileOpen();
     void slotFileList();

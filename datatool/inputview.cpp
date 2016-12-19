@@ -15,6 +15,17 @@ inputView::~inputView()
 {
 
 }
+bool inputView::isInput()
+{
+    if (m_id == 0) return true;
+    else return false;
+}
+bool inputView::isOutput()
+{
+    if(isInput()) return false;
+    else
+        return true;
+}
 void inputView::init()
 {
    ui.setupUi(this);

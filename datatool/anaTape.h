@@ -7,6 +7,7 @@
 #include <QToolBar>
 #include <QDebug>
 #include "QTapeIO.h"
+#include "copyITF.h"
 class anaTape :public QObject
 {
     Q_OBJECT
@@ -18,9 +19,12 @@ public:
     void createLocationToolBar(QToolBar *b);
     void createDumpToolBar(QToolBar *b);
     void createCopyToolBar(QToolBar *b);
-    bool isDeviceOpen();
-    bool isCopyDeviceOpen();
+    bool isDeviceOpen();  // is open foe location,dump dio=== dioIn or dioOut
+    bool isCopyDeviceOpen();// is open for copy; dioIn, & dioOut (if not open it)
     int getOPNumber();
+    void deviceClose();// close in out 
+    int copyRecord();
+    int copyFile();
 // location:
     QAction *skipFAct;
     QAction *skipRAct;
@@ -41,6 +45,7 @@ public:
    // DEV dev;
    // DEV devIn,devOut;
     unsigned char buf[TAPE_BLOCK];
+    int lastRecords;// In copyFile function, record copyed in the last call
 
 public slots:
     //void slotLocation();

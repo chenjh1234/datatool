@@ -588,47 +588,7 @@ void dtMainWin::slotLicConfig()
 //moveData(MOVE_LAST);
 }
  
-void dtMainWin::slotInputBT()
-{
-     ana.dio = ana.dioIn;
-     deviceBT(inputV);
-}
-void dtMainWin::slotOutputBT()
-{
-     ana.dio = ana.dioOut;
-     deviceBT(outputV);
-}
-void dtMainWin::deviceClose()
-{
-   if(ana.dio->isOpen())
-        ana.dio->close();
 
-   inputV->setBT(0);
-   outputV->setBT(0);// color 
-}
-void dtMainWin::deviceBT(inputView *v)
-{
-   int iret;
-   QString st;
-   st = "OK";
-   DEV dev;
-
-   deviceClose();
-
-   dev = v->getDev();
-   iret = ana.dio->openDev(&dev, 0);
-   if (iret != OPENFILE_OK)
-   {
-      
-      st = "open dev error dev = " + dev.name ;
-      qDebug() << "open dev return = " << st;
-   }
-   else
-   {
-       v->setBT(1);
-   }
-   setStatus(st);
-}
 void dtMainWin::slotParam(int i)
 {
    QString x, y;
@@ -1172,5 +1132,94 @@ void dtMainWin::addAnaTape()
     ana.createCopyToolBar(copyToolBar);
 
 
+}
+void dtMainWin::slotInputBT()
+{
+     ana.dio = ana.dioIn;
+     deviceBT(inputV);
+}
+void dtMainWin::slotOutputBT()
+{
+     ana.dio = ana.dioOut;
+     deviceBT(outputV);
+}
+void dtMainWin::deviceClose()
+{
+   if(ana.dioIn->isOpen())
+        ana.dioIn->close();
+   if(ana.dioOut->isOpen())
+        ana.dioOut->close();
+   ana.dio = ana.dioIn;
+
+   inputV->setBT(0);
+   outputV->setBT(0);// color 
+}
+int dtMainWin::deviceBT(inputView *v)
+{
+   int iret;
+   QString st;
+   st = "OK";
+   DEV dev;
+   //qDebug() << " in device BT" << v;
+
+   deviceClose();
+    // qDebug() << " in device BT1" << v;
+
+   dev = v->getDev();
+   if (v->isInput()) ana.dio = ana.dioIn;
+   else ana.dio = ana.dioOut;
+    
+   iret = ana.dio->openDev(&dev, 0);
+   if (iret != OPENFILE_OK)
+   {
+      
+      st = "open dev error dev = " + dev.name ;
+      qDebug() << "open dev return = " << st;
+   }
+   else
+   {
+       v->setBT(1);
+   }
+   setStatus(st);
+   if(st == "OK") return 0;
+   else return -1;
+}
+int dtMainWin::deviceOpen(inputView *v)
+{
+   int iret;
+   QString st;
+   st = "OK";
+   DEV dev;
+   //qDebug() << " in device BT" << v;
+
+  // deviceClose();
+    // qDebug() << " in device BT1" << v;
+
+   dev = v->getDev();
+   if (v->isInput()) 
+   {
+       ana.dio = ana.dioIn;
+       iret = ana.dio->openDev(&dev, 0);
+   }
+   else 
+   {
+       ana.dio = ana.dioOut;
+       iret = ana.dio->openDev(&dev, 1);
+   }
+    
+   
+   if (iret != OPENFILE_OK)
+   {
+      
+      st = "open dev error dev = " + dev.name ;
+      qDebug() << "open dev return = " << st;
+   }
+   else
+   {
+       v->setBT(1);
+   }
+   setStatus(st);
+   if(st == "OK") return 0;
+   else return -1;
 }
 

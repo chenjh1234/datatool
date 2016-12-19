@@ -170,12 +170,13 @@ public:
     int fromReel();
     int skipReel(dataIO *d,int);
 //
-    void deviceBT(inputView *v);
-    void deviceClose();
+    int deviceBT(inputView *v); // open device for ana,dump(open only one device)
+    void deviceClose();// close input output device for ana
+    int deviceOpen(inputView *v);// open device for copy (open both)
 
 private slots:
-    void slotInputBT();
-    void slotOutputBT();
+    void slotInputBT(); // pressed inputview pushbutton
+    void slotOutputBT();//pressed outpouview pushbutton
       
 private slots:
    
