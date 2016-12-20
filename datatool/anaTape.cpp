@@ -402,7 +402,6 @@ int anaTape::copyRecord()
 //read:
 //DOC->sumIn->start();
    iret = dioIn->read(buf, iby);
-   //wastTime();
    //DOC->sumIn->elapsed();
    //DOC->sumIn->addBytes(iret);
    if (iret < 0)
@@ -479,7 +478,7 @@ int anaTape::copyFile()
          // ir --;
          break;
       }
-      else if (iret < COPY_OK) 
+      else if (iret < COPY_OK) // err
       {
           ir --;
           break;

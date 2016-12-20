@@ -29,7 +29,7 @@ void copyITF::wastTime()
     //return;
 
     int i,num,j;
-    num = 123456;//6789;
+    num = 1234567890;//6789;
     for (int i = 0; i <num ;i++)
     {
          j = i;

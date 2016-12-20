@@ -74,6 +74,7 @@ dtMainWin::dtMainWin() : QMainWindow()
    createToolBars();
    createStatusBar();
    addAnaTape();
+   //locationToolBar->setEnabled(false);
    addHelp();
    connect(windowMapper, SIGNAL(mapped(int)),
            this, SLOT(slotParam(int)));
@@ -964,7 +965,8 @@ void dtMainWin::endJob(int ie)
    DOC->logSum();
    DOC->logClose();
    //DOC->sumEnd();// sumStart() is enough;
-   WOP->btCMD.clear();
+   //WOP->btCMD.clear();
+   WOP->btCMD.endJob();
    str = QString("Job End = ") + QString("%1 , ").arg(ie) +  DOC->_jobname;
    msgOut(str);
    jobV->jobEnd(ie);
@@ -1222,4 +1224,10 @@ int dtMainWin::deviceOpen(inputView *v)
    if(st == "OK") return 0;
    else return -1;
 }
-
+void dtMainWin::setEnabledToolbar(QToolBar *bar,bool b)
+{
+    if(b)
+        bar->setEnabled(true);
+    else
+        bar->setEnabled(false);
+}

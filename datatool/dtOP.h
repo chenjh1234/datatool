@@ -16,6 +16,10 @@ public:
     bool isPause(){return _pause; };
     bool isStop(){return _stop; };
     void clear();
+
+    void startJob();
+    void endJob();
+    void setEnable(bool b);
 private:
     
     int _stop,_pause,_running;

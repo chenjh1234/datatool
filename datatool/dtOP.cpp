@@ -18,6 +18,30 @@ void btCmd::start()
     WIN->runPauseAct->setToolTip("runPause");
     WIN->runPauseAct->setIcon(ICON_PAUSE);
     WIN->runStopAct->setEnabled(true);
+    startJob();
+
+}
+void btCmd::startJob()
+{ 
+    setEnable(false);
+}
+void btCmd::endJob()
+{ 
+    clear();
+    setEnable(true);
+}
+void btCmd::setEnable(bool b)
+{ 
+    int ib;
+    ib = 1;
+    if (b) ib = 0; 
+    WIN->setEnabledToolbar(WIN->locationToolBar, b);
+    WIN->setEnabledToolbar(WIN->copyToolBar,b);
+    WIN->setEnabledToolbar(WIN->dumpToolBar,b);
+    WIN->inputV->setBT(ib);
+    WIN->outputV->setBT(ib);
+    WIN->inputV->setEnabled(b);
+    WIN->outputV->setEnabled(b);
 }
 void btCmd::stop()
 {
@@ -26,6 +50,7 @@ void btCmd::stop()
     WIN->runStartAct->setEnabled(true);
     WIN->runPauseAct->setEnabled(false);
     WIN->runStopAct->setEnabled(false);
+    endJob();
 }
 void btCmd::pause()
 {

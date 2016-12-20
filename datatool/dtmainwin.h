@@ -131,6 +131,7 @@ public:
     void addAnaTape();
     void addHelp();
     void setStatus(QString str);
+    void setEnabledToolbar(QToolBar *,bool b);
 
  
 protected:
@@ -173,6 +174,7 @@ public:
     int deviceBT(inputView *v); // open device for ana,dump(open only one device)
     void deviceClose();// close input output device for ana
     int deviceOpen(inputView *v);// open device for copy (open both)
+    //void setEnabledToolbar(QToolBar *bar,bool b);
 
 private slots:
     void slotInputBT(); // pressed inputview pushbutton
