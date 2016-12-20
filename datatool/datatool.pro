@@ -38,6 +38,7 @@ HEADERS += \
 	 paramDlg.h\
 	 fileListDlg.h\
 	 anaTape.h\
+         optionDlg.h\
 #	 QTapeData.h\
          ../segdata/QTapeIO.h \
          ../segdata/QSegyADI.h \
@@ -63,6 +64,7 @@ SOURCES += datatool.cpp\
 	 paramDlg.cpp\
 	 fileListDlg.cpp\
 	 anaTape.cpp\
+         optionDlg.cpp\
 #	 QTapeData.cpp\
         ../segdata/QTapeIO.cpp \
         ../segdata/QSegyADI.cpp \
@@ -72,6 +74,7 @@ FORMS += inputoutput.ui\
 	deviceParam.ui\
 	fileList.ui\
 	copyParam.ui\
+        options.ui\
          textedit.ui
 RESOURCES     = datatool.qrc
  

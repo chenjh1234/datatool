@@ -50,6 +50,7 @@
 #include "jobview.h"
 #include "paramDlg.h"
 #include "anaTape.h"
+#include "optionDlg.h"
 using namespace std;
 
 class dtMainWin;
@@ -109,6 +110,7 @@ public:
     QAction *licConfigAct;
     QAction *jobConfigAct;
     QAction *logConfigAct;
+    QAction *optionAct;
  
     QAction *exitAct;
 
@@ -153,6 +155,7 @@ protected:
 
     copyThread *tCopy;
     copyITF  *pCopy;
+    optionDlg *option;
     QProcess hrun;
 public:
     inputView *inputV,*outputV;
@@ -190,6 +193,7 @@ private slots:
 
     void slotTapeConfig();
     void slotLicConfig();
+    void slotOptions();
     //void slotLogConfig();
     void slotLogView(QTreeWidgetItem * , int  );
     //void slotLog(QString);

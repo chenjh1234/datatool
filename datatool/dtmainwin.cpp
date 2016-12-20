@@ -64,6 +64,7 @@ dtMainWin::dtMainWin() : QMainWindow()
    devDockWidget->setWidget(devV);
 
    dlgE = new editDlg(this);
+   option = new optionDlg(this);
 //copy:
    tCopy = new copyThread();
    pCopy = NULL;
@@ -212,11 +213,18 @@ void dtMainWin::createActions()
    //moveFirstAct->setShortcuts(QKeySequence::Quit);
    runPauseAct->setStatusTip(tr("runPause"));
    connect(runPauseAct, SIGNAL(triggered()), this, SLOT(slotJobPause()));
-//config
+//tape config
    tapeConfigAct = new QAction(QIcon(":/images/tapeconfig.png"), tr("tapeConfig"), this);
    //moveFirstAct->setShortcuts(QKeySequence::Quit);
    tapeConfigAct->setStatusTip(tr("tapeConfig"));
    connect(tapeConfigAct, SIGNAL(triggered()), this, SLOT(slotTapeConfig()));
+// option config
+   optionAct = new QAction(QIcon(":/images/options.png"), tr("Options"), this);
+   //moveFirstAct->setShortcuts(QKeySequence::Quit);
+   optionAct->setStatusTip(tr("options"));
+   connect(optionAct, SIGNAL(triggered()), this, SLOT(slotOptions()));
+
+  
 
    licConfigAct = new QAction(QIcon(":/images/licconfig.png"), tr("register"), this);
    //moveFirstAct->setShortcuts(QKeySequence::Quit);
@@ -291,6 +299,7 @@ void dtMainWin::createMenus()
    // fileMenu->addAction(licConfigAct);
 
    fileMenu->addAction(jobConfigAct);
+   fileMenu->addAction(optionAct);
 
    fileMenu->addAction(exitAct);
 
@@ -340,6 +349,7 @@ void dtMainWin::createToolBars()
       //configToolBar->hide();
       configToolBar->addAction(tapeConfigAct);
       configToolBar->addAction(jobConfigAct);
+      configToolBar->addAction(optionAct);
       //
      numberToolBar = addToolBar(tr("Number"));
      str = "OP NUmber:";
@@ -515,7 +525,13 @@ void dtMainWin::slotAbout()
       QString("App Build Date : ") + str1;
    QMessageBox::about(this, title, str);
 }
-
+void dtMainWin::slotOptions()
+{
+ 
+   QString str;
+   int i;
+   i = option->exec();
+}
 void dtMainWin::slotTapeConfig()
 {
 //moveData(MOVE_LAST);

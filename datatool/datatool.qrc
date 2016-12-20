@@ -21,6 +21,7 @@
     <file>images/copyf.png</file>
     <file>images/copyr.png</file>
     <file>images/eof.png</file>
+    <file>images/options.png</file>
     <file>images/help.png</file>
 </qresource>
 </RCC>
