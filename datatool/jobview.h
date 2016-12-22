@@ -19,6 +19,7 @@ public:
     void jobStart(QString j);
     void jobEnd(int ir);
     void jobSta(QString s);
+    void jobAdd(QString s,QString st);
 
 public   slots:
     void slotJobStat();

@@ -134,6 +134,7 @@ public:
     void addHelp();
     void setStatus(QString str);
     void setEnabledToolbar(QToolBar *,bool b);
+    void setOptions();
 
  
 protected:
@@ -179,7 +180,7 @@ public:
     int deviceOpen(inputView *v);// open device for copy (open both)
     //void setEnabledToolbar(QToolBar *bar,bool b);
 
-private slots:
+public slots:
     void slotInputBT(); // pressed inputview pushbutton
     void slotOutputBT();//pressed outpouview pushbutton
       

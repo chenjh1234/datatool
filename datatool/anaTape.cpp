@@ -130,6 +130,12 @@ bool anaTape::isDeviceOpen()
 {
 
    QString st;
+   if (dio == NULL)
+   {
+       dio = dioIn;
+       WIN->slotInputBT();
+   }
+
    if (!dio->isOpen())
    {
       st = "No device opened!!";
@@ -229,13 +235,14 @@ void anaTape::slotEof()
    if (!isCopyDeviceOpen()) return;
    st = "write EOF OK";
    stt = "Write EOF to output device???";
-   if (WIN->askDlg(stt))
-   {
+   if (DOC->bCopyPrompt)
+       if (WIN->askDlg(stt)!= 1) return;
+  
       i = dioOut->writeEOF();
       if (i < 0) st = "write EOF err";
       WIN->msgOut(st);
       qDebug() << st;
-   }
+  
 }
 
 
@@ -298,7 +305,8 @@ void anaTape::slotCopyf()
    st = "copyf OK";
 
    stt = "copy file to output device???";
-   if (WIN->askDlg(stt) != 1) return;
+   if (DOC->bCopyPrompt)
+       if (WIN->askDlg(stt) != 1) return;
 
    stt = "copy complete ";
    ifcp = 0;
@@ -346,7 +354,9 @@ void anaTape::slotCopyr()
    if (!isCopyDeviceOpen()) return;
 
    stt = "copy record to output device???";
-   if (WIN->askDlg(stt) != 1) return;
+   if (DOC->bCopyPrompt)
+       if (WIN->askDlg(stt) != 1) return;
+
    iby = 0;
 
    n = getOPNumber();

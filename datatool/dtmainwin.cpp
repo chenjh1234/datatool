@@ -79,6 +79,7 @@ dtMainWin::dtMainWin() : QMainWindow()
    addHelp();
    connect(windowMapper, SIGNAL(mapped(int)),
            this, SLOT(slotParam(int)));
+   setOptions();
 
    readSettings();
 
@@ -524,6 +525,14 @@ void dtMainWin::slotAbout()
       QString("App version : ") + QString(APP_VERSION) + "\n" +
       QString("App Build Date : ") + str1;
    QMessageBox::about(this, title, str);
+}
+void dtMainWin::setOptions()
+{
+    if (DOC->bCopyToolbar)
+        setEnabledToolbar(copyToolBar,true);
+    else
+        setEnabledToolbar(copyToolBar,false);
+
 }
 void dtMainWin::slotOptions()
 {

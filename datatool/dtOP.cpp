@@ -36,7 +36,13 @@ void btCmd::setEnable(bool b)
     ib = 1;
     if (b) ib = 0; 
     WIN->setEnabledToolbar(WIN->locationToolBar, b);
-    WIN->setEnabledToolbar(WIN->copyToolBar,b);
+    if (b)
+    {
+        if (DOC->bCopyToolbar)
+            WIN->setEnabledToolbar(WIN->copyToolBar, b);
+    }
+    else
+        WIN->setEnabledToolbar(WIN->copyToolBar, b);
     WIN->setEnabledToolbar(WIN->dumpToolBar,b);
     WIN->inputV->setBT(ib);
     WIN->outputV->setBT(ib);

@@ -17,20 +17,30 @@ void jobView::init()
     // header()->setResizeMode(QHeaderView::ResizeToContents );
      resizeColumnToContents(JOB_NAME);
      setColumnWidth(JOB_NAME,200);
+     setSortingEnabled(false);
     //QTreeWidgetItem * hd =	headerItem();
     //hd->setSizeHint(JOB_NAME,QSize(200,5));
 }
+void jobView::jobAdd(QString j,QString st)
+{
+    int i;
+    i = 0;
+    QTreeWidgetItem *item;
+    item = new QTreeWidgetItem(this);
+    _job = item;
+    item->setText(JOB_NAME,j);
+    item->setText(JOB_STAT,st);
+    //addTopLevelItem( item);
+    insertTopLevelItem(i,item);
+    qDebug() << " index of item = " << indexOfTopLevelItem(item);
+    
+}
 void jobView::jobStart(QString j)
 {
-     QTreeWidgetItem *item;
-     item = new QTreeWidgetItem(this);
-     _job = item;
-     item->setText(JOB_NAME,j);
-     item->setText(JOB_STAT,"runing");
-     //addTopLevelItem( item);
-     insertTopLevelItem(0,item);
-
-     qDebug() << " index of item = " << indexOfTopLevelItem(item);
+    QString st;
+    st = "Running";
+     jobAdd(j,st);
+     
 }
 void jobView::slotJobStat()
 {
