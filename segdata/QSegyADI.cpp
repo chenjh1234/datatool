@@ -77,7 +77,6 @@ void QSegyADI::createThIdxFile(QString filen, int h)
 int QSegyADI::createIdxFile(QString filen, int hd)
 {
    int i, j;
-   //float buf[TAPE_BLOCK];
    m_strFilename = filen;
    m_strFilenameIdx = filen + ".idx";
    QFile file;

@@ -25,6 +25,7 @@ public:
     void deviceClose();// close in out 
     int copyRecord();
     int copyFile();
+    void setTapeBlock(int len);
 // location:
     QAction *skipFAct;
     QAction *skipRAct;
@@ -44,7 +45,7 @@ public:
     dataIO *dio,*dioIn,*dioOut;
    // DEV dev;
    // DEV devIn,devOut;
-    unsigned char buf[TAPE_BLOCK];
+    //unsigned char buf[TAPE_BLOCK];
     int lastRecords;// In copyFile function, record copyed in the last call
 
 public slots:

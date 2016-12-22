@@ -26,19 +26,28 @@ void dtData::init()
    //m_dataName = "";
    // m_dataType = 0;
    // char ch[256];
+// anaTape:
    opNumber = 1;
    dumpLines = 10;
+   buf = NULL;
+// options:
+   iTapeBlock = 0;
+   bCopyPrompt = true;
+   bCopyToolbar = false;
 
+   setTapeBlock(TAPE_BLOCK);
+// dev for job copy
    devIn = new DEV();
    devOut = new DEV();
-
+// for sum in jobCopy
    sumIn = new sumInfo();
    sumOut = new sumInfo();
    sumFile = new sumInfo();
    sumReel = new sumInfo();
-
+// logs for system(app)  &job
    logJ = new logFile();
    logS = new logFile();
+// job parameters:
    setParamDevInStart(PARAM_REWIND);
    setParamDevInEnd(PARAM_REWIND_UNLOAD);
    setParamDevOutStart(PARAM_REWIND);
@@ -410,7 +419,7 @@ QString dtData::getDevOutStr()
 }
 QString dtData::getCopyParamStr()
 {
-   QString  str,str1;
+   QString  str, str1;
    // copy parameters:
    str1 = "Copy parameters:\n";
    str = str1 +  strEQ(EQ50 - str1.size()) +  STR_LR;
@@ -437,10 +446,8 @@ QString dtData::logFrom(int i)
    QString str, str1;
    if (getParamCopyFrom() == 1)  return str;
 
-   if (i == 0) 
-       str1 = QString("Append to %1 Reel OK:\n").arg(paramCopyAppend); 
-   else
-       str1 = QString("Append to %1 Reel Failed!!!:\n").arg(paramCopyAppend);
+   if (i == 0) str1 = QString("Append to %1 Reel OK:\n").arg(paramCopyAppend);
+   else str1 = QString("Append to %1 Reel Failed!!!:\n").arg(paramCopyAppend);
    logJ->line(str1);
    logJ->flush();
    return str1;
@@ -450,10 +457,8 @@ QString dtData::logAppend(int i)
    QString str, str1;
    if (getParamCopyAppend() == 0)  return str;
 
-   if (i == 0)
-       str1 = QString("Append to %1 Reel OK:\n").arg(paramCopyAppend); 
-   else
-       str1 = QString("Append to %1 Reel Failed!!!:\n").arg(paramCopyAppend);
+   if (i == 0) str1 = QString("Append to %1 Reel OK:\n").arg(paramCopyAppend);
+   else str1 = QString("Append to %1 Reel Failed!!!:\n").arg(paramCopyAppend);
    logJ->line(str1);
    logJ->flush();
    return str1;
@@ -492,7 +497,7 @@ QString dtData::logGoon()
 QString dtData::logF()
 {
    QString str;
-   int reel,file, record, bytes, recordAll;
+   int reel, file, record, bytes, recordAll;
    reel = sumReel->size();
    file = sumFile->size();
    record = sumFile->getFiles() - 1;
@@ -509,7 +514,7 @@ QString dtData::logReel()
    QString str, str1;
    int reel;
    reel = sumReel->size();
-   str1 = QString("Reel: %1  complete").arg(reel+1);
+   str1 = QString("Reel: %1  complete").arg(reel + 1);
    str = str1 +  strEQ(EQ50 - str1.size()) +  STR_LR;
    logJ->line(str);
    return str;
@@ -517,14 +522,14 @@ QString dtData::logReel()
 }
 QString dtData::logNewReel()
 {
-  
+
    DEV dev;
    QString str, str1;
    int reel;
    dev = WIN->getCopy()->tpOut.dev;
    qDebug() << "logNewReel name = " << dev.name;
    reel = sumReel->size();
-   str1 = QString("Reel: %1  start\n").arg(reel+1);
+   str1 = QString("Reel: %1  start\n").arg(reel + 1);
    str = str1;
    str1 = QString("Output Name is : %1  \n").arg(dev.name);
    str += str1;
@@ -552,26 +557,26 @@ QString dtData::logJobEnd(QString s)
 }
 QString dtData::logErr(QString s)
 {
-   QString str ;
-   str  =  QString("Error: ") ;
-   str += s;  
+   QString str;
+   str  =  QString("Error: ");
+   str += s;
    logJ->line(str);
    return str;
 }
 QString dtData::logMsg(QString s)
 {
-    QString str ;
-    str  =  QString("Msg: ") ;
-    str += s;  
-    logJ->line(str);
-    return str;
+   QString str;
+   str  =  QString("Msg: ");
+   str += s;
+   logJ->line(str);
+   return str;
 }
 QString dtData::logSum()
 {
    QString str, str1;
    long h, m, s, all;
 
-   int reel,file, tm, ctm, bytes, record;
+   int reel, file, tm, ctm, bytes, record;
    reel = sumReel->size();  // files
    file = sumFile->size();  // files
 
@@ -580,7 +585,7 @@ QString dtData::logSum()
    str += QString(" Copy All Reels: %1").arg(reel) +  STR_LR;
    str += QString(" Copy All files: %1").arg(file) +  STR_LR;
 
-   record = sumIn->size() - file - reel;// - _iEOT;
+   record = sumIn->size() - file - reel; // - _iEOT;
    tm = sumIn->getTime();
    ctm = sumIn->getCpu();
    bytes = sumIn->getBytes();
@@ -588,7 +593,7 @@ QString dtData::logSum()
    str += QString(" Input  record: %1 , bytes: %2 , time: %3 , cputime: %4\n")
       .arg(record).arg(bytes).arg(tm).arg(ctm);
 
-   record = sumOut->size() - file - reel;//_iEOT;
+   record = sumOut->size() - file - reel; //_iEOT;
 
    tm = sumOut->getTime();
    ctm = sumOut->getCpu();
@@ -822,7 +827,7 @@ int  dtData::getParamCopyAppend()
 
 }
 
-//===========end of copy 
+//===========end of copy
 //===========start of dev================
 int  dtData::getParamDevInStart()
 {
@@ -872,81 +877,97 @@ QString dtData::getDevPositionStr(int dev)
    str += "   end:" + str1 + "\n";
    return str;
 }
-QString dtData::getNextName(QString baseName,int id)
+QString dtData::getNextName(QString baseName, int id)
 {
-    QString str,rt;
-    str = QString("%1").arg(id,3,10,QLatin1Char('0'));
-    rt = baseName + "_"+str;
-    qDebug() << " getNextName = " << baseName << rt;
-    return rt;
+   QString str, rt;
+   str = QString("%1").arg(id, 3, 10, QLatin1Char('0'));
+   rt = baseName + "_" + str;
+   qDebug() << " getNextName = " << baseName << rt;
+   return rt;
 }
-QString dtData::hexOut( unsigned char *buf,int rby,int line) 
+QString dtData::hexOut(unsigned char *buf, int rby, int line)
 {
-	// TODO: Add your command handler code here
-	QString out;
+   // TODO: Add your command handler code here
+   QString out;
 
-	int all_lines,i,j,print_lines;
-	char str[80];
-	int ichs = 16;
-	all_lines = rby/ichs+1;
+   int all_lines, i, j, print_lines;
+   char str[80];
+   int ichs = 16;
+   all_lines = rby / ichs + 1;
 //	printf("ic = %d\n",ic);
-	print_lines = line;
+   print_lines = line;
 //	if(all_lines < print_lines ) print_lines = all_lines;
 // print hex code
-	if(print_lines <=0) print_lines = 1;
+   if (print_lines <= 0) print_lines = 1;
 //	printf("print_lines=%d\n",print_lines);
 
-	for(i = 0;i<print_lines;i++)
-	{
-		//sprintf(str,"%06d | ",rby+i*ichs);
+   for (i = 0; i < print_lines; i++)
+   {
+      //sprintf(str,"%06d | ",rby+i*ichs);
 // adress:
-		sprintf(str,"%06d | ", i*ichs);
-		hexOutStrN(str,out);
+      sprintf(str, "%06d | ", i * ichs);
+      hexOutStrN(str, out);
 //  hex data :
-		for(j = 0;j<ichs;j++)
-		{
-			if(j != 7 )
-			{
-				sprintf(str,"%02X ",buf[i*ichs+j]);
-				hexOutStrN(str,out);
-			}
-			else
-			{// in middle:
-				sprintf(str,"%02X-",buf[i*ichs+j]);
-				hexOutStrN(str,out);
-			}
+      for (j = 0; j < ichs; j++)
+      {
+         if (j != 7)
+         {
+            sprintf(str, "%02X ", buf[i * ichs + j]);
+            hexOutStrN(str, out);
+         }
+         else
+         { // in middle:
+            sprintf(str, "%02X-", buf[i * ichs + j]);
+            hexOutStrN(str, out);
+         }
 
-		}
-		sprintf(str," | ");
-		hexOutStrN(str,out);
+      }
+      sprintf(str, " | ");
+      hexOutStrN(str, out);
 // ascii code
-		for(j = 0;j<ichs;j++)
-		{
-			if(buf[i*ichs+j] >= 0 && buf[i*ichs+j] <= ichs +1)
-			{
-				sprintf(str,".");
-				hexOutStrN(str,out);
-			}
-			else
-			{
-				sprintf(str,"%1C",buf[i*ichs+j]);
-				hexOutStrN(str,out);
-			}
-		}
-		sprintf(str," ");
-		hexOutStr(str,out);
-	}	// all lines:
-	
-	return out;
+      for (j = 0; j < ichs; j++)
+      {
+         if (buf[i * ichs + j] >= 0 && buf[i * ichs + j] <= ichs + 1)
+         {
+            sprintf(str, ".");
+            hexOutStrN(str, out);
+         }
+         else
+         {
+            sprintf(str, "%1C", buf[i * ichs + j]);
+            hexOutStrN(str, out);
+         }
+      }
+      sprintf(str, " ");
+      hexOutStr(str, out);
+   }   // all lines:
+
+   return out;
 }
-void dtData::hexOutStr(char *str,QString &out)
+void dtData::hexOutStr(char *str, QString& out)
 {
-	//printf("%s\n",str);
-	out = out + str + "\n";
+   //printf("%s\n",str);
+   out = out + str + "\n";
 }
-void dtData::hexOutStrN(char *str,QString &out)
+void dtData::hexOutStrN(char *str, QString& out)
 {
-	//printf("%s",str);
-	out = out + str ;
+   //printf("%s",str);
+   out = out + str;
+}
+int dtData::getTapeBlock()
+{
+   return iTapeBlock;
+}
+int dtData::setTapeBlock(int id)
+{
+   int i; 
+   if (id > iTapeBlock)
+   {
+       if (buf != NULL)  delete []buf;
+       buf = new unsigned char[id];
+       iTapeBlock = id; 
+   }
+   i = iTapeBlock;
+   return i;
 }
 

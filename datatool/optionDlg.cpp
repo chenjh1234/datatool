@@ -21,25 +21,37 @@ void optionDlg::init()
    connect(ui.pushButtonFile, SIGNAL(clicked()), this, SLOT(slotFileOpen()));
 #endif
 }
-void optionDlg::setText(QString in)
+bool optionDlg::isCopyPrompt()
 {
-   // ui.textEdit->setText(in);
+      return ui.checkBoxCopyPrompt->isChecked();
 }
-void optionDlg::setList(QStringList in)
+bool optionDlg::isCopyToolbar()
 {
+      return  ui.checkBoxCopyBar->isChecked();
+}
+int optionDlg::getTapeBlock()
+{
+    int i;
+    QString str;
+    str = ui.lineEditTapeBlock->text();
+    i = str.toInt();
+    return i;
+}
+void optionDlg::setTapeBlock(int len)
+{
+    int i;
+    QString str;
+    str.setNum(len);
+    qDebug() << "option in setTapeBlock = " <<len << str;
+    ui.lineEditTapeBlock->setText(str);
+}
+void optionDlg::setCopyToolbar(bool b)
+{
+    ui.checkBoxCopyBar->setChecked(b);
+}
+void optionDlg::setCopyPrompt(bool b)
+{
+    ui.checkBoxCopyPrompt->setChecked(b);
+}
     
-}
-QString optionDlg::getText()
-{
-    
-}
-QStringList optionDlg::getList()
-{
-     
-}
-
-void optionDlg::setReadOnly()
-{
-     
-}
  

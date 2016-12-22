@@ -70,7 +70,7 @@ tpErr[WRITEFILE_TYPE_ERR] = "WRITEFILE_TYPE_ERR";\
 
 
 //#define IBLOCK 3 * sizeof(int) // a test
-#define IBLOCK 200 * 1000 * sizeof(int)
+#define IBLOCK 200 * 1000 * sizeof(int)// block  save to disk
 #define BYTE unsigned char
 // device type:
 
@@ -194,6 +194,8 @@ public:
     int iOpenWrite();// init for block
     int iCloseWrite();// write last block
 //
+    int getTapeBlock();
+    int setTapeBlock(int id);
     QString filename,filenameImg;
 
     qint64  size();
@@ -202,6 +204,7 @@ public:
     int eofFlag, eof2Flag,eotFlag; 
     QMap<int,QString> tpErr;
     DEV dev;
+    int iTapeBlock;
 private:
    
     int  tapeio(int *iunit,char *opkey);

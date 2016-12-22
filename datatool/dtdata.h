@@ -120,7 +120,7 @@ public:
     ~dtData();
     void init();
 // data buf;
-    unsigned char buf[TAPE_BLOCK];
+    unsigned char *buf; 
 // control:
     //bool btStop;
 // log:=====================
@@ -153,6 +153,8 @@ public:
     QString hexOut( unsigned char *buf,int rby,int line);
     void hexOutStr(char *str,QString &out);// append str with \n
     void hexOutStrN(char *str,QString &out); // append no \n
+    int getTapeBlock();
+    int setTapeBlock(int i);
  
 
     logFile *logJ,*logS;
@@ -162,6 +164,7 @@ public:
     sumInfo *sumReel; 
     QString _startT;// job start time
     int _iEOT ; // input type =DISK =0 else 1, when sum all record - iEOT;
+    
     //QList<sumInfo> listSum;
 
 //job:======================
@@ -188,6 +191,11 @@ public:
     int paramCopyAppend;    // default = 0;  where to output,override which reel in  output device( is a big tape)
                             // 0:from start ogf the tape:
                             // 1:skip first reel (mark 2 eof),output is second reel;
+// options:
+    int iTapeBlock;
+    bool bCopyToolbar;
+    bool bCopyPrompt;
+    
 //number:
     int opNumber,dumpLines;
     QStringList getDevInFileList(); 

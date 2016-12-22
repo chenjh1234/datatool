@@ -15,12 +15,13 @@ public:
     optionDlg(QWidget *p);
     ~optionDlg();
     void init();
-    void setText(QString in);
-    void setList(QStringList in);
-    QString getText();
-    QStringList getList();
-    void setTitle(QString t);
-    void setReadOnly();
+    bool isCopyPrompt();
+    bool isCopyToolbar();
+    int getTapeBlock();
+    void setTapeBlock(int len);
+    void setCopyToolbar(bool b);
+    void setCopyPrompt(bool b);
+
 public   slots:
  
  

@@ -35,6 +35,11 @@ void copyITF::wastTime()
          j = i;
     }
 }
+void copyITF::setTapeBlock(int len)
+{
+    tpIn.setTapeBlock(len);
+    tpOut.setTapeBlock(len);
+}
 QString copyITF::getStatus()
 {
 	return m_status;

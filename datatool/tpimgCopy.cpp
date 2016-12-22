@@ -175,7 +175,7 @@ int tpimgCopy::copyRecord()
    QString str;
    int iret, ist;
    int iby;
-   iby = TAPE_BLOCK;
+   iby = DOC->getTapeBlock();
    ist = 0;
 //read:
    DOC->sumIn->start();

@@ -60,6 +60,7 @@ public:
 	void setStop(bool b);//slot of stop button,set stop flag;
 	void setPause(bool b);///slot of pause button,set pasue flag;
     void wastTime();
+    void setTapeBlock(int len);
 	//bool isSelectedAll(int file);
 	//bool isSelect(int counter);
 

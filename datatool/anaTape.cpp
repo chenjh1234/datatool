@@ -247,12 +247,12 @@ void anaTape::slotDump()
    line = DOC->dumpLines;
    if (!isDeviceOpen()) return;
 
-   iby = TAPE_BLOCK;
+   iby = DOC->getTapeBlock();
    n = getOPNumber();
    for (i = 0; i < n; i++)
    {
-      memset(buf, '\0', iby);
-      iret = dio->read(buf, iby);
+      memset(DOC->buf, '\0', iby);
+      iret = dio->read(DOC->buf, iby);
       if (iret == 0)
       {
          if (dio->eotFlag) st = "EOT";
@@ -263,7 +263,7 @@ void anaTape::slotDump()
       {
          st = QString("OK,ret = %1\n").arg(iret);
          WIN->msgOut(st);
-         st = DOC->hexOut(buf, iby, line);
+         st = DOC->hexOut(DOC->buf, iby, line);
          WIN->msgOut(st);
       }
       else
@@ -282,11 +282,11 @@ void anaTape::slotDumpOnly()
    QString st;
    st = "OK";
    line = DOC->dumpLines;
-   iby = TAPE_BLOCK;
+   iby = DOC->getTapeBlock();
 
    st = QString("dump last read \n");
    WIN->msgOut(st);
-   st = DOC->hexOut(buf, iby, line);
+   st = DOC->hexOut(DOC->buf, iby, line);
    WIN->msgOut(st);
 
 }
@@ -397,11 +397,11 @@ int anaTape::copyRecord()
    QString str;
    int iret, ist;
    int iby;
-   iby = TAPE_BLOCK;
+   iby = DOC->getTapeBlock();
    ist = 0;
 //read:
 //DOC->sumIn->start();
-   iret = dioIn->read(buf, iby);
+   iret = dioIn->read(DOC->buf, iby);
    //DOC->sumIn->elapsed();
    //DOC->sumIn->addBytes(iret);
    if (iret < 0)
@@ -424,7 +424,7 @@ int anaTape::copyRecord()
 // yes write: data or EOF ,not EOT
    iby = iret;
    //DOC->sumOut->start();
-   iret = dioOut->write(buf, iby);
+   iret = dioOut->write(DOC->buf, iby);
    //qDebug() << "iret = " <<iret;
    // DOC->sumOut->elapsed();
    //DOC->sumOut->addBytes(iret);
@@ -486,4 +486,9 @@ int anaTape::copyFile()
    }
    lastRecords = ir;
    return iret;
+}
+void anaTape::setTapeBlock(int len)
+{
+   dioIn->setTapeBlock(len);
+   dioOut->setTapeBlock(len);
 }

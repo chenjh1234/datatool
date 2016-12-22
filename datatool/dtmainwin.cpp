@@ -531,6 +531,42 @@ void dtMainWin::slotOptions()
    QString str;
    int i;
    i = option->exec();
+   if (i == 0) 
+   {
+       qDebug() << "option0 ="<< DOC->getTapeBlock();
+       option->setTapeBlock(DOC->getTapeBlock());
+       option->setCopyToolbar(DOC->bCopyToolbar);
+       option->setCopyPrompt(DOC->bCopyPrompt);
+       return;
+   }
+   
+   i = option->getTapeBlock();
+   DOC->setTapeBlock(i);
+   i = DOC->getTapeBlock();// actral data
+   ana.setTapeBlock(i);
+   qDebug() << "options = " << i << option->isCopyToolbar() <<option->isCopyPrompt() ;
+
+   option->setTapeBlock(DOC->getTapeBlock());
+
+   if (option->isCopyToolbar()) 
+   {
+       DOC->bCopyToolbar = true;
+       setEnabledToolbar(copyToolBar,true);
+   }
+   else
+   {
+       DOC->bCopyToolbar = false;
+       setEnabledToolbar(copyToolBar,false);
+   }
+
+   if (option->isCopyPrompt()) 
+   {
+       DOC->bCopyPrompt= true;
+   }
+   else
+   {
+       DOC->bCopyPrompt = false;
+   }
 }
 void dtMainWin::slotTapeConfig()
 {
@@ -749,6 +785,7 @@ void dtMainWin::runJob()
    if (pCopy != NULL) delete pCopy;
    pCopy = new tpimgCopy();
    connect(pCopy, SIGNAL(sigFileEnd(int)), this, SLOT(slotFileEnd(int)));
+   pCopy->setTapeBlock(DOC->getTapeBlock());
 //open Copy:
    i = pCopy->openCopy(*(DOC->devIn), *(DOC->devOut));
    if (i != OPEN_OK)
@@ -1056,53 +1093,18 @@ int dtMainWin::appendReel()
     int app;
     app = DOC->getParamCopyAppend();
     return skipReel(&pCopy->tpOut,app);
-    #if 0
-    int app,ic,ie,i;
-    int len;
-    char buf[TAPE_BLOCK];
-    len = 100;// tape will change to TAPE_BLOCK
-    app = DOC->getParamCopyAppend();
-    if (app <= 0) return 0;
-//
-    if (DOC->devOut->type != DEV_TAPE) return 0;// not tape device;
-// position
-    ic = 0;
-    ie = 0;
-    while (ic == app) 
-    {
-        // skip eof:
-        i = pCopy->tpOut.fileForword();
-        if (i != 0) 
-        {
-            ie = -1;
-            break;
-        }
-        //read a record :
-        i = pCopy->tpOut.read(buf,len);
-        if (i <0 ) 
-        {
-            ie = -1;
-            return;
-        }
-        else if (i == 0) 
-        {// if eof: a reel end (2EOFS)
-            ic++;
-        }
-        //i >0  ,not a 2EOFS continue to find;
-    }
-    return ie; 
-    #endif
+     
 }
 int dtMainWin::skipReel(dataIO *io,int n)
 {
     int app,ic,ie,i;
     int len;
-    unsigned char buf[TAPE_BLOCK];
+    //unsigned char buf[TAPE_BLOCK];
     DEV dev;
     dev = io->dev;
 
     app = n;
-    len = 100;// tape will change to TAPE_BLOCK
+    len = DOC->getTapeBlock();// tape will change to TAPE_BLOCK
     qDebug() << "skipReels n=" << app;
     if (app <= 0) return 0;
 //
@@ -1121,7 +1123,7 @@ int dtMainWin::skipReel(dataIO *io,int n)
             break;
         }
         //read a record :
-        i = io->read(buf,len);
+        i = io->read(DOC->buf,len);
         qDebug() << "file read = " << i;
         if (i <0 ) 
         {

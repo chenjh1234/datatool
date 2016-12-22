@@ -111,7 +111,25 @@ void dataIO::init()
    ifileLen = 0;
    ifileBuf = NULL;
    ifilePtr = 0;
+   iTapeBlock = 0;
+   setTapeBlock(TAPE_BLOCK);
 }
+int dataIO::getTapeBlock()
+{
+   return iTapeBlock;
+
+}
+int dataIO::setTapeBlock(int id)
+{
+   int i; 
+   if (id > iTapeBlock)
+   {
+       iTapeBlock = id; 
+   }
+   i = iTapeBlock;
+   return i;
+}
+
 int dataIO::setType(int i)
 {
    if (i != DEV_DISK && i != DEV_TAPE && i != DEV_TPIMG)
@@ -489,7 +507,7 @@ int dataIO::read(BYTE *buf, int iby)
 // tape:
    if (devType == DEV_TAPE)
    {
-      iby = TAPE_BLOCK;
+      iby = getTapeBlock();
       ret =  myRead(iunit, (char *)buf, iby);
       bytes = ret;
       if (bytes > 0)
