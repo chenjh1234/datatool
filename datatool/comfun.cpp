@@ -76,6 +76,33 @@ int saveListToFile(QString s,QStringList slist)
    }
    return i-1; 
 }
+int appendListToFile(QString s,QStringList slist)
+{
+   QFile f;
+   QString str;
+   int i;
+   bool b;
+   i = -1;
+   f.setFileName(s);
+   if(!f.exists())
+       b = f.open(QIODevice::WriteOnly |QIODevice::Text);
+   else
+       b = f.open(QIODevice::Append|QIODevice::Text );
+
+
+   if (b) 
+   {
+       QTextStream out(&f);     
+       for (i =0; i< slist.size(); i++) 
+       {
+           str = slist[i];
+           //qDebug() << "write = " << str;
+           out << str << ENDL; 
+       } 
+       f.close();
+   }
+   return i-1; 
+}
 vector<stringList> getMsgFromFile(string fname,string de )
 {
    string str;

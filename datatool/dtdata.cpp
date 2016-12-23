@@ -55,6 +55,7 @@ void dtData::init()
    setParamCopyReels(1);
    setParamCopyFrom(1);
    setParamCopyReels(0);
+   setParamCopyAppend(0);
 
    //strcpy(ch,fileAppLog().Q2CH);
    //logS->setName(ch);
@@ -716,6 +717,21 @@ QString dtData::fileJob(QString f)
    s = pathJob();
    mkdir(s);
    s = s + +MARK_PATH + f;
+   return s;
+}
+QString dtData::fileJobMsg()
+{
+   QString s,dt,f;
+   QDate d;
+   s = pathJob();
+   mkdir(s);
+   
+   d = QDate::currentDate();
+   dt = QString("%1%2").arg(d.year(),4,10,QLatin1Char('0')).arg(d.month(),2,10,QLatin1Char('0'));
+   f = JOBMSG_CONFIG;
+
+   s = s + +MARK_PATH + f + dt;//jobmsg201608
+   qDebug() << "file jobmsg = " << s;
    return s;
 }
 QString dtData::fileTapeConfig()

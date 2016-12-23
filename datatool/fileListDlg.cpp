@@ -145,7 +145,7 @@ void fileListDlg::moveSelectedItem(int wh)
             //ui.treeWidget->setCurrentItem(item);
             item->setSelected(true);
          }
-         else break;
+         else break;//any one moved to index 0, wo stop the moving//
       }
       if (wh == MOVE_DOWN)
       {

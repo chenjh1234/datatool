@@ -19,7 +19,9 @@
 #if 0
 2016.12 :v1.04:  
    1: add tape analysis
-   2: add  location  toolbars;add dump functions
+   2: add  location  toolbars;add dump functions; add selected copy toolbar
+   3: add options
+   4: add load jobmsgs in jobview that last time down;
 2016.12.01:v1.03:  
    1: add append to parameter:n(0: not append,1:append to 1st reel), copy the data to end of output tape device.
    2: add copy from paramters:n(1: from first), which reel start to copy( from input device) .
@@ -60,6 +62,8 @@
 #define JOBNUMBER_FILE "job.number" //$DATATOOL/etc/tape.conf
 #define PARA_CONFIG "parameters.conf"
 #define LIC_CONFIG "datatool.lic"
+#define JOBMSG_CONFIG "jobmsg"    //$PROJECT_H/job/jobmsg201605
+
 //#define JOB_NUMBER "job.number"
 #if  !defined(WIN32)
 #define MARK_PATH "/"
@@ -76,10 +80,6 @@
 #define PROJECT_JOB "job";
 #define PROJECT_LOG "job";
 //#define PROJECT_INFO "job";
-
-#define CONFIG_TAPE "tape.conf"
-#define CONFIG_LIC "lic.conf"
- 
 #define TAPE_COMM "# /dev/st0    3480    500(M) "
 // format :
   // in:
@@ -251,6 +251,7 @@ public:
     QString fileParaConfig();
     QString fileLicConfig();
     QString fileJobNumber();
+    QString fileJobMsg();
 // config:
     // lic:
     QString getLicConfig();

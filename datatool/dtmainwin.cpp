@@ -220,7 +220,7 @@ void dtMainWin::createActions()
    tapeConfigAct->setStatusTip(tr("tapeConfig"));
    connect(tapeConfigAct, SIGNAL(triggered()), this, SLOT(slotTapeConfig()));
 // option config
-   optionAct = new QAction(QIcon(":/images/options.png"), tr("Options"), this);
+   optionAct = new QAction(QIcon(":/images/options.png"), tr("options"), this);
    //moveFirstAct->setShortcuts(QKeySequence::Quit);
    optionAct->setStatusTip(tr("options"));
    connect(optionAct, SIGNAL(triggered()), this, SLOT(slotOptions()));
@@ -266,11 +266,11 @@ void dtMainWin::createActions()
 #endif
 
 //help:
-   aboutAct = new QAction(QIcon(":/images/about.png"), tr("&About"), this);
+   aboutAct = new QAction(QIcon(":/images/about.png"), tr("&about"), this);
    aboutAct->setStatusTip(tr("show the application's About box"));
    connect(aboutAct, SIGNAL(triggered()), this, SLOT(slotAbout()));
 
-   helpAct = new QAction(QIcon(":/images/help.png"), tr("&Help"), this);
+   helpAct = new QAction(QIcon(":/images/help.png"), tr("&help"), this);
    helpAct->setStatusTip(tr("Help"));
    connect(helpAct, SIGNAL(triggered()), this, SLOT(slotHelp()));
 
@@ -718,9 +718,7 @@ void dtMainWin::slotJobStart()
 
    *DOC->devIn = in;
    *DOC->devOut = out;
-// job:
-   jbname = DOC->jobname();
-   DOC->_jobname = jbname;
+//jobname moved
 
 // format check
    copyITF pcp;
@@ -739,10 +737,13 @@ void dtMainWin::slotJobStart()
    }
    qDebug() << "conform";
    deviceClose();// close the device if opened for anaTape;
+// jobname:
+   jbname = DOC->jobname();
+   DOC->_jobname = jbname;
 //log: file open:
    DOC->logJ->setName(DOC->fileJobLog(jbname));
 // begin:
-   qDebug() << "jbname = " << jbname;
+   //qDebug() << "jbname = " << jbname;
    DOC->logApp();
    DOC->logJob();
    DOC->logDev();

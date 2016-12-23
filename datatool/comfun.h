@@ -43,6 +43,7 @@ int saveMsgToFile(QString fname,QString  de,QList<QStringList> v_slist,QString c
 QStringList getListFromFile(QString s);
 /// save lines from file
 int saveListToFile(QString file,QStringList slist);
+int appendListToFile(QString s,QStringList slist);
 
 bool isComm(QString s); // is the string lead by "#"
 bool isFile(QString s); // if the file exist,s is the full path"

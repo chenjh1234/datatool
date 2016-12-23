@@ -4,9 +4,11 @@
 #include <QString>
 #include <QDebug>
 #include <QTreeWidgetItem>
+#include "comfun.h"
 
 #define JOB_NAME 0
 #define JOB_STAT 1
+#define JOBMSG_LEN 10
 
 class jobView :public QTreeWidget
 {
@@ -20,6 +22,9 @@ public:
     void jobEnd(int ir);
     void jobSta(QString s);
     void jobAdd(QString s,QString st);
+    void addList(int id);
+    void saveList();
+    void loadJob();
 
 public   slots:
     void slotJobStat();
@@ -27,6 +32,7 @@ public   slots:
 protected:
     QTreeWidgetItem *_job;
 private:
+    QList<QStringList> listJob;
   
 };
 
