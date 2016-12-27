@@ -355,6 +355,48 @@ QList<QStringList> getMsgFromFile(QString f,QString de )
     return listQSlist;
 };
 #endif
+QString getDateStr(int y,int m,int d)
+{
+    QString str;
+    str = QString("%1%2%3").arg(y,4,10,QChar('0')).arg(m,2,10,QChar('0')).arg(d,2,10,QChar('0'));
+    return str;
+}
+/// we get newest date in the dir /tmp/usr/bin bin;
+QString getLastDate()
+{
+    QFileInfo inf;
+    QDate dt;
+    QString str, lstr;
+//bin
+    inf.setFile(BIN_DIR);
+    dt = inf.lastRead().date();
+    str = getDateStr(dt.year(),dt.month(),dt.day());
+    lstr = str;
+//tmp
+    inf.setFile(TMP_DIR);
+    dt = inf.lastRead().date();
+    str = getDateStr(dt.year(),dt.month(),dt.day());
+    if (lstr < str)  lstr = str;
+
+//usr/bin
+    inf.setFile(TMP_DIR);
+    dt = inf.lastRead().date();
+    str = getDateStr(dt.year(),dt.month(),dt.day());
+    if (lstr < str)  lstr = str;
+    return lstr;
+}
+/// if the date turn back 
+bool isOverDate()
+{
+    QDate dt;
+    QString st,lst;
+    dt = QDate::currentDate();
+    st = getDateStr(dt.year(),dt.month(),dt.day());
+    lst = getLastDate();
+    if (st >= lst) return false;
+    else 
+        return true;
+}
 #if 0 // test
 main()
 {
