@@ -16,15 +16,15 @@ NodeID::NodeID()
 {
     licFile = "";
 }
-int NodeID::getFileID(string fn)
+unsigned long  NodeID::getFileID(string fn)
 {
    struct stat buf;
    char *filen;
-   int ia;
+   unsigned long ia;
    filen = (char *)fn.c_str();
 
    stat(filen, &buf);
-   ia = (unsigned int)buf.st_ino;
+   ia = (unsigned long)buf.st_ino;
    //printf("/usr/bin/startx = %08X\n",ia);
 
    return ia;
@@ -47,6 +47,7 @@ int NodeID::getFileTID(string fn)
 string NodeID::getMID()
 {
    int i;
+   unsigned long l;
    string str;
    char ch[256], filen[256];
    int j;
@@ -71,8 +72,8 @@ string NodeID::getMID()
    filen[j] = 'x'; j++;
    filen[j] = 0; j++;
 
-   i = dd.getFileID(filen);
-   sprintf(ch, "%08X", i);
+   l = dd.getFileID(filen);
+   sprintf(ch, "%08X", l);
    nid1 = ch;
    str = str + ch;
 

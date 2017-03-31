@@ -976,14 +976,15 @@ int dtData::getTapeBlock()
 }
 int dtData::setTapeBlock(int id)
 {
-   int i; 
+   
    if (id > iTapeBlock)
    {
        if (buf != NULL)  delete []buf;
        buf = new unsigned char[id];
        iTapeBlock = id; 
    }
-   i = iTapeBlock;
-   return i;
+   if (id < TAPE_BLOCK_MIN)  id = TAPE_BLOCK_MIN;
+   iTapeBlock = id; 
+   return id;
 }
 

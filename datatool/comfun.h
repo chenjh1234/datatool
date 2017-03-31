@@ -25,7 +25,11 @@ using namespace std;
 #define BIN_DIR "/bin"
 #define USR_BIN "/usr/bin"
 #define TMP_DIR "/tmp"
- 
+
+
+#ifndef Q2CH
+    #define Q2CH toUtf8().data()
+#endif
 
 #define NAMELEN_MAX 156
 //#define MAX_STR 256
