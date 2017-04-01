@@ -20,6 +20,7 @@
 #include<QFile>
 #include<QDebug>
 #define TAPE_BLOCK 256000
+#define TAPE_BLOCK_MIN 60000
 //
 #define TP_REWIND "rew"
 #define TP_UNLOAD "uld"

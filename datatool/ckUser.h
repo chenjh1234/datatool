@@ -41,7 +41,7 @@ class NodeID
 {
 public:
     NodeID();
-    int getFileID(string f);// file nide is
+    unsigned long getFileID(string f);// file node
     int getFileTID(string f);// file create time 
     string getLicPath();// lic file path
     void setLicPath(QString file);// lic file path

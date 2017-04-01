@@ -20,6 +20,17 @@ using namespace std;
 #include <QFileInfo>
 #include <QTextStream>
 #include <QStringList>
+<<<<<<< HEAD
+=======
+#define BIN_DIR "/bin"
+#define USR_BIN "/usr/bin"
+#define TMP_DIR "/tmp"
+
+
+#ifndef Q2CH
+    #define Q2CH toUtf8().data()
+#endif
+>>>>>>> f4553a9150d46365355e25dff356bf058464f1f7
 
 #define NAMELEN_MAX 156
 //#define MAX_STR 256
