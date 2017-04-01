@@ -17,15 +17,9 @@ using namespace std;
 #include <QList>
 #include <QString>
 #include <QFile>
-#include <QDate>
-#include <QDateTime>
 #include <QFileInfo>
 #include <QTextStream>
 #include <QStringList>
-#define BIN_DIR "/bin"
-#define USR_BIN "/usr/bin"
-#define TMP_DIR "/tmp"
- 
 
 #define NAMELEN_MAX 156
 //#define MAX_STR 256
@@ -33,13 +27,13 @@ using namespace std;
 #define ENDL "\n"
 
 typedef vector<string> stringList;
-// 2 dimension table :string
+// 2 dimension table :
 /// get message from file 
 vector<stringList> getMsgFromFile(string fname,string delimiter);
 /// save 
 int saveMsgToFile(string fname,string de,vector<stringList> v_slist ,string comm);
 
-// for QString:
+#if 1
 /// get lines from file ,and each line contain list of items
 QList<QStringList> getMsgFromFile(QString f,QString de );
 /// save lines to file ,and each line contain list of items
@@ -53,14 +47,9 @@ int appendListToFile(QString s,QStringList slist);
 
 bool isComm(QString s); // is the string lead by "#"
 bool isFile(QString s); // if the file exist,s is the full path"
+
 QString getFileText(QString file);
-/// get starded date:20160101
-QString getDateStr(int y,int m,int d);
-/// if the date turn back 
-bool isOverDate();
-/// we get newest date in the dir /tmp/usr/bin bin;
-QString getlastDate();
- 
+#endif
 /**
  * splt srings delimited by space(can be more space )to 
  * stringList 

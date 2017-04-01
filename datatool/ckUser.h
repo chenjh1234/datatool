@@ -30,7 +30,6 @@
 #define LIC_START "start"
 #define LIC_END "end"
 #define LIC_DELIMIT " = "
-#define LIC_TEST_DAYS 15
 
 #define LIC_KEY "key"
 using namespace std;
@@ -64,7 +63,7 @@ public:
 
 };
 
-class ckUser// no use now
+class ckUser
 {
 public:
     ckUser();

@@ -38,15 +38,8 @@ main()
     cout << "is valid = " << b << endl;
 
     cout << " licToFile()=====================\n";
-    string user,sdt1,sdt2;
-    QDate dt,dt1;
-    dt = QDate::currentDate();
-    dt1 = dt.addDays(LIC_TEST_DAYS);
-    sdt1 = qToStr(getDateStr(dt.year(),dt.month(),dt.day()));
-    sdt2 = qToStr(getDateStr(dt1.year(),dt1.month(),dt1.day()));
-    nid.licToFile(mp[LIC_USER],mp[LIC_MID],sdt1,sdt2);
 
-    //nid.licToFile();
+    nid.licToFile();
 
 }
 

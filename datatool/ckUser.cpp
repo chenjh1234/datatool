@@ -148,7 +148,7 @@ void NodeID::setLicPath(string str)
 }
 string NodeID::getLicPath()
 {
-    // 1st: get what set:setLicpath();
+    // 1st: get what set
     // 2nd: get current dir;
     // 3rd: /tmp/ or c:
 
@@ -324,17 +324,8 @@ bool NodeID::isValidUser()
     qstr = today();
     sdt = qToStr(qstr);
     if(sdt > mp[LIC_END])  
-    {
         return false;
-    }
-    if(sdt < mp[LIC_START])  
-    {
-        return false;
-    }
-    if (isOverDate())
-    {
-        return false;
-    }
+ 
     return true;
 }
 string NodeID::getLic()
@@ -348,7 +339,7 @@ string NodeID::getLic()
 string NodeID::getLic(string user,string mid,string start,string end)
 {
    string str;
-   str =   user+ mid+ start + end + "datatool";
+   str =   user+ mid+ start + end;
    return md5Lic(str);
 
 }
