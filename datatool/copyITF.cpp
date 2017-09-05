@@ -8,7 +8,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-copyITF::copyITF()
+copyITF::copyITF():QObject()
 {
 	init();
 }
