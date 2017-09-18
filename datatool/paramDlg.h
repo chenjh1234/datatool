@@ -6,6 +6,7 @@
 #include "ui_paramDlg.h"
 #include "ui_deviceParam.h"
 #include "ui_copyParam.h"
+#include "ui_h80.h"
 #define DEVICE_DISK "DISKFILE"
 #define DEVICE_TPIMG "TPIMG"
 #define DEVICE_REEL "reel0000"
@@ -28,11 +29,12 @@ public   slots:
 protected:
 private:
     QGridLayout *lyout;
-    QWidget *inputW,*outputW,*copyW;
+    QWidget *inputW,*outputW,*copyW,*h80W;
  
     //Ui::FormDev ui;
     Ui::DialogParam uiDlg;
     Ui::copyParam uiCopy;
     Ui::deviceParam uiDevIn,uiDevOut;
+    Ui::H80Form uiH80;
 };
 #endif

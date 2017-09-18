@@ -36,6 +36,7 @@ HEADERS += \
 	 comfun.h\
          md5.h\
 	 paramDlg.h\
+         nextdlg.h\
 	 fileListDlg.h\
 	 anaTape.h\
          optionDlg.h\
@@ -62,6 +63,7 @@ SOURCES += datatool.cpp\
 	 comfun.cpp\
 	 sumInfo.cpp\
 	 paramDlg.cpp\
+         nextdlg.cpp\
 	 fileListDlg.cpp\
 	 anaTape.cpp\
          optionDlg.cpp\
@@ -75,6 +77,8 @@ FORMS += inputoutput.ui\
 	fileList.ui\
 	copyParam.ui\
         options.ui\
+        h80.ui\
+        nextReelDlg.ui\
          textedit.ui
 RESOURCES     = datatool.qrc
  

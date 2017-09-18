@@ -1,46 +1,46 @@
-#include "paramDlg.h"
+#include "nextdlg.h"
 #include "dtapp.h"
 
-paramDlg::paramDlg(QWidget *p) : QDialog(p)
+nextDlg::nextDlg(QWidget *p) : QDialog(p)
 {
     
    init();
 }
  
-paramDlg::~paramDlg()
+nextDlg::~nextDlg()
 {
 
 }
-void paramDlg::init()
+void nextDlg::init()
 {
-    uiDlg.setupUi(this);
+   
+   uiNext.setupUi(this);
    lyout = new QGridLayout(this);
-   inputW = new QWidget(this);
-   outputW = new QWidget(this);
-   copyW = new QWidget(this);
-   h80W = new QWidget(this);
-
-   lyout->addWidget(inputW, 0, 0, 1, 1);
-   lyout->addWidget(outputW, 1, 0, 1, 1);
-   lyout->addWidget(copyW, 2, 0, 1, 1);
-   lyout->addWidget(h80W,3,0,1,1);
-   lyout->addWidget(uiDlg.buttonBox,4,0,1,1);
+    
+ 
+   labelYes = new QLabel(this);
+   
+   labelNo = new QLabel(this);
+   checkBoxH80 = new QCheckBox(this);
+   labelYes->setText("    OK: Input next Reel");
+   labelNo->setText( "Cancel: end of Copy");
+   checkBoxH80->setText("H80: Remove the last option tail bloak");
 
    
-   uiDevIn.setupUi(inputW);
-   uiDevOut.setupUi(outputW);
-   uiCopy.setupUi(copyW);
-   uiH80.setupUi(h80W);
-   uiDevIn.groupBoxDev->setTitle("Input Device:");
-   uiDevOut.groupBoxDev->setTitle("output Device:");
- 
+   lyout->addWidget(checkBoxH80, 1, 0, 1, 1);
+   lyout->addWidget(labelYes, 2, 0, 1, 1);
+   lyout->addWidget(labelNo,3,0,1,1);
+   lyout->addWidget(uiNext.buttonBox,4,0,1,1);
+
+   
 // connect File:
    //connect(ui.comboBoxTape, SIGNAL(	currentIndexChanged(const QString)), this, SLOT(slotComBox(const QString)));
   // connect(ui.pushButtonFile, SIGNAL(clicked()), this, SLOT(slotFileOpen()));
-
+ 
 }
-void paramDlg::getParam()
+void nextDlg::getParam()
 {
+    #if 0
 // input start:
     if(uiDevIn.radioButtonRewind->isChecked())
         DOC->setParamDevInStart(PARAM_REWIND);
@@ -83,6 +83,7 @@ void paramDlg::getParam()
     qDebug() << "devOut Param = "<< DOC->getParamDevOutStart() << DOC->getParamDevOutEnd();
     qDebug() << "copy Param = "<< DOC->getParamCopyFrom() <<DOC->getParamCopyReels() <<DOC->getParamCopyAppend();
 
-
+#endif
 }
  
+

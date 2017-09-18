@@ -51,6 +51,7 @@
 #include "paramDlg.h"
 #include "anaTape.h"
 #include "optionDlg.h"
+#include "nextdlg.h"
 using namespace std;
 
 class dtMainWin;
@@ -157,6 +158,7 @@ protected:
     copyThread *tCopy;
     copyITF  *pCopy;
     optionDlg *option;
+    nextDlg *_nextDlg;
     QProcess hrun;
 public:
     inputView *inputV,*outputV;

@@ -65,6 +65,7 @@ dtMainWin::dtMainWin() : QMainWindow()
 
    dlgE = new editDlg(this);
    option = new optionDlg(this);
+   _nextDlg = new nextDlg(this);
 //copy:
    tCopy = new copyThread();
    pCopy = NULL;
@@ -536,6 +537,8 @@ void dtMainWin::setOptions()
 }
 void dtMainWin::slotOptions()
 {
+   _nextDlg->exec();
+   return;
  
    QString str;
    int i;
