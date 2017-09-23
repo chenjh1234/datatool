@@ -181,7 +181,8 @@ public:
     void deviceClose();// close input output device for ana
     int deviceOpen(inputView *v);// open device for copy (open both)
     //void setEnabledToolbar(QToolBar *bar,bool b);
-
+// h80:
+    bool isNextInputReel();// is inpur next rell of the : for multi tape input to one tape output;
 public slots:
     void slotInputBT(); // pressed inputview pushbutton
     void slotOutputBT();//pressed outpouview pushbutton

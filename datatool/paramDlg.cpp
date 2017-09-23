@@ -78,10 +78,19 @@ void paramDlg::getParam()
 
     str = uiCopy.lineEditAppend->text();
     DOC->setParamCopyAppend(str.toInt());
+ // h80
+    bool b;
+    b = uiH80.checkBoxH80->isChecked();
+    DOC->setH80(b);
+
+    b = uiH80.checkBoxRemoveTail->isChecked();
+    DOC->setH80SkipTail(b);
+    
 
     qDebug() << "devIn Param = "<< DOC->getParamDevInStart() << DOC->getParamDevInEnd() ;
     qDebug() << "devOut Param = "<< DOC->getParamDevOutStart() << DOC->getParamDevOutEnd();
     qDebug() << "copy Param = "<< DOC->getParamCopyFrom() <<DOC->getParamCopyReels() <<DOC->getParamCopyAppend();
+     qDebug() << "h80 Param = "<< DOC->isH80() << DOC->isH80SkipTail();
 
 
 }

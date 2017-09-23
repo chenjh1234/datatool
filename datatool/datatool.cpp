@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     
     NodeID id;
     QString f;
-    f = doc.fileLicConfig();
+    f = doc.fileLicConfig();//1:$DATATOOL/etc/datatool.lic, $HOME/DATATOOL/etc/lic
     id.setLicPath(f);
     if (!id.isValidUser())
     {

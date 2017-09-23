@@ -115,7 +115,7 @@ private:
 
     qint32 file_len,max_cs,min_cs;
     qint32 all_groups,all_trs,max_trs_per_group;
-    qint32 si,format,sam,ltr,bytes,iie;
+    qint32 si,format,ltr,bytes,iie,sam;
     qint32 wsam;
 
 // listGroup.grp[i],listGroup.idx[i]

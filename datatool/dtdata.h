@@ -189,8 +189,16 @@ public:
     int paramCopyFrom;         // copy from which reel (1:defasult)in input device(multyple reel tape device) 
     int paramCopyReels;         // copy reels: default = 1;  input device(multyple reel tape device)  
     int paramCopyAppend;    // default = 0;  where to output,override which reel in  output device( is a big tape)
-                            // 0:from start ogf the tape:
+                            // 0:from start of the tape:
                             // 1:skip first reel (mark 2 eof),output is second reel;
+//h80:
+    bool _bH80,_bH80SkipTail;
+    bool isH80(){return _bH80;};
+    void setH80(bool b){_bH80 = b;};
+    bool isH80SkipTail(){return _bH80SkipTail;};
+    void setH80SkipTail(bool b){_bH80SkipTail = b;};
+// next:
+   
 // options:
     int iTapeBlock;
     bool bCopyToolbar;

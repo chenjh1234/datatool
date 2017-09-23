@@ -139,8 +139,8 @@ void dtMainWin::readSettings()
 {
    //float f;
    QSettings settings(ORG_NAME, APP_NAME);
-   QString str = settings.value("dataname").toString();
-   int i = settings.value("datatype").toInt();
+   //QString str = settings.value("dataname").toString();
+   //int i = settings.value("datatype").toInt();
    // DOC->m_dataName = str;
    //DOC->m_dataType = i;
 }
@@ -763,7 +763,7 @@ void dtMainWin::slotJobStart()
 bool dtMainWin::startConform()
 {
    QString msg, title, str;
-   int i, sz;
+ //  int i, sz;
    //return 1;
 #if 0
    qDebug() << "in.n,r=" << in.name << in.reel;
@@ -1261,4 +1261,13 @@ void dtMainWin::setEnabledToolbar(QToolBar *bar,bool b)
         bar->setEnabled(true);
     else
         bar->setEnabled(false);
+}
+bool dtMainWin::isNextInputReel()
+{
+    bool b;
+    b = _nextDlg->exec();
+    qDebug()<< "isNext = " << b;
+    if (b)  _nextDlg->getParam();
+    qDebug() << "is skip tail block = " << DOC->isH80SkipTail();
+    return b;
 }

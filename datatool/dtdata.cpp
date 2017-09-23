@@ -56,6 +56,9 @@ void dtData::init()
    setParamCopyFrom(1);
    setParamCopyReels(0);
    setParamCopyAppend(0);
+//h80:
+   setH80(false);
+   setH80SkipTail(false);
 
    //strcpy(ch,fileAppLog().Q2CH);
    //logS->setName(ch);
@@ -755,7 +758,7 @@ QString dtData::fileLicConfig()
    QString s;
    s = pathConfig();
    mkdir(s);
-   s = s + +MARK_PATH + LIC_CONFIG;
+   s = s + MARK_PATH + LIC_CONFIG;
    return s;
 }
 QString dtData::fileJobNumber()

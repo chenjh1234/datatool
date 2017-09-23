@@ -1,5 +1,5 @@
 #include "ckUser.h"
-
+// file found: 1: datatool.lic  2:/tmp/datatool.lic
 main()
 {
    string s;
