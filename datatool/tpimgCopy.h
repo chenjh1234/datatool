@@ -30,6 +30,7 @@ public:
 	int closeCopy();// close copy
     int closeIn();
     int closeOut();
+    int writeEof();
 
 };
 

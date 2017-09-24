@@ -197,8 +197,16 @@ int tpimgCopy::copyRecord()
       if (tpIn.eof2Flag) ist = COPY_EOF2;
       if (tpIn.eotFlag) ist = COPY_EOT;
       qDebug() << "copyRecord EOF ist = " << cpErr[ist];
-      //eof : continue  to write:
-      if (tpIn.eotFlag) return ist;// eot not write
+      //eof: continue  to write:
+      // eof: ask for continue
+      // eot: for special proccesing
+      if (ist == COPY_EOT) return ist;// eot not write
+      if (ist == COPY_EOF2 && DOC->isH80()) 
+      {
+          tpIn.rewind();
+          tpIn.unload();
+          return ist;// if 2eof, adn h80 not copy, do ask Next
+      }
    }
 // yes write: data or EOF ,not EOT
    iby = iret;
@@ -211,7 +219,7 @@ int tpimgCopy::copyRecord()
    if (iret < 0)
    {
       qDebug() << "write record err ";
-      qDebug() << "err = " << tpIn.tpErr[iret];
+      qDebug() << "err = " << tpOut.tpErr[iret];
       ist = COPY_WRITE_ERR;
       //return ist;
    }
@@ -219,6 +227,30 @@ int tpimgCopy::copyRecord()
    { //---------we do it in read:
      // m_status == "EOF";
      //ist = COPY_EOF;
+   }
+   return ist;
+}
+int tpimgCopy::writeEof()
+{
+    // yes write: data or EOF ,not EOT
+   int iby,iret,ist;
+   iby = 0;
+   ist = 0;
+   DOC->sumOut->start();
+   iret = tpOut.write(DOC->buf, iby);
+   //qDebug() << "iret = " <<iret;
+   DOC->sumOut->elapsed();
+   DOC->sumOut->addBytes(iret);
+
+   if (iret < 0)
+   {
+      qDebug() << "write record err ";
+      qDebug() << "err = " << tpOut.tpErr[iret];
+      ist = COPY_WRITE_ERR;
+      //return ist;
+   }
+   else if (iret == 0)
+   { //---------we do it in read:
    }
    return ist;
 }

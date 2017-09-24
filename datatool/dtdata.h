@@ -14,9 +14,12 @@
 
 #define ORG_NAME "DATATOOL"
 #define APP_NAME "DataTool"
-#define APP_VERSION "V1.04"
+#define APP_VERSION "V1.05"
 
 #if 0
+2017.9:v1.05
+   1:add h80 FORMAT
+
 2016.12 :v1.04:  
    1: add tape analysis
    2: add  location  toolbars;add dump functions; add selected copy toolbar
@@ -51,7 +54,7 @@
 #define APP_LOG "log"       //$DATATOOL/APP_CONFIG
 #define APP_LIC "etc"       //$DATATOOL/APP_CONFIG
 // config:
-//when output device multyple reel(TPIMG) ,if we seprate the output to one file ,or serval files:1: a big file ,0:seprated files
+//when output device multyple reel(TPIMG) ,if we output to one file ,or serval files:1: a big file ,0:seprated files
 #define TPIMG_M_REEL 0
 
 // end
@@ -135,8 +138,8 @@ public:
      
     QString logCMD();
     QString logF();
-    QString logReel();
-    QString logNewReel();
+    QString logReel();// complete a reel;
+    QString logNewReel();// for output
     QString logEnd();
     QString logErr(QString s);
     QString logMsg(QString s);

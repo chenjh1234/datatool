@@ -894,11 +894,9 @@ void dtMainWin::slotFileEnd(int sta)
  
 // still more reel to input:
       i = endReel(sta); 
-
       if(i < 0)  endJob(-1);
       else if (i ==0)  endJob(0);
       else if (i > 0) runFile();
-
       break;
    case COPY_STOP_ERR:
       qDebug() << "Job err = " << pCopy->cpErr[sta];
@@ -924,42 +922,35 @@ void dtMainWin::fileEof()
    //sleep(1);
 
 }
+
 int dtMainWin::endReel(int sta)
 {
    int i;
 
    QString str, str1;
-
- 
-// end of job:
-   //if (DOC->getDevInFileList().size() <= 1)   // this is not proper,test failed:
+   if (DOC->isH80())
+   {
+       return endReelH80(sta);
+   }
    if (pCopy->tpIn.dev.type == DEV_TAPE) 
    {
-       // not a multyfile input:
-      return endReelTape(sta);
-      //return 0;
+      return endReelTape(sta);   
    }
-// multiple file input:
-// log reel:
-   
-// if all input down:
+// multiple file input: if all input down:
    if (DOC->sumReel->size() + 1 >= DOC->getDevInFileList().size()) // not closeed so +1
    {
       //DOC->sumReel->elapsed(); in copyclose()
-      //endJob(0);
       return 0;//endof file 0
    }
-    qDebug() << "reelEnd  " ;
+    qDebug() << "reelEnd  \n" ;
 // close in and open:
-   if (pCopy != NULL) // new input reel
+   if (pCopy != NULL) // new input reel of disk file
    {
       pCopy->closeIn();
       DOC->sumReel->elapsed();
-      //  log mark:
+      //get name:
       DOC->devIn->name = DOC->getDevInFileList()[DOC->sumReel->size()];
-      //qDebug() << "reelEnd ="   <<pCopy;
-      //str = pCopy->cpErr[ie];
-     
+      //open in
       i = pCopy->openIn(*DOC->devIn);
       if (i != OPEN_OK) return i;
       DOC->sumReel->start();
@@ -967,13 +958,73 @@ int dtMainWin::endReel(int sta)
    //runFile();// go next file;
    return 1;//runFile >0;
 }
+int dtMainWin::endReelH80(int sta)
+{
+   int i,ii,iby;
+   QString str, str1;
+
+   iby = DOC->getTapeBlock();
+   if (pCopy->tpIn.dev.type == DEV_TAPE) 
+   {
+       i = _nextDlg->exec();
+       if (i >0)// yes next
+       {
+            pCopy->closeIn();
+            DOC->sumReel->elapsed();
+            //get name: 
+           // DOC->devIn->name = DOC->getDevInFileList()[DOC->sumReel->size()];
+            //open the old name
+            ii = pCopy->openIn(*DOC->devIn);
+            if (ii != OPEN_OK) 
+            {
+                ii = askDlg("the input tape is not ready"," yes when ready, or cancel to stop the copy job");
+                if (ii <0 ) return -1;// err end of the copy job 
+                ii = pCopy->openIn(*DOC->devIn);      // open the 2rd time;
+                if (ii != OPEN_OK) return ii;                                         
+            }
+            DOC->sumReel->start();
+            pCopy->tpIn.read(DOC->buf,iby);// skip the first 80 bytes;
+            str = "skip the first 80  bytes;\n";
+            DOC->logJ->line(str);
+            return  1;
+       }
+       else// no end of job
+       {
+           ((tpimgCopy*)( pCopy))->writeEof();
+           return 0;
+       }
+   }
+   else// disk file:
+   {
+          if (DOC->sumReel->size() + 1 >= DOC->getDevInFileList().size()) // not closeed so +1
+          {
+              ((tpimgCopy*)( pCopy))->writeEof();
+              return 0;//endof file 0
+          }
+            pCopy->closeIn();
+            DOC->sumReel->elapsed();
+            //get name: 
+            DOC->devIn->name = DOC->getDevInFileList()[DOC->sumReel->size()];
+            //open the old name
+            ii = pCopy->openIn(*DOC->devIn);
+            if (ii != OPEN_OK) return ii;            
+            DOC->sumReel->start();
+            iby = 80;
+            pCopy->tpIn.read(DOC->buf,iby);// skip the first 80 bytes;
+            str = "skip the first 80  bytes;\n";
+            DOC->logJ->line(str);
+            return  1;
+   } 
+}
 // multi reel tape input
 int dtMainWin::endReelTape(int sta)
 {
    int i,sz;
    QString str, str1;
-   sz = DOC->getParamCopyReels();
 
+// copy multiple reels in one tape:
+
+   sz = DOC->getParamCopyReels();
    qDebug() << "endReelTape ;Copy reels,current reel = " << sz <<DOC->sumReel->size();
 // if EOT: must be a error,even sz == DOC->sumReel->size()
    if (sta == COPY_EOT) 
@@ -982,8 +1033,7 @@ int dtMainWin::endReelTape(int sta)
        DOC->logErr(str);
        return -1;
    }
-// end of input tape( int multi reel tape or TPIMG) down:
-  // all thing 
+// end of input tape( int multi reel tape) down:
  
    if (DOC->sumReel->size() +1 >= sz) 
    {

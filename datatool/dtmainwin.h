@@ -169,6 +169,7 @@ public:
     void fileEof(); // Eof file sum process; slotFileEnd call it when normal EOF end;
     int endReel(int sta); // for more input file of TPIMG
     int endReelTape(int sta);// for one TPIMG(or tape) which is more reel data;
+    int endReelH80(int sta); // for more H80 format
     void endJob(int );// end of job process;
 
     int newOutputReel();// copy more reel ,create next file to output:

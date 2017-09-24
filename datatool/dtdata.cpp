@@ -430,6 +430,13 @@ QString dtData::getCopyParamStr()
    str += QString("Copy reel from: %1\n").arg(getParamCopyFrom());
    str += QString("Copy reel numbers: %1\n").arg(getParamCopyReels());
    str += QString("Copy output reel from: %1\n").arg(getParamCopyAppend());
+   if (isH80())
+   {
+       str += QString("The input tape format is H80: ");
+       if(isH80SkipTail()) str += QString("Skip the option tail block\n");
+       else str += QString("Do not skip the option tail block\n");
+   }
+   
    return str;
 }
 QString dtData::logCMD()
@@ -524,7 +531,7 @@ QString dtData::logReel()
    return str;
 
 }
-QString dtData::logNewReel()
+QString dtData::logNewReel()// for output:
 {
 
    DEV dev;
