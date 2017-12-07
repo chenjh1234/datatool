@@ -19,6 +19,10 @@ public:
     void init();
 
     void getParam();
+    void setReel();
+
+    QCheckBox *checkBoxH80;
+   
 public   slots:
  //   void slotFileOpen();
  //   void slotComBox(const QString);
@@ -28,7 +32,7 @@ private:
     QGridLayout *lyout;
     QWidget *inputW;
     QLabel * labelYes,*labelNo;
-    QCheckBox *checkBoxH80;
+    QLabel * labelReel;
  
     Ui::DialogNext uiNext;
 };

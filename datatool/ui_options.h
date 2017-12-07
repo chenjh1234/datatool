@@ -85,10 +85,10 @@ public:
     void retranslateUi(QDialog *DialogOption)
     {
         DialogOption->setWindowTitle(QApplication::translate("DialogOption", "Options", 0));
-        label->setText(QApplication::translate("DialogOption", "Tape Block", 0));
+        label->setText(QApplication::translate("DialogOption", "Block Size ", 0));
         lineEditTapeBlock->setText(QApplication::translate("DialogOption", "256000", 0));
-        checkBoxCopyBar->setText(QApplication::translate("DialogOption", "Is enable copyToolBar", 0));
-        checkBoxCopyPrompt->setText(QApplication::translate("DialogOption", "Is copy prompt", 0));
+        checkBoxCopyBar->setText(QApplication::translate("DialogOption", "Enable Copy ToolBar", 0));
+        checkBoxCopyPrompt->setText(QApplication::translate("DialogOption", "Copy Prompt", 0));
     } // retranslateUi
 
 };

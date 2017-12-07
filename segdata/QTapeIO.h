@@ -197,6 +197,7 @@ public:
 //
     int getTapeBlock();
     int setTapeBlock(int id);
+    void h80();
     QString filename,filenameImg;
 
     qint64  size();

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>File list</string>
+   <string>File List</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0" colspan="2">
@@ -31,7 +31,7 @@
         <string>move selected items up</string>
        </property>
        <property name="text">
-        <string>up</string>
+        <string>Up</string>
        </property>
       </widget>
      </item>
@@ -41,7 +41,7 @@
         <string>move selected items down</string>
        </property>
        <property name="text">
-        <string>down</string>
+        <string>Down</string>
        </property>
       </widget>
      </item>
@@ -51,7 +51,7 @@
         <string>clear all items </string>
        </property>
        <property name="text">
-        <string>clear</string>
+        <string>Clear</string>
        </property>
       </widget>
      </item>
@@ -75,7 +75,7 @@
         <string>remove selected items </string>
        </property>
        <property name="text">
-        <string>remove</string>
+        <string>Remove</string>
        </property>
       </widget>
      </item>
@@ -92,7 +92,7 @@
         <string>input files and add to view</string>
        </property>
        <property name="text">
-        <string>add</string>
+        <string>Add</string>
        </property>
       </widget>
      </item>

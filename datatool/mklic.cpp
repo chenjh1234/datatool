@@ -1,6 +1,7 @@
 #include "ckUser.h"
 // file found: 1: datatool.lic  2:/tmp/datatool.lic
-main()
+#define PASSWD "12345678"
+main(int argc ,char **argv)
 {
    string s;
    char *c;
@@ -36,10 +37,23 @@ main()
     b= nid.isValidUser();
 
     cout << "is valid = " << b << endl;
-
     cout << " licToFile()=====================\n";
-
-    nid.licToFile();
+    QString pass;
+    pass  = "";
+    if (argc >1) 
+    {
+        if (QString(argv[1] )== QString(PASSWD))  
+        {
+             nid.licToFile();// normal exit
+             exit(0);
+        }
+    }
+   //
+    mp[LIC_START] = qToStr(nid.today());
+    mp[LIC_END] = qToStr(nid.next15Day());
+    
+    nid. licToFile(mp[LIC_USER], mp[LIC_MID], mp[LIC_START],mp[LIC_END]);
+    //nid.licToFile();
 
 }
 

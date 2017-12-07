@@ -19,7 +19,7 @@
      <item row="0" column="0" colspan="2">
       <widget class="QPushButton" name="pushButtonCheck">
        <property name="text">
-        <string>Input</string>
+        <string>Input Device</string>
        </property>
       </widget>
      </item>

@@ -14,9 +14,16 @@
 
 #define ORG_NAME "DATATOOL"
 #define APP_NAME "DataTool"
-#define APP_VERSION "V1.05"
+#define APP_VERSION "V1.06"
+
 
 #if 0
+2017.12 :v1.06
+   1:update gui word
+   2:directory changed :job config,license,
+   3:remove help
+   3:add command line parameters
+
 2017.9:v1.05
    1:add h80 FORMAT
 
@@ -50,12 +57,15 @@
 
 #define APP_ENV "DATATOOL" //  app path env
 #define APP_PATH getenv(APP_ENV); 
-#define APP_CONFIG "etc"       //$DATATOOL/APP_CONFIG
-#define APP_LOG "log"       //$DATATOOL/APP_CONFIG
-#define APP_LIC "etc"       //$DATATOOL/APP_CONFIG
+//#define APP_CONFIG "etc"       //$DATATOOL/APP_CONFIG
+#define APP_CONFIG "config"       //$DATATOOL/APP_CONFIG
+#define APP_LOG "log"       //$DATATOOL/APP_LOG
+//#define APP_LIC "etc"       //$DATATOOL/APP_LIC
+#define APP_LIC "license"       //$DATATOOL/APP_LIC
 // config:
 //when output device multyple reel(TPIMG) ,if we output to one file ,or serval files:1: a big file ,0:seprated files
 #define TPIMG_M_REEL 0
+#define TEST_H80_TAPE 0
 
 // end
 // files:
@@ -77,7 +87,8 @@
 #define HOME_ENV "HOMEPATH"
 #endif
 // path file
-#define PROJECT_ENV "PROJECT_H"
+//#define PROJECT_ENV "PROJECT_H"
+#define PROJECT_ENV "DATATOOL"
 #define PROJECT_PATH getenv(PROJECT_ENV);
 #define PROJECT_DATA "data";// 
 #define PROJECT_JOB "job";
@@ -164,7 +175,7 @@ public:
 // sum:===================
     sumInfo *sumIn,*sumOut;// sum for input dev,output dev: time,cpu,record,bytes
     sumInfo *sumFile; // sum for copy files  record, bytes 
-    sumInfo *sumReel; 
+    sumInfo *sumReel; // sum for reel;
     QString _startT;// job start time
     int _iEOT ; // input type =DISK =0 else 1, when sum all record - iEOT;
     
@@ -200,6 +211,7 @@ public:
     void setH80(bool b){_bH80 = b;};
     bool isH80SkipTail(){return _bH80SkipTail;};
     void setH80SkipTail(bool b){_bH80SkipTail = b;};
+    int _icR80InFile;
 // next:
    
 // options:

@@ -31,13 +31,22 @@ void paramDlg::init()
    uiDevOut.setupUi(outputW);
    uiCopy.setupUi(copyW);
    uiH80.setupUi(h80W);
-   uiDevIn.groupBoxDev->setTitle("Input Device:");
-   uiDevOut.groupBoxDev->setTitle("output Device:");
+   uiDevIn.groupBoxDev->setTitle(tr("Input Device:"));
+   uiDevOut.groupBoxDev->setTitle(tr("Output Device:"));
  
 // connect File:
    //connect(ui.comboBoxTape, SIGNAL(	currentIndexChanged(const QString)), this, SLOT(slotComBox(const QString)));
   // connect(ui.pushButtonFile, SIGNAL(clicked()), this, SLOT(slotFileOpen()));
 
+}
+
+void paramDlg::setParam()
+{
+    // h80
+    if (DOC->isH80SkipTail())  
+        uiH80.checkBoxRemoveTail->setChecked(true); 
+    else
+        uiH80.checkBoxRemoveTail->setChecked(false); 
 }
 void paramDlg::getParam()
 {
@@ -91,7 +100,6 @@ void paramDlg::getParam()
     qDebug() << "devOut Param = "<< DOC->getParamDevOutStart() << DOC->getParamDevOutEnd();
     qDebug() << "copy Param = "<< DOC->getParamCopyFrom() <<DOC->getParamCopyReels() <<DOC->getParamCopyAppend();
      qDebug() << "h80 Param = "<< DOC->isH80() << DOC->isH80SkipTail();
-
 
 }
  

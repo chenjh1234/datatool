@@ -14,57 +14,57 @@ void anaTape::init()
 void anaTape::createActions()
 {
 // dump
-   dumpAct = new QAction(QIcon(":/images/readdump.png"), tr("read &dump"), WIN);
-   dumpAct->setStatusTip(tr("read and Dump"));
+   dumpAct = new QAction(QIcon(":/images/readdump.png"), tr("View &dump"), WIN);
+   dumpAct->setStatusTip(tr("Read and Dump"));
    connect(dumpAct, SIGNAL(triggered()), this, SLOT(slotDump()));
 // dumponly
-   dumpOnlyAct = new QAction(QIcon(":/images/dumponly.png"), tr("dump"), WIN);
-   dumpOnlyAct->setStatusTip(tr(" dump only"));
+   dumpOnlyAct = new QAction(QIcon(":/images/dumponly.png"), tr("Dump"), WIN);
+   dumpOnlyAct->setStatusTip(tr(" Dump only"));
    connect(dumpOnlyAct, SIGNAL(triggered()), this, SLOT(slotDumpOnly()));
 // skipf
-   skipFAct = new QAction(QIcon(":/images/skipf.png"), tr("forward file"), WIN);
-   skipFAct->setStatusTip(tr("skip forward file"));
+   skipFAct = new QAction(QIcon(":/images/skipf.png"), tr("Forward File"), WIN);
+   skipFAct->setStatusTip(tr("Skip forward file"));
    connect(skipFAct, SIGNAL(triggered()), this, SLOT(slotSkipF()));
 // skipr
-   skipRAct = new QAction(QIcon(":/images/skipr.png"), tr("forward record"), WIN);
-   skipRAct->setStatusTip(tr("skip forward record"));
+   skipRAct = new QAction(QIcon(":/images/skipr.png"), tr("Forward Record"), WIN);
+   skipRAct->setStatusTip(tr("Skip forward record"));
    connect(skipRAct, SIGNAL(triggered()), this, SLOT(slotSkipR()));
 // bskipr
-   bSkipRAct = new QAction(QIcon(":/images/bskipr.png"), tr("backward record"), WIN);
-   bSkipRAct->setStatusTip(tr("backward record"));
+   bSkipRAct = new QAction(QIcon(":/images/bskipr.png"), tr("Backward Record"), WIN);
+   bSkipRAct->setStatusTip(tr("Backward record"));
    connect(bSkipRAct, SIGNAL(triggered()), this, SLOT(slotBSkipR()));
 
 // bskipf
-   bSkipFAct = new QAction(QIcon(":/images/bskipf.png"), tr("backward file"), WIN);
-   bSkipFAct->setStatusTip(tr("backward file"));
+   bSkipFAct = new QAction(QIcon(":/images/bskipf.png"), tr("Backward File"), WIN);
+   bSkipFAct->setStatusTip(tr("Backward file"));
    connect(bSkipFAct, SIGNAL(triggered()), this, SLOT(slotBSkipF()));
 
 // rewind
-   rewindAct = new QAction(QIcon(":/images/rewind.png"), tr("rewind"), WIN);
-   rewindAct->setStatusTip(tr("tape rewind"));
+   rewindAct = new QAction(QIcon(":/images/rewind.png"), tr("Rewind"), WIN);
+   rewindAct->setStatusTip(tr("Tape rewind"));
    connect(rewindAct, SIGNAL(triggered()), this, SLOT(slotRewind()));
 // unload
-   unloadAct = new QAction(QIcon(":/images/unload.png"), tr("unload"), WIN);
-   unloadAct->setStatusTip(tr("tape unload"));
+   unloadAct = new QAction(QIcon(":/images/unload.png"), tr("Unload"), WIN);
+   unloadAct->setStatusTip(tr("Tape unload"));
    connect(unloadAct, SIGNAL(triggered()), this, SLOT(slotUnload()));
 // stat
-   statusAct = new QAction(QIcon(":/images/status.png"), tr("status"), WIN);
-   statusAct->setStatusTip(tr("tape status"));
+   statusAct = new QAction(QIcon(":/images/status.png"), tr("Status"), WIN);
+   statusAct->setStatusTip(tr("Tape Status"));
    connect(statusAct, SIGNAL(triggered()), this, SLOT(slotStatus()));
 // copy
 
-   copyfAct = new QAction(QIcon(":/images/copyf.png"), tr("copy file"), WIN);
-   copyfAct->setStatusTip(tr("copy file"));
+   copyfAct = new QAction(QIcon(":/images/copyf.png"), tr("Copy File"), WIN);
+   copyfAct->setStatusTip(tr("Copy file"));
    connect(copyfAct, SIGNAL(triggered()), this, SLOT(slotCopyf()));
 // copr
 
-   copyrAct = new QAction(QIcon(":/images/copyr.png"), tr("copy record"), WIN);
-   copyrAct->setStatusTip(tr("copy record"));
+   copyrAct = new QAction(QIcon(":/images/copyr.png"), tr("Copy Record"), WIN);
+   copyrAct->setStatusTip(tr("Copy record"));
    connect(copyrAct, SIGNAL(triggered()), this, SLOT(slotCopyr()));
 // write eof
 
-   eofAct = new QAction(QIcon(":/images/eof.png"), tr("write eof"), WIN);
-   eofAct->setStatusTip(tr("write eof"));
+   eofAct = new QAction(QIcon(":/images/eof.png"), tr("Write Eof"), WIN);
+   eofAct->setStatusTip(tr("Write eof"));
    connect(eofAct, SIGNAL(triggered()), this, SLOT(slotEof()));
 
 

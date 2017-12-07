@@ -12,7 +12,7 @@ jobView::~jobView()
 void jobView::init()
 {
     QStringList slist;
-    slist << "jobname " <<"status";
+    slist <<tr( "Job Name ")<<tr("Status");
     setHeaderLabels(slist);
     // header()->setResizeMode(QHeaderView::ResizeToContents );
      resizeColumnToContents(JOB_NAME);

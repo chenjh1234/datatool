@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>584</width>
-    <height>217</height>
+    <width>628</width>
+    <height>187</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,10 +27,7 @@
    <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>when Start Copy</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <string>When Start Copy</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="1">
@@ -42,7 +39,7 @@
          <string>NotRewind</string>
         </property>
         <property name="text">
-         <string>NotRewind</string>
+         <string>None</string>
         </property>
         <property name="checked">
          <bool>false</bool>
@@ -55,7 +52,7 @@
          <string>rewind</string>
         </property>
         <property name="text">
-         <string>rewind</string>
+         <string>Rewind</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -68,10 +65,10 @@
    <item row="2" column="0">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
-      <string>when Finished Copy</string>
+      <string>When Finished Copy</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
+     <property name="flat">
+      <bool>false</bool>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
@@ -80,7 +77,7 @@
          <string>Rewind&amp;Unload</string>
         </property>
         <property name="text">
-         <string>Rewind&amp; Unload</string>
+         <string>Unload</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -93,7 +90,7 @@
          <string>rewind</string>
         </property>
         <property name="text">
-         <string>rewind</string>
+         <string>Rewind</string>
         </property>
         <property name="checked">
          <bool>false</bool>
@@ -109,7 +106,7 @@
          <string>NotRewind</string>
         </property>
         <property name="text">
-         <string>NotRewind</string>
+         <string>None</string>
         </property>
         <property name="checked">
          <bool>false</bool>

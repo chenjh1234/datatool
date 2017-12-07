@@ -25,7 +25,7 @@ dtMainWin::dtMainWin() : QMainWindow()
 
    DOC = theApp->m_doc;
 
-   devDockWidget = new QDockWidget("devView", this);
+   devDockWidget = new QDockWidget(tr("Device View"), this);
 
 
    addDockWidget(Qt::LeftDockWidgetArea, devDockWidget);
@@ -56,7 +56,7 @@ dtMainWin::dtMainWin() : QMainWindow()
 
 
 
-   outputV->setDev("Output");
+   outputV->setDev(tr("Output Device"));
 
    devLay->addWidget(inputV, 0, 0);
    devLay->addWidget(outputV, 1, 0);
@@ -97,7 +97,7 @@ dtMainWin::~dtMainWin()
 
 void dtMainWin::errDlg(QString s)
 {
-   QMessageBox::warning(this, "Error", s);
+   QMessageBox::warning(this, tr("Error"), s);
 }
 void dtMainWin::errDlg(QString s1, QString s2)
 {
@@ -106,7 +106,7 @@ void dtMainWin::errDlg(QString s1, QString s2)
 
 int dtMainWin::askDlg(QString str)
 {
-   return askDlg("ask:", str);
+   return askDlg(tr("Warning:"), str);
 }
 
 int dtMainWin::askDlg(QString s1, QString s2)
@@ -201,29 +201,29 @@ void dtMainWin::createActions()
 //runStartAct = addACT(":/images/movefirst.png","runStart",&dtMainWin::slotRunStart);
 //qDebug() << runStartAct;
 //==============================================================================
-   runStartAct = new QAction(QIcon(":/images/runstart.png"), tr("runStart"), this);
+   runStartAct = new QAction(QIcon(":/images/runstart.png"), tr("Start"), this);
    //moveFirstAct->setShortcuts(QKeySequence::Quit);
-   runStartAct->setStatusTip(tr("runStart"));
+   runStartAct->setStatusTip(tr("Start"));
    connect(runStartAct, SIGNAL(triggered()), this, SLOT(slotJobStart()));
 
-   runStopAct = new QAction(QIcon(":/images/runstop.png"), tr("runStop"), this);
+   runStopAct = new QAction(QIcon(":/images/runstop.png"), tr("Stop"), this);
    //moveFirstAct->setShortcuts(QKeySequence::Quit);
-   runStopAct->setStatusTip(tr("runStop"));
+   runStopAct->setStatusTip(tr("Stop"));
    connect(runStopAct, SIGNAL(triggered()), this, SLOT(slotJobStop()));
 
-   runPauseAct = new QAction(QIcon(":/images/runpause.png"), tr("runPause"), this);
+   runPauseAct = new QAction(QIcon(":/images/runpause.png"), tr("Pause"), this);
    //moveFirstAct->setShortcuts(QKeySequence::Quit);
-   runPauseAct->setStatusTip(tr("runPause"));
+   runPauseAct->setStatusTip(tr("Pause"));
    connect(runPauseAct, SIGNAL(triggered()), this, SLOT(slotJobPause()));
 //tape config
-   tapeConfigAct = new QAction(QIcon(":/images/tapeconfig.png"), tr("tapeConfig"), this);
+   tapeConfigAct = new QAction(QIcon(":/images/tapeconfig.png"), tr("Tape Device Config"), this);
    //moveFirstAct->setShortcuts(QKeySequence::Quit);
-   tapeConfigAct->setStatusTip(tr("tapeConfig"));
+   tapeConfigAct->setStatusTip(tr("Tape Device Config"));
    connect(tapeConfigAct, SIGNAL(triggered()), this, SLOT(slotTapeConfig()));
 // option config
-   optionAct = new QAction(QIcon(":/images/options.png"), tr("options"), this);
+   optionAct = new QAction(QIcon(":/images/options.png"), tr("Options"), this);
    //moveFirstAct->setShortcuts(QKeySequence::Quit);
-   optionAct->setStatusTip(tr("options"));
+   optionAct->setStatusTip(tr("Options"));
    connect(optionAct, SIGNAL(triggered()), this, SLOT(slotOptions()));
 
   
@@ -238,9 +238,9 @@ void dtMainWin::createActions()
    logConfigAct->setStatusTip(tr("log"));
    connect(logConfigAct, SIGNAL(triggered()), this, SLOT(slotLogConfig()));
 #endif
-   jobConfigAct = new QAction(QIcon(":/images/paraconfig.png"), tr("jobConfig"), this);
+   jobConfigAct = new QAction(QIcon(":/images/paraconfig.png"), tr("Job Config"), this);
    //moveFirstAct->setShortcuts(QKeySequence::Quit);
-   jobConfigAct->setStatusTip(tr("parameters"));
+   jobConfigAct->setStatusTip(tr("Job Config"));
    connect(jobConfigAct, SIGNAL(triggered()), this, SLOT(slotJobConfig()));
 
 
@@ -280,13 +280,13 @@ void dtMainWin::createActions()
 }
 void dtMainWin::addHelp()
 {
-    helpMenu = menuBar()->addMenu(tr("&Help"));
-    helpMenu->addAction(helpAct);
-    helpMenu->addAction(aboutAct);
+    //helpMenu = menuBar()->addMenu(tr("&Help"));
+    //helpMenu->addAction(helpAct);
+    //helpMenu->addAction(aboutAct);
 
     //help:
-    helpToolBar = addToolBar(tr("Help"));
-    helpToolBar->addAction(aboutAct);
+   // helpToolBar = addToolBar(tr("Help"));
+    //helpToolBar->addAction(aboutAct);
 }
 
 void dtMainWin::createMenus()
@@ -354,10 +354,10 @@ void dtMainWin::createToolBars()
       configToolBar->addAction(optionAct);
       //
      numberToolBar = addToolBar(tr("Number"));
-     str = "OP NUmber:";
-     numberToolBar->addWidget(createSpinWidget("NUmber", str, PARAM_NUMBER_OP, 1, 1, 100, 1));
-     str = "Dump lines:";
-     numberToolBar->addWidget(createSpinWidget("Lines", str, PARAM_NUMBER_LINE, 10, 1, 100, 1));
+     str = tr("OP Number:");
+     numberToolBar->addWidget(createSpinWidget(tr("Number"), str, PARAM_NUMBER_OP, 1, 1, 100, 1));
+     str = tr("Dump lines:");
+     numberToolBar->addWidget(createSpinWidget(tr("Lines"), str, PARAM_NUMBER_LINE, 10, 1, 100, 1));
       
 
 #if 0 //  AGC TEST
@@ -537,8 +537,8 @@ void dtMainWin::setOptions()
 }
 void dtMainWin::slotOptions()
 {
-   _nextDlg->exec();
-   return;
+  //  isNextInputReel();
+  // return;
  
    QString str;
    int i;
@@ -589,7 +589,7 @@ void dtMainWin::slotTapeConfig()
    slist = DOC->getTapeConfig();
    qDebug() << " get tape Config = " << slist;
 
-   dlgE->setTitle("Tape Config");
+   dlgE->setTitle(tr("Tape Device Config"));
    dlgE->resize(TAPE_SIZE);
 
    slist.insert(0, TAPE_COMM);
@@ -623,6 +623,7 @@ void dtMainWin::slotTapeConfig()
 void dtMainWin::slotJobConfig()
 {
    qDebug() << "para";
+   paramD->setParam();
    paramD->exec();
    paramD->getParam();
 
@@ -964,9 +965,9 @@ int dtMainWin::endReelH80(int sta)
    QString str, str1;
 
    iby = DOC->getTapeBlock();
-   if (pCopy->tpIn.dev.type == DEV_TAPE) 
+   if (pCopy->tpIn.dev.type == DEV_TAPE || TEST_H80_TAPE) 
    {
-       i = _nextDlg->exec();
+       i = isNextInputReel();
        if (i >0)// yes next
        {
             pCopy->closeIn();
@@ -1315,7 +1316,20 @@ void dtMainWin::setEnabledToolbar(QToolBar *bar,bool b)
 bool dtMainWin::isNextInputReel()
 {
     bool b;
-    b = _nextDlg->exec();
+    if (DOC->isH80()) 
+    {
+        _nextDlg->checkBoxH80->setEnabled(true); 
+
+        if (DOC->isH80SkipTail())  
+            _nextDlg->checkBoxH80->setChecked(true); 
+        else
+            _nextDlg->checkBoxH80->setChecked(false);        
+    }
+    else
+        _nextDlg->checkBoxH80->setEnabled(false); 
+    _nextDlg->setReel();
+
+    b = _nextDlg->exec(); 
     qDebug()<< "isNext = " << b;
     if (b)  _nextDlg->getParam();
     qDebug() << "is skip tail block = " << DOC->isH80SkipTail();

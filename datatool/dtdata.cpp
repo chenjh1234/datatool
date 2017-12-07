@@ -59,7 +59,8 @@ void dtData::init()
 //h80:
    setH80(false);
    setH80SkipTail(false);
-
+   _icR80InFile = 0;
+   
    //strcpy(ch,fileAppLog().Q2CH);
    //logS->setName(ch);
    str = fileAppLog();
@@ -763,7 +764,7 @@ QString dtData::fileParaConfig()
 QString dtData::fileLicConfig()
 {
    QString s;
-   s = pathConfig();
+   s = pathLic();
    mkdir(s);
    s = s + MARK_PATH + LIC_CONFIG;
    return s;

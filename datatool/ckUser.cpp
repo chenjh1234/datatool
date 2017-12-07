@@ -240,7 +240,7 @@ map<string,string> NodeID::getLicInfoFromFile()
    ssize_t ret;
 
    mp[LIC_USER] = "default_user";
-   mp[LIC_MID] = "default_mid";
+   mp[LIC_MID] = getMID();//"default_mid";
    mp[LIC_START] =  qToStr(today());
    mp[LIC_END] = qToStr(nextYear());
 
@@ -276,6 +276,18 @@ QString NodeID::nextYear()
     cout  << "nextYeary = " << dt << endl;
     QString str;
     str = dt;
+    return str;
+}
+#define DT_FORMAT "yyyyMMdd"
+QString NodeID::next15Day()
+{
+    QDateTime dt;
+    QString str;
+    long d,days;
+    days = 15;
+    dt = dt.currentDateTime();
+    dt = dt.addDays(days);
+    str = dt.toString(DT_FORMAT);
     return str;
 }
 QString NodeID::today()

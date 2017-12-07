@@ -954,6 +954,64 @@ int dataIO::tapeio(int *iunit, char *opkey)
    return ist;
 #endif
 }
+void  dataIO::h80()
+{
+   QString filen = "h801";
+   dataIO tp;
+   unsigned char buf[10000];
+   int *ip, len, it, l, i;
+   len = 80;
+   l = 0;
+   tp.openTPIMG(filen, 1);
+   qDebug() << "open ok";
+// header 80*3
+   for (i = 0; i < 3 ; i++)
+   {
+      //qDebug() << "w ok";
+      memset(buf, i, len);
+      it = tp.write(buf, len);
+      if (it != len)
+      {
+         qDebug() << "write heder error 0";
+         return;
+      }
+   }   
+  // eof:
+   it = tp.write(buf, l);
+// 10 data of 1000;
+   len  =1000;
+   for (i = 0; i < 10; i++)
+   {
+      memset(buf, i+10, len);
+      it = tp.write(buf, len);
+      if (it != len)
+      {
+         qDebug() << "write data error 0";
+         return;
+      }
+   }
+  // tail 80*3:
+   len =80;
+   for (i = 0; i < 3 ; i++)
+   {
+      //qDebug() << "w ok";
+      memset(buf, i+20, len);
+      it = tp.write(buf, len);
+      if (it != len)
+      {
+         qDebug() << "write tail error 0";
+         return;
+      }
+   }   
+// 2 eof:
+
+   it = tp.write(buf, l);
+   it = tp.write(buf, l);
+   tp.close();
+   qDebug() << "close";
+
+}
+
 
 //=====================================================================
 #if 0 // test tpimg:=========================================

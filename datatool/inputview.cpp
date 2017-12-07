@@ -52,8 +52,9 @@ void inputView::slotComBox(const QString str)
 {
 
 
-   if (ui.pushButtonCheck->text() == QString("Input"))
-   {
+   //if (ui.pushButtonCheck->text() == QString("Input"))
+    if (isInput())  
+    {
       //if (str == DEVICE_DISK || str == DEVICE_TPIMG)
       if (str == DEVICE_TPIMG)
       {

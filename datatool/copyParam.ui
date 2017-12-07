@@ -77,7 +77,7 @@
            <enum>QFrame::Raised</enum>
           </property>
           <property name="text">
-           <string>Append to:</string>
+           <string>Append To:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

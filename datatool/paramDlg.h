@@ -22,6 +22,7 @@ public:
     void init();
 
     void getParam();
+    void setParam();
 public   slots:
  //   void slotFileOpen();
  //   void slotComBox(const QString);

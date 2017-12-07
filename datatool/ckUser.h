@@ -35,6 +35,7 @@
 using namespace std;
 #include <QFile>
 #include <QString>
+#include <QDateTime>
 #include "comfun.h"
 
 class NodeID
@@ -48,6 +49,7 @@ public:
     void setLicPath(string file);
     QString today();
     QString nextYear();
+    QString next15Day();
 
     string getMID();// mid of local host
     string getLic();// get key string according to licfile contains;in:(user,mid,start,end ) out(key)

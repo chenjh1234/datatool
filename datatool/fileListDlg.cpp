@@ -23,7 +23,7 @@ void fileListDlg::init()
    connect(ui.pushButtonDown, SIGNAL(clicked()), this, SLOT(slotDown()));
    connect(ui.pushButtonUnselect, SIGNAL(clicked()), this, SLOT(slotUnselect()));
    QStringList slist;
-   slist << "filename" << "size" << "last modify";
+   slist << "File Name" << "Size" << "Last Modify";
    ui.treeWidget->setHeaderLabels(slist);
    // header()->setResizeMode(QHeaderView::ResizeToContents );
    ui.treeWidget->resizeColumnToContents(FILE_NAME);
@@ -173,7 +173,7 @@ void fileListDlg::moveSelectedItem(int wh)
       {
          if (i == 0) // 1st loop : ask if remove:
          {
-            j = WIN->askDlg("Remove Selected Items??");
+            j = WIN->askDlg(tr("Remove Selected Items??"));
             if (j == 0) return;
          }
          //item = listItem[i];
@@ -201,7 +201,7 @@ void fileListDlg::slotDown()
 }
 void fileListDlg::slotClear()
 {
-   if (!WIN->askDlg("Remove all The Items??")) return;
+   if (!WIN->askDlg(tr("Remove all The Items??"))) return;
    ui.treeWidget->clear();
 
 }

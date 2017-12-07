@@ -196,6 +196,7 @@ int tpimgCopy::copyRecord()
       if (tpIn.eofFlag) ist = COPY_EOF;
       if (tpIn.eof2Flag) ist = COPY_EOF2;
       if (tpIn.eotFlag) ist = COPY_EOT;
+      DOC->_icR80InFile = 0;
       qDebug() << "copyRecord EOF ist = " << cpErr[ist];
       //eof: continue  to write:
       // eof: ask for continue
@@ -207,6 +208,25 @@ int tpimgCopy::copyRecord()
           tpIn.unload();
           return ist;// if 2eof, adn h80 not copy, do ask Next
       }
+   }
+   if (iret == 80) 
+   {
+        if( DOC->sumOut->size() - DOC->sumFile->getFiles() > 3) // not the first 3 record of the file
+        {
+               DOC->_icR80InFile ++;
+               if (DOC->_icR80InFile >=3) // this is the option tail of H80
+               {
+                     if (DOC->isH80SkipTail()) 
+                     {
+                        DOC->logJ->line("We skip the option tail of H80");
+                        return ist; // skip option tail of H80
+                     }
+               }
+         }   
+   }
+   else
+   {
+      DOC->_icR80InFile = 0;      
    }
 // yes write: data or EOF ,not EOT
    iby = iret;

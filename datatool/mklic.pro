@@ -1,4 +1,4 @@
-EMPLATE = app
+TEMPLATE = app
 TARGET = mklic
 DESTDIR =Debug
 CONFIG += debug

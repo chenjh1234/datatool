@@ -1,4 +1,4 @@
-EMPLATE = app
+TEMPLATE = app
 TARGET = mid
 DESTDIR =Debug
 CONFIG += debug

@@ -13,7 +13,7 @@ QT += testlib
         LIBS += -lssl
 }
  
- 
+TRANSLATIONS += datatool.ts
 INCLUDEPATH += .\
         ../segdata
 
