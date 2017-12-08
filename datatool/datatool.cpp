@@ -20,16 +20,20 @@ int main(int argc, char *argv[])
     dtApp app(argc, argv);
     app.setOrganizationName(ORG_NAME);
     app.setApplicationName(APP_NAME);
+// tralator:
     QTranslator qtTranslator; 
-    qtTranslator.load("datatool.qm"); 
+    QString path;
+    path = app.applicationDirPath() + "/datatool.qm";
+    qtTranslator.load(path); 
     app.installTranslator(&qtTranslator); 
 
     dtData doc;
     app.m_doc = &doc;
-    doc.getNextName("2222",3);
+    //doc.getNextName("2222",3);
  
     dtMainWin mainWin;
     app.m_win = &mainWin;
+    mainWin.setWindowIcon(QIcon(":/images/tapeicon.png"));
     qDebug() << "app dir = " << app.applicationDirPath() ;
     qDebug() << "working dir = " << QDir::currentPath() ;
 
