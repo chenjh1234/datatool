@@ -46,6 +46,7 @@ void QSegyADI::init()
    m_iReelCounter = 0;
    m_iLineCounter = 0;
    m_iCurGather = 0;
+   m_ic = 0;
   // th = new segyThread();
 
    connect(&th, SIGNAL(finished()),
@@ -473,14 +474,25 @@ int QSegyADI::readTrace(int *head, float *buf)
    unsigned int *iip;
    iip = (unsigned int*)m_pcBuf;
 
+  // iby = m_iBytes;
+//read header:
+   //i = m_tp->read(m_pcBuf, SEGY_HEAD_BYTES + iby);
+   i = m_tp->read(m_pcBuf, SEGY_HEAD_BYTES);
+   if (i < 0) return i;
+   else if (i == 0)
+   {
+      setStatus("EOF");
+      return 0;
+   }
+   setMainHeader();
+   memcpy(head, m_pcBuf, SEGY_HEAD_BYTES);
+
    iby = m_iBytes;
 
-   i = m_tp->read(m_pcBuf, SEGY_HEAD_BYTES + iby);
- //  qDebug("ppppp0 = %d,%x,%x,%x,%x---%x,%x,%x",i,m_pcBuf[0],m_pcBuf[1],m_pcBuf[2],m_pcBuf[3],m_pcBuf[240],m_pcBuf[241],m_pcBuf[242]);
 
-
+   //reade samples:
+   i = m_tp->read(m_pcBuf+SEGY_HEAD_BYTES , iby);
    if (i < 0) return i;
-
    else if (i == 0)
    {
       setStatus("EOF");
@@ -489,13 +501,7 @@ int QSegyADI::readTrace(int *head, float *buf)
    else
    { // ok;
       setStatus("");
-
-      setMainHeader();
-      // qDebug("ppppp1 = %d,%x,%x,%x,%x---%x,%x,%x",i,m_pcBuf[0],m_pcBuf[1],m_pcBuf[2],m_pcBuf[3],m_pcBuf[240],m_pcBuf[241],m_pcBuf[242]);
-
-      memcpy(head, m_pcBuf, SEGY_HEAD_BYTES);
-      // qDebug("ppppp2 = %d,%x,%x,%x,%x---%x,%x,%x",i,m_pcBuf[0],m_pcBuf[1],m_pcBuf[2],m_pcBuf[3],m_pcBuf[240],m_pcBuf[241],m_pcBuf[242]);
-        
+      // qDebug("ppppp2 = %d,%x,%x,%x,%x---%x,%x,%x",i,m_pcBuf[0],m_pcBuf[1],m_pcBuf[2],m_pcBuf[3],m_pcBuf[240],m_pcBuf[241],m_pcBuf[242]);     
 /// here we got a error ,i donot know why: copy a crazy data ,240byte looped data buf[0] = buf[60] = buf[120]???
    //   if (i - SEGY_HEAD_BYTES  > 0) 
     //      memcpy(m_pcBuf, m_pcBuf + SEGY_HEAD_BYTES, i - SEGY_HEAD_BYTES);
@@ -504,23 +510,25 @@ int QSegyADI::readTrace(int *head, float *buf)
    unsigned char *mpp;
    mpp = m_pcBuf + SEGY_HEAD_BYTES;
    str = getStatus();
+   int sams;
+   sams = m_iSamples;
    if (str != "EOF") switch (m_iFormat)
       {
       case 1:
-         ibm_to_float((int *)mpp, (int *)buf, m_iSamples, m_iEndian);
+         ibm_to_float((int *)mpp, (int *)buf, sams, m_iEndian);
         // qDebug("ppppp4 = %d,%x,%x,%x,%x---%x,%x,%x",i,m_pcBuf[0],m_pcBuf[1],m_pcBuf[2],m_pcBuf[3],m_pcBuf[240],m_pcBuf[241],m_pcBuf[242]);
          break;
       case 2:
-         int_to_float((int *)mpp, buf, m_iSamples, m_iEndian);
+         int_to_float((int *)mpp, buf, sams, m_iEndian);
          break;
       case 3:
-         short_to_float((short *)mpp, buf, m_iSamples, m_iEndian);
+         short_to_float((short *)mpp, buf, sams, m_iEndian);
          break;
       case 4:
-         int_to_float((int *)mpp, buf, m_iSamples, m_iEndian);
+         int_to_float((int *)mpp, buf, sams, m_iEndian);
          break;
       case 5: //ieee
-         ieee_to_float((float *)mpp, buf, m_iSamples, m_iEndian);
+         ieee_to_float((float *)mpp, buf, sams, m_iEndian);
          break;
       }
  
@@ -604,6 +612,7 @@ int QSegyADI::writeTrace(int *head, float *buf)
    memcpy(m_pcBuf, head, SEGY_HEAD_BYTES); //donot swap ok,//head[0]
    i = m_tpo->write(m_pcBuf, SEGY_HEAD_BYTES);
    if (i != SEGY_HEAD_BYTES) return -1;
+
    //qDebug() << "after head,format = "<<m_iWriteFormat;
 //traces
 //use format 2:
@@ -633,7 +642,7 @@ int QSegyADI::writeTrace(int *head, float *buf)
    }
    if (m_iWriteFormat == 5)
    {
-      //qDebug() << "bf copy  i= "<<m_pcBuf<<m_iSamples*sizeof(float)<<m_iSamples;
+     // qDebug() << "bf copy  i= "<<m_pcBuf<<m_iSamples*sizeof(float)<<m_iSamples;
 
       memcpy(m_pcBuf, buf, m_iSamples * sizeof(float));
       //qDebug() << "after copy  i= "<<m_pcBuf;
@@ -1241,7 +1250,19 @@ int QSegyADI::setMainHeader(MAINHD_INFO &mhd,unsigned char * hd)
 
 //	unsigned char *p;
 //fill main header;
- 
+   int sams;
+   sams =  getShort(hd + 115-1); // 115-116
+   m_ic ++;
+   if (sams != m_iSamples)
+   { 
+       qDebug()<<"==========sample changed:"<< m_iSamples <<"to "<<sams << "index tr: "<< m_ic;
+       m_iSamples = sams;
+
+       if (m_iFormat == 3) m_iBytes =  m_iSamples * 2;
+       else m_iBytes =  m_iSamples * 4;
+   }
+   
+  
 
    mhd.iShot = getInt(hd + 8); //9-12 hd3
    mhd.iTr = getInt(hd + 12); //13-16:hd4
@@ -1444,6 +1465,7 @@ int QSegyADI::setFileInfo()
    m_iLTR = m_iSI * m_infoGHD.iSams;
 //			m_iFormat = m_infoGHD.iFormat;
    m_iSamples = m_infoGHD.iSams;
+   qDebug() << "m_iSamples = " <<m_iSamples;
 
 
 

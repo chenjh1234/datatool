@@ -529,6 +529,7 @@ public:
 
    int m_iReelCounter;
    int m_iLineCounter;
+   int m_ic;// counter of read trace
 
 //public:
    int openRead(int unit);// for pc not used now
