@@ -27,25 +27,47 @@ public:
    */
    typedef struct
    {
-      int iShot;
-      int iTr;
-      int iChannel;
+      int iShot ;//9-12,13-16
+      int iFfid;//9-12
+      int iTr;//13-16
+      int iChannel;//13-16
       int iType; //1:ok,2:aux
-      int iCMP;
+      int iCMP,iCMPTr;// 21-24,25-28
+      int iLine;//189-192
+      int iLineY;//193-196
+      int iLagA,iLagB;//105-106,107-108
+
+     
+      int iScaleXy,iScaleEle,iScaleSt;//71-72,69-70125-126;
 
       int iLtr;
-      int iSi;
-      int iOffset;
+      int iSi,iSams;//17-18;15-16
+      int iOffset;//37-40
       int iValid; //1:ok 0:invalid
+// scale xy:
+      int iCMPX,iCMPY;//181-184,185-188
+      int iShotX,iShotY;//73-76,77-79
+      int iReceiverX,iReceiverY;//81-84,85-88
+// scale lp
+      int iStaticsShot,iStaticsReceiver,iStaticsSum;//99-100,101-102,103-104
+      int iUpholeShot,iUpholeReceiver;//95-96,97-98
+      int iDelay;//
 
+      int iEleShot,iEleReceiver,iEleDReceiver,iEleDShot;//45-48,41-44,53-56,57-60
+      int iDepthShot;//49-52
+      int iWaterShot,iWaterReceiver;//61-64,65-68
 
-
-      float fShotLine;
-      float fShotPoint;
-      int   iShotIndex;
-      float fReceiverLine;
-      float fReceiverPoint;
+      int iMuteS,iMuteE;//111-112,113-114
+// not used:
+#if 1
+      float fShotLine;//77-78
+      float fShotPoint;//73-76
+      float fReceiverLine;//81-84
+      float fReceiverPoint;//85-88
+#endif
       int   iReceiverIndex;
+      int   iShotIndex;//
+
       int iTrsAll; // all traces in shot
       int iTrs; // seismic traces in shot
       int iAux; //aux traces in shot

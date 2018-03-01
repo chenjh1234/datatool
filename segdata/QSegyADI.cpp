@@ -18,9 +18,9 @@ segyThread::segyThread():QThread()
 void segyThread::run()
 {
     QSegyADI sgy;
-     qDebug() << " thread run file,hd=" << _file << _hd;
+   //  qDebug() << " thread run file,hd=" << _file << _hd;
     _ret = sgy.createIdxFile(_file,_hd);
-    qDebug() << "end of thread run";
+  //  qDebug() << "end of thread run";
     //emit sigDown();
 }; 
        
@@ -31,7 +31,9 @@ QSegyADI::QSegyADI() : QSegCommon()
 
 QSegyADI::~QSegyADI()
 {
+   // qDebug() << " dddddddddddd11111";
    if (m_pIdx != NULL) delete[] m_pIdx;
+    //qDebug() << " dddddddddddd222222222222222";
 
 }
 void QSegyADI::init()
@@ -292,6 +294,7 @@ int QSegyADI::openReadFile(QString filename)
     //qDebug() << "ssssssssssss";
     int id,idx;
     id = testGather(filename);
+    qDebug() << "testgather ok ";
     if (id < 0 ) return -1; 
 
     idx = openRead(filename); 
@@ -346,7 +349,7 @@ int QSegyADI::openRead(QString filename)
    if (i != 400) return -3;
 
    // get 400 information
-
+   qDebug() << "get file info start ";
    i = getFileInfo();
    if (i != 0) return -4;
 
@@ -467,11 +470,17 @@ int QSegyADI::readTrace(int *head, float *buf)
 {
    int iby, i;
    QString str;
+   unsigned int *iip;
+   iip = (unsigned int*)m_pcBuf;
 
    iby = m_iBytes;
 
    i = m_tp->read(m_pcBuf, SEGY_HEAD_BYTES + iby);
+ //  qDebug("ppppp0 = %d,%x,%x,%x,%x---%x,%x,%x",i,m_pcBuf[0],m_pcBuf[1],m_pcBuf[2],m_pcBuf[3],m_pcBuf[240],m_pcBuf[241],m_pcBuf[242]);
+
+
    if (i < 0) return i;
+
    else if (i == 0)
    {
       setStatus("EOF");
@@ -482,30 +491,41 @@ int QSegyADI::readTrace(int *head, float *buf)
       setStatus("");
 
       setMainHeader();
+      // qDebug("ppppp1 = %d,%x,%x,%x,%x---%x,%x,%x",i,m_pcBuf[0],m_pcBuf[1],m_pcBuf[2],m_pcBuf[3],m_pcBuf[240],m_pcBuf[241],m_pcBuf[242]);
 
       memcpy(head, m_pcBuf, SEGY_HEAD_BYTES);
-      if (i - SEGY_HEAD_BYTES  > 0) memcpy(m_pcBuf, m_pcBuf + SEGY_HEAD_BYTES, i - SEGY_HEAD_BYTES);
+      // qDebug("ppppp2 = %d,%x,%x,%x,%x---%x,%x,%x",i,m_pcBuf[0],m_pcBuf[1],m_pcBuf[2],m_pcBuf[3],m_pcBuf[240],m_pcBuf[241],m_pcBuf[242]);
+        
+/// here we got a error ,i donot know why: copy a crazy data ,240byte looped data buf[0] = buf[60] = buf[120]???
+   //   if (i - SEGY_HEAD_BYTES  > 0) 
+    //      memcpy(m_pcBuf, m_pcBuf + SEGY_HEAD_BYTES, i - SEGY_HEAD_BYTES);
+      // qDebug("ppppp3 = %d,%x,%x,%x,%x---%x,%x,%x",i,m_pcBuf[0],m_pcBuf[1],m_pcBuf[2],m_pcBuf[3],m_pcBuf[240],m_pcBuf[241],m_pcBuf[242]);
    }
-
+   unsigned char *mpp;
+   mpp = m_pcBuf + SEGY_HEAD_BYTES;
    str = getStatus();
    if (str != "EOF") switch (m_iFormat)
       {
       case 1:
-         ibm_to_float((int *)m_pcBuf, (int *)buf, m_iSamples, m_iEndian);
+         ibm_to_float((int *)mpp, (int *)buf, m_iSamples, m_iEndian);
+        // qDebug("ppppp4 = %d,%x,%x,%x,%x---%x,%x,%x",i,m_pcBuf[0],m_pcBuf[1],m_pcBuf[2],m_pcBuf[3],m_pcBuf[240],m_pcBuf[241],m_pcBuf[242]);
          break;
       case 2:
-         int_to_float((int *)m_pcBuf, buf, m_iSamples, m_iEndian);
+         int_to_float((int *)mpp, buf, m_iSamples, m_iEndian);
          break;
       case 3:
-         short_to_float((short *)m_pcBuf, buf, m_iSamples, m_iEndian);
+         short_to_float((short *)mpp, buf, m_iSamples, m_iEndian);
          break;
       case 4:
-         int_to_float((int *)m_pcBuf, buf, m_iSamples, m_iEndian);
+         int_to_float((int *)mpp, buf, m_iSamples, m_iEndian);
          break;
       case 5: //ieee
-         ieee_to_float((float *)m_pcBuf, buf, m_iSamples, m_iEndian);
+         ieee_to_float((float *)mpp, buf, m_iSamples, m_iEndian);
          break;
       }
+ 
+   // qDebug("ppppp = %08X, %08X,%x,%x,%x,%x",iip[0],iip[60],m_pcBuf[0],m_pcBuf[1],m_pcBuf[2],m_pcBuf[3]);
+   // qDebug()<< "format = " <<m_tp->pos() <<  i <<i - SEGY_HEAD_BYTES<< m_iFormat << m_iSamples << buf[0] << buf[1] << buf[60] << buf[61] ;
 
    return m_iSamples;
 }
@@ -576,7 +596,7 @@ int QSegyADI::write400()
    if (i != 400) return -1;
    return 0;
 }
-int QSegyADI::writeTraces(int *head, float *buf)
+int QSegyADI::writeTrace(int *head, float *buf)
 {
    int i;
 
@@ -639,7 +659,7 @@ int QSegyADI::writeTraces(int *head, float *buf, int trs)
    int i;
    for (i = 0; i < trs; i++)
    {
-      if (writeTraces(head + i * SEGY_HEAD_WORDS, buf + i * m_iSamples) != 0) return -1;
+      if (writeTrace(head + i * SEGY_HEAD_WORDS, buf + i * m_iSamples) != 0) return -1;
    }
    return 0;
 }
@@ -1044,37 +1064,64 @@ Modified by: Baltic Sea Reasearch Institute: Toralf Foerster, March 1997
    }
 }
 
-
-
-int QSegyADI::setTraceHeader()
+int QSegyADI::setTraceHeader(char * head)
 {
 
-   char head[SEGY_HEAD_BYTES];
-   memset(head, 0, SEGY_HEAD_BYTES);
-
-//1,2,3,4,6,10
-
-//fill main header;
+    //fill main header;
    setInt((int *)(head + 1 - 1), m_iLineCounter); //1-4  hd1
    setInt((int *)(head + 5 - 1), m_iReelCounter); //5-8  hd2
    setInt((int *)(head + 9 - 1), m_infoMHD.iShot); //9-12 hd3
    setInt((int *)(head + 13 - 1), m_infoMHD.iTr); //13-16:hd4
+   //qDebug() << "hd4 = " << m_infoMHD.iTr;
+   //setShort((short *)(head + 15 - 1), m_infoMHD.iSams); //15-16 
 
    setInt((int *)(head + 21 - 1), m_infoMHD.iCMP); //21-24 hd6
-   setShort((short *)(head + 29 - 1), m_infoMHD.iType); //1:seis other:aux  29-30//hd9h
-   setInt((int *)(head + 37 - 1), m_infoMHD.iOffset); //37-40 hd10
+   setInt((int *)(head + 25 - 1), m_infoMHD.iCMPTr); //25-26  
+
+   setShort((short *)(head + 29 - 1), m_infoMHD.iType); //  29-30//hd9h
+   setInt((int *)(head + 37 - 1), m_infoMHD.iOffset); //37-40  
+
+   setInt((int *)(head + 41 - 1), m_infoMHD.iEleReceiver); //41-44
+   setInt((int *)(head + 45 - 1), m_infoMHD.iEleShot); //45-48
+   setInt((int *)(head + 49 - 1), m_infoMHD.iDepthShot); //49-52
+   setInt((int *)(head + 53 - 1), m_infoMHD.iEleDReceiver); //53-56
+   setInt((int *)(head + 57 - 1), m_infoMHD.iEleDShot); //57-60
+   setInt((int *)(head + 61 - 1), m_infoMHD.iWaterShot); //61-64
+   setInt((int *)(head + 65 - 1), m_infoMHD.iWaterReceiver); //65-68
+
+    setShort((short *)(head + 69 - 1), m_infoMHD.iScaleEle); //69-70
+    setShort((short *)(head + 71 - 1), m_infoMHD.iScaleXy); //71-72
+   
+    setInt((int *)(head + 73 - 1), m_infoMHD.iShotX); //73-76: SHOTx
+    setInt((int *)(head + 77 - 1), m_infoMHD.iShotY); //77-80: SHOTy
+    setInt((int *)(head + 81 - 1), m_infoMHD.iReceiverX); //81-84: rx
+    setInt((int *)(head + 85 - 1), m_infoMHD.iReceiverY); //85-88: ry
+
+    setShort((short *)(head + 95 - 1), m_infoMHD.iUpholeShot); //95-96
+    setShort((short *)(head + 97 - 1), m_infoMHD.iUpholeReceiver); //97-98
+    setShort((short *)(head + 99 - 1), m_infoMHD.iStaticsShot); //99-100
+    setShort((short *)(head + 101 - 1), m_infoMHD.iStaticsReceiver); //101-102
+    setShort((short *)(head + 103 - 1), m_infoMHD.iStaticsSum); //103-104
+    setShort((short *)(head + 105 - 1), m_infoMHD.iLagA); //105-106
+    setShort((short *)(head + 107 - 1), m_infoMHD.iLagB); //107-108
+    setShort((short *)(head + 109 - 1), m_infoMHD.iDelay); //109-110
+
+
+    setShort((short *)(head + 111 - 1), m_infoMHD.iMuteS); //111-112
+    setShort((short *)(head + 113 - 1), m_infoMHD.iMuteE); //113-114
+
+
+   
+//	m_infoMHD.iReceiverIndex = getInt(m_pcBuf -1 + 73);//73-76: SHOTx
    setShort((short *)(head + 115 - 1), m_infoMHD.iLtr * 1000 / m_infoMHD.iSi); //115-116,samples:
    setShort((short *)(head + 117 - 1), m_infoMHD.iSi); //117-118,si
-//
-   setInt((int *)(head + 77 - 1), m_infoMHD.fShotLine); //77-80: SHOTy
-   setInt((int *)(head + 73 - 1), m_infoMHD.fShotPoint); //73-76: SHOTx
-//	m_infoMHD.iShotIndex = getInt(m_pcBuf -1 + 73);//73-76: rx
-   setInt((int *)(head + 85 - 1), m_infoMHD.fReceiverLine); //85-88: ry
-   setInt((int *)(head + 81 - 1), m_infoMHD.fReceiverPoint); //81-84: rx
-//	m_infoMHD.iReceiverIndex = getInt(m_pcBuf -1 + 73);//73-76: SHOTx
+                                                       //
+   setShort((short *)(head + 117 - 1), m_infoMHD.iScaleSt); //125-126  
 
-   memcpy((char *)m_piHead, head, SEGY_HEAD_BYTES);
-   //m_infoMHD.iValid =1;//ok;
+   setInt((int *)(head + 181 - 1), m_infoMHD.iCMPX); //181-184 
+   setInt((int *)(head + 185 - 1), m_infoMHD.iCMPY); //185-188 
+   setInt((int *)(head + 189 - 1), m_infoMHD.iLine); //189-192 line
+   setInt((int *)(head + 193 - 1), m_infoMHD.iLine); //193-196 line
 
    if (0)
    {
@@ -1094,16 +1141,26 @@ int QSegyADI::setTraceHeader()
    m_iSI = m_infoMHD.iSi;
    m_iLTR = m_infoMHD.iLtr;
 
+   return 0;
 
+}
+
+int QSegyADI::setTraceHeader()
+{
+
+   char head[SEGY_HEAD_BYTES];
+   memset(head, 0, SEGY_HEAD_BYTES);
+   setTraceHeader(head);
+   memcpy((char *)m_piHead, head, SEGY_HEAD_BYTES);
    return 0;
 }
 
-int QSegyADI::writeTraces(float *buf)
+int QSegyADI::writeTrace(float *buf)
 {
    int i;
    setTraceHeader();
    //qDebug() << "after set header";
-   i = writeTraces(m_piHead, buf);
+   i = writeTrace(m_piHead, buf);
    //qDebug() << "after write";
    return i;
 
@@ -1129,6 +1186,15 @@ int QSegyADI::openAppend(QString file)
 
 int QSegyADI::setMainHeader()
 {
+   setMainHeader(m_infoMHD,m_pcBuf);
+   m_infoMHD.iSi = m_iSI;
+   m_infoMHD.iLtr = m_iLTR;
+   m_iCurGather = getInt(m_pcBuf +( m_iIdxHD -1)*sizeof(int));
+   return 0;
+}
+#if 0
+int QSegyADI::setMainHeader()
+{
 
 //	unsigned char *p;
 //fill main header;
@@ -1140,6 +1206,20 @@ int QSegyADI::setMainHeader()
    m_infoMHD.iSi = m_iSI;
    m_infoMHD.iType = getShort(m_pcBuf + 28); //1:seis other:aux29-30
    m_infoMHD.iValid = 1; //ok;
+
+   m_infoMHD.iLine = getInt(m_pcBuf + 188); //189-192  line
+   m_infoMHD.iLineY = getInt(m_pcBuf + 192); //193-196  crossline
+
+   m_infoMHD.iCMPX= getInt(m_pcBuf + 180); //181-184
+   m_infoMHD.iCMPY= getInt(m_pcBuf + 184); //185-188 
+   m_infoMHD.iShotX= getInt(m_pcBuf + 72); //73-76
+   m_infoMHD.iShotY= getInt(m_pcBuf + 76); //77-79
+   m_infoMHD.iReceiverX= getInt(m_pcBuf + 80); //81-84
+   m_infoMHD.iReceiverY= getInt(m_pcBuf + 84); //85-88
+
+    m_infoMHD.iStaticsShot= getShot(m_pcBuf + 98); //99-100
+    m_infoMHD.iStaticsReceiver= getShot(m_pcBuf + 100); //101-102
+    m_infoMHD.iStaticsSum= getShot(m_pcBuf + 102); //103-104
 
    m_infoMHD.fShotLine = getInt(m_pcBuf  + 77- 1); //77-80: SHOTy
    m_infoMHD.fShotPoint = getInt(m_pcBuf  + 73- 1); //73-76: SHOTx
@@ -1155,6 +1235,73 @@ int QSegyADI::setMainHeader()
    return 0;
 
 }
+#endif
+int QSegyADI::setMainHeader(MAINHD_INFO &mhd,unsigned char * hd)
+{
+
+//	unsigned char *p;
+//fill main header;
+ 
+
+   mhd.iShot = getInt(hd + 8); //9-12 hd3
+   mhd.iTr = getInt(hd + 12); //13-16:hd4
+   mhd.iChannel= getInt(hd + 12); //13-16 
+   //mhd.iShotTr = getInt(hd + 12); //13-16         
+                                   //
+   mhd.iCMP = getInt(hd + 20); //21-24 
+   mhd.iCMPTr = getInt(hd + 24); //25-28
+   mhd.iType = getShort(hd + 28); //1:seis other:aux29-30
+   mhd.iValid = 1; //ok 
+   //
+   mhd.iOffset = getInt(hd + 36); //37-40 hd10
+
+   mhd.iEleReceiver = getInt(hd + 40); //41-44   
+   mhd.iEleShot= getInt(hd + 44); //45-48   
+   mhd.iEleDReceiver = getInt(hd + 52); //53-56  
+   mhd.iEleDShot = getInt(hd + 56); //57-60 
+   mhd.iDepthShot = getInt(hd + 48); //49-52   
+   mhd.iWaterShot= getInt(hd + 60); //61-64   
+    mhd.iWaterReceiver= getInt(hd + 64); //65-68   
+
+   mhd.iLine = getInt(hd + 188); //189-192  line
+   mhd.iLineY = getInt(hd + 192); //193-196  crossline
+
+   mhd.iScaleEle= getShort(hd + 68); //69-70
+   mhd.iScaleXy= getShort(hd + 70); //71-72
+   mhd.iShotX= getInt(hd + 72); //73-76
+   mhd.iShotY= getInt(hd + 76); //77-79
+   mhd.iReceiverX= getInt(hd + 80); //81-84
+   mhd.iReceiverY= getInt(hd + 84); //85-88
+
+   mhd.iUpholeShot= getShort(hd + 94); //95-96
+    mhd.iUpholeReceiver= getShort(hd + 96); //97-98
+    mhd.iStaticsShot= getShort(hd + 98); //99-100
+    mhd.iStaticsReceiver= getShort(hd + 100); //101-102
+    mhd.iStaticsSum= getShort(hd + 102); //103-104
+    mhd.iLagA= getShort(hd + 104); //105-106
+    mhd.iLagB= getShort(hd + 106); //107-108
+    mhd.iDelay= getShort(hd + 108); //109-110
+
+    mhd.iMuteS= getShort(hd + 110); //111-112
+    mhd.iMuteE= getShort(hd + 112); //113-114
+    mhd.iScaleSt= getShort(hd + 124); //125-126
+  
+
+//	mhd.iReceiverIndex = getInt(hd -1 + 73);//73-76: SHOTx
+
+   mhd.iCMPX= getInt(hd + 180); //181-184
+   mhd.iCMPY= getInt(hd + 184); //185-188 
+
+
+   mhd.iSi = m_iSI;
+   mhd.iLtr = m_iLTR;
+   m_iCurGather = getInt(hd +( m_iIdxHD -1)*sizeof(int));
+   //qDebug() << "mhd.iShot ,gather =" <<m_infoMHD.iShot << m_iCurGather << m_iIdxHD;
+   
+   return 0;
+
+}
+
 
 int QSegyADI::getFileInfo()
 {
@@ -1168,15 +1315,15 @@ int QSegyADI::getFileInfo()
    }
 
 //get job no //1-4
-   m_infoGHD.iJobNo = getInt(m_pBuf400);
+   m_infoGHD.iJobNo = getInt(m_pBuf400);//1-4
 //get line no //5-8
-   m_infoGHD.iLineNo = getInt(m_pBuf400 + 4);
+   m_infoGHD.iLineNo = getInt(m_pBuf400 + 4);//5-8
 //get reel no //9-12
-   m_infoGHD.iReelNo = getInt(m_pBuf400 + 8);
+   m_infoGHD.iReelNo = getInt(m_pBuf400 + 8);//9-12
 //get all trs/shot //13-14
-   m_infoGHD.iTrs = getShort(m_pBuf400 + 12);
+   m_infoGHD.iTrs = getShort(m_pBuf400 + 12);//13-4
 //get aux trs/shot  //15-16
-   m_infoGHD.iAuxs = getShort(m_pBuf400 + 14);
+   m_infoGHD.iAuxs = getShort(m_pBuf400 + 14);//15-16
 //get si  //17 -18
    m_infoGHD.iSi = getShort(m_pBuf400 + 16); ///1000;
 //get osi  //19-20
@@ -1185,9 +1332,11 @@ int QSegyADI::getFileInfo()
    m_infoGHD.iSams = getShort(m_pBuf400 + 20);
 //get osams  //23-24
    m_infoGHD.iOSams = getShort(m_pBuf400 + 22);
+   //15-16:format
+
 
 //cmp cover num
-   m_infoGHD.iCmpCover = getShort(m_pBuf400 + 26);
+   m_infoGHD.iFold = getShort(m_pBuf400 + 26);//27-28
 //get data type  //29-30; 1:shot,2:cmp,3:single stack,4:stack
    m_infoGHD.iDataType = getShort(m_pBuf400 + 28);
 
@@ -1203,7 +1352,7 @@ int QSegyADI::getFileInfo()
    m_infoGHD.iRelTrs = getShort(m_pBuf400 + 48);           //49-50
    m_infoGHD.iGain = getShort(m_pBuf400 + 50);             //51-52 yzy
                                                            //	    m_infoGHD.iAmpType= GetShort(m_pBuf400 + 52);          //53-54;1:non,2:serphial 3,agc,4:other
-   m_infoGHD.iPer = getShort(m_pBuf400 + 54);              //55-56
+   m_infoGHD.iUnit = getShort(m_pBuf400 + 54);              //55-56
    m_infoGHD.iDirection = getShort(m_pBuf400 + 56);        //57-58
    m_infoGHD.iFrDirection = getShort(m_pBuf400 + 58);      //59-60
 //get amp type //53-54
@@ -1214,6 +1363,7 @@ int QSegyADI::getFileInfo()
    m_iLTR = m_iSI * m_infoGHD.iSams;
    m_iFormat = m_infoGHD.iFormat;
    m_iSamples = m_infoGHD.iSams;
+
    qDebug() << "file infor start============================";
    qDebug() << "iFormat = " << m_infoGHD.iFormat;
    qDebug() << "m_infoGHD.iJobNo = " << m_infoGHD.iJobNo;
@@ -1224,7 +1374,8 @@ int QSegyADI::getFileInfo()
    qDebug() << "m_infoGHD.iOSi = " << m_infoGHD.iOSi;
    qDebug() << "m_infoGHD.iSams = " << m_infoGHD.iSams;
    qDebug() << "m_infoGHD.iOSams = " << m_infoGHD.iOSams;
-   qDebug() << "m_infoGHD.iCmpCover = " << m_infoGHD.iCmpCover;
+   qDebug() << "m_infoGHD.iFold= " << m_infoGHD.iFold;
+    qDebug() << "m_infoGHD.iFormat= " << m_infoGHD.iFormat;
    qDebug() << "m_infoGHD.iDataType = " << m_infoGHD.iDataType;
    qDebug() << "m_infoGHD.iVerCode = " << m_infoGHD.iVerCode;      
    qDebug() << "m_infoGHD.iStartFreq = " << m_infoGHD.iStartFreq;
@@ -1247,15 +1398,13 @@ int QSegyADI::getFileInfo()
 
    if (m_iFormat == 3) m_iBytes =  m_iSamples * 2;
    else m_iBytes =  m_iSamples * 4;
-
-
+   qDebug() << "m_iBytes m_iSI,m_iLTR,m_iFormat,m_iSamples = " <<  m_iBytes << m_iSI <<m_iLTR <<m_iFormat << m_iSamples;
    m_strStatus = "OK";
    if (m_iSI <= 0) m_strStatus = "SI ERR";
    if (m_infoGHD.iSams <= 0) m_strStatus = "SAMPLES ERR";
    if (m_iLTR <= 0) m_strStatus = "LTR ERR";
    if (m_iFormat <= 0) m_strStatus = "FORMAT ERR";
    //	if(m_infoGHD.iTrs <=0) m_strStatus = "TRS ERR";
-
    qDebug() << "startus = " << m_strStatus;
    if (m_strStatus != "OK") return -1;
    //		return 0;
@@ -1277,9 +1426,9 @@ int QSegyADI::setFileInfo()
 //get aux trs/shot  //15-16
    setShort((short *)(m_pBuf400 + 14), m_infoGHD.iAuxs);
 //get si  //17 -18
-   setShort((short *)(m_pBuf400 + 16), m_infoGHD.iSi * 1000);
+   setShort((short *)(m_pBuf400 + 16), m_infoGHD.iSi );
 //get osi  //19-20
-   setShort((short *)(m_pBuf400 + 18), m_infoGHD.iOSi * 1000);
+   setShort((short *)(m_pBuf400 + 18), m_infoGHD.iOSi );
 //get sams  //21-22
    setShort((short *)(m_pBuf400 + 20), m_infoGHD.iSams);
 //get osams  //23-24

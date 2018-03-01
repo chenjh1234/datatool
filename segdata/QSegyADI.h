@@ -448,7 +448,8 @@ public:
       int iSams;            //21-22
       int iOSams;           //23-24
       int iFormat;           //25-26//1:ibm,2:long,3:short,4:5:ieee
-      int iCmpCover;         //27-28 yzy cmp cover num
+      int iFold;         //27-28 yzy cmp cover num
+      int iUnit;
       int iDataType;        //29-30 ;1:shot,2:cmp,3:single stack,4:stack
       int iVerCode;          //31-32 yzy
       int iStartFreq;        //33-34 yzy
@@ -566,7 +567,8 @@ public:
    int write3200(unsigned char *buf);
    int write400(unsigned char *buf);
 
-   int writeTraces(int *head, float *buf);
+   int writeTrace(float *buf); //det head and write trace;
+   int writeTrace(int *head, float *buf);
    int writeTraces(int *head, float *buf, int trs);
    /*
    0: OK
@@ -593,9 +595,11 @@ public:
 
    void init();
 
-   int writeTraces(float *buf); //det head and write trace;
+
    int setTraceHeader(); // fill data head to piHead,from main head message,
+   int setTraceHeader(char *head); // fill data head to piHead,from main head message,
    int setMainHeader(); // fill main head message,from segy header
+   int setMainHeader(MAINHD_INFO &mhd,unsigned char * hd);
  
    //index file functions:
    segyThread th;
