@@ -128,7 +128,7 @@ int segd2y::run()
 
 
             setSegyHeader();
-            id = m_segy->writeTraces(buf);
+            id = m_segy->writeTrace(buf);
             if(id =0 )
             {
                 qDebug()<<"write griData err = "<< id;

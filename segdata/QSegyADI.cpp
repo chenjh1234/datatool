@@ -1,7 +1,7 @@
 // QSegyADI.cpp: implementation of the QSegyADI class.
 //
 //////////////////////////////////////////////////////////////////////
-#include <QApplication>
+//#include <QApplication>
 #include "QSegyADI.h"
 #include <QObject>
 #define   SHOT  3 
@@ -47,6 +47,8 @@ void QSegyADI::init()
    m_iLineCounter = 0;
    m_iCurGather = 0;
    m_ic = 0;
+   m_iIdxHD =0;
+   m_iMaxTrsOfGather =1;
   // th = new segyThread();
 
    connect(&th, SIGNAL(finished()),
@@ -75,6 +77,9 @@ void QSegyADI::createThIdxFile(QString filen, int h)
     th.setFile(filen,h);
     qDebug() << "connected ============================";
     th.start();
+    qDebug() << "start wait";
+    th.wait();
+    qDebug() << "after wait";
    #endif
 }
 int QSegyADI::createIdxFile(QString filen, int hd)
@@ -119,14 +124,16 @@ int QSegyADI::createIdxFile(QString filen, int hd)
       //j = readTrace(m_piHead, (float *)buf);
       j= m_tp->read(head, SEGY_HEAD_BYTES + m_iBytes);
      // qDebug() << "read trace i+++++++++++ " << i << j;
-      if (j <= 0) break;
+      if (j < SEGY_HEAD_BYTES + m_iBytes) break;
       //ihd = m_piHead[hd - 1];
       ihd = getHeaderWord(hd, (int *)head);
-		//qDebug("i =ihd,hd=%d,%d,%d\n",i,ihd,hd); 
+	  //qDebug("i =ihd,hd=%d,%d,%d\n",i,ihd,hd); 
+      if (ihd <=0)  break;
       if (i == 0) ioldhd = ihd;
       if (ihd != ioldhd)
       {
          // v1.02 update segy idx file
+        //  qDebug() << "hd =  " << ihd << ioldhd;
          pidx.idx = idxhd;
          pidx.num = ichd;
          pidx.grp = ioldhd;
@@ -146,6 +153,7 @@ int QSegyADI::createIdxFile(QString filen, int hd)
       ichd++; //counter in a gather
       iccchd++; // counter in file
    }
+   //qDebug() << "hdend =  " << ihd << ioldhd;
    // last gather:
    pidx.idx = idxhd;
    pidx.num = ichd;
@@ -230,6 +238,7 @@ int QSegyADI::testGather(QString filen)
    num = 50;
 
    i = openRead(filen);
+  // qDebug() << "ret openFile in testFather: " << i;
    if (i < 0) return -1;
    if (num > i) num = i;
    gather = -1;
@@ -240,13 +249,15 @@ int QSegyADI::testGather(QString filen)
 
    for (i = 0; i < num; i++)
    {
+       qDebug() << i << m_piHead <<m_pcBuf ;
       j = readTrace(m_piHead, (float *)m_pcBuf);
+       qDebug() << j;
       if (j <= 0) break;
       shot = getInt((unsigned char *)&m_piHead[ SHOT - 1]);
       cmp = getInt((unsigned char *)&m_piHead[CMP - 1]);
       line = getInt((unsigned char *)&m_piHead[LINE - 1]);
       linec = getInt((unsigned char *)&m_piHead[LINEC - 1]);
-      //qDebug() << "testdata =" << i << shot << cmp << line << linec;
+      qDebug() << "testdata =" << i << shot << cmp << line << linec;
       // next 2 trace header eaqual, we consider it is the gather header
       if (i >0)// not first;
       {
@@ -292,16 +303,20 @@ int QSegyADI::testGather(QString filen)
 
 int QSegyADI::openReadFile(QString filename)
 {
-    //qDebug() << "ssssssssssss";
+  // qDebug() << "openReadFile = " << filename;
     int id,idx;
     id = testGather(filename);
-    qDebug() << "testgather ok ";
+    qDebug() << "testgather ok " << id;
     if (id < 0 ) return -1; 
 
     idx = openRead(filename); 
+    qDebug() << "indexfile gatherHD=" << m_bIdxFile << id;
     if (!m_bIdxFile) 
     {
-        createThIdxFile(filename,id);
+        //createThIdxFile(filename,id);
+         closeRead();
+         createIdxFile(filename,id);
+          idx = openRead(filename); 
     }
     return idx; 
 }
@@ -324,7 +339,7 @@ int QSegyADI::openRead(QString filename)
    {
       qDebug() << "file IDX = " << m_strFilenameIdx;
       getIdxInfo() ;
-      #if 0 // mmove to :getIdxInfo() ;
+      #if 0 // rmmove to :getIdxInfo() ;
       if (getIdxInfo() == 0)
       {
          m_bIdxFile = true;
@@ -350,8 +365,9 @@ int QSegyADI::openRead(QString filename)
    if (i != 400) return -3;
 
    // get 400 information
-   qDebug() << "get file info start ";
+   //qDebug() << "get file info start ";
    i = getFileInfo();
+  // qDebug() << "ret of getFileInfo in OpenFIle =" << i;
    if (i != 0) return -4;
 
    //return 0;
@@ -365,7 +381,6 @@ int QSegyADI::openRead(QString filename)
    qDebug() << " m_iBytes of tracedata = " << m_iBytes;
    qDebug() << " SEGY_HEAD_BYTES = " << SEGY_HEAD_BYTES;
    qDebug() << " end of open read =========================";
-
 
    return m_iAllTraces;
 }
@@ -477,7 +492,9 @@ int QSegyADI::readTrace(int *head, float *buf)
   // iby = m_iBytes;
 //read header:
    //i = m_tp->read(m_pcBuf, SEGY_HEAD_BYTES + iby);
+  //  qDebug() << "start tp_read = ";
    i = m_tp->read(m_pcBuf, SEGY_HEAD_BYTES);
+  // qDebug() << "tp_read ret = "<<i;
    if (i < 0) return i;
    else if (i == 0)
    {
@@ -485,13 +502,15 @@ int QSegyADI::readTrace(int *head, float *buf)
       return 0;
    }
    setMainHeader();
+   // qDebug() << "start memcpy head = "<< head;
    memcpy(head, m_pcBuf, SEGY_HEAD_BYTES);
 
    iby = m_iBytes;
 
-
+  // qDebug() << "start tp_read = ";
    //reade samples:
    i = m_tp->read(m_pcBuf+SEGY_HEAD_BYTES , iby);
+  // qDebug() << "tp_read ret = "<<i;
    if (i < 0) return i;
    else if (i == 0)
    {
@@ -544,15 +563,16 @@ int QSegyADI::readGather(int *head, float *buf)
     */
    int i,trs;
    trs =  m_infoGHD.iTrs + m_infoGHD.iAuxs;
-   qDebug() << " QSegyADI::readGather trs = " << trs << head << buf;
+   qDebug() << " QSegyADI::readGather trs = " << trs << head << buf<< m_iSamples;
    for (i = 0; i < trs; i++)
    {
       if (readTrace(head + i * SEGY_HEAD_WORDS, buf + i * m_iSamples) != m_iSamples) 
       {
-          qDebug() << "read error trs in shot" << i << trs;
+          qDebug() << "read gather error trs in shot" << i << trs;
           return -1;
       }
    }
+    qDebug() << "read gather ok =" <<trs;
    return trs;
 }
 int QSegyADI::readTraces(int *head, float *buf, int trs)
@@ -1250,19 +1270,23 @@ int QSegyADI::setMainHeader(MAINHD_INFO &mhd,unsigned char * hd)
 
 //	unsigned char *p;
 //fill main header;
+   // qDebug() << "start setMainHeader hd =" <<hd;
    int sams;
    sams =  getShort(hd + 115-1); // 115-116
    m_ic ++;
+   
    if (sams != m_iSamples)
    { 
-       qDebug()<<"==========sample changed:"<< m_iSamples <<"to "<<sams << "index tr: "<< m_ic;
-       m_iSamples = sams;
+       if (sams>=0 && sams <10000) // mybe the sams in header is crazy
+       {
+      
+           qDebug() << "==========sample changed:" << m_iSamples << "to " << sams << "index tr: " << m_ic;
+           m_iSamples = sams;
 
-       if (m_iFormat == 3) m_iBytes =  m_iSamples * 2;
-       else m_iBytes =  m_iSamples * 4;
+           if (m_iFormat == 3) m_iBytes =  m_iSamples * 2;
+           else m_iBytes =  m_iSamples * 4; 
+       }
    }
-   
-  
 
    mhd.iShot = getInt(hd + 8); //9-12 hd3
    mhd.iTr = getInt(hd + 12); //13-16:hd4
@@ -1313,10 +1337,11 @@ int QSegyADI::setMainHeader(MAINHD_INFO &mhd,unsigned char * hd)
    mhd.iCMPX= getInt(hd + 180); //181-184
    mhd.iCMPY= getInt(hd + 184); //185-188 
 
-
+ 
    mhd.iSi = m_iSI;
    mhd.iLtr = m_iLTR;
-   m_iCurGather = getInt(hd +( m_iIdxHD -1)*sizeof(int));
+   if(m_iIdxHD >0) 
+       m_iCurGather = getInt(hd +( m_iIdxHD -1)*sizeof(int));
    //qDebug() << "mhd.iShot ,gather =" <<m_infoMHD.iShot << m_iCurGather << m_iIdxHD;
    
    return 0;

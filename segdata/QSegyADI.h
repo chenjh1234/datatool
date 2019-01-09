@@ -18,6 +18,7 @@
 #include <QFile>
 #include <QString>
 #include <QThread>
+#include <QDebug>
 
 #define SEGY_MAX_GROUPS 9000
 #define MAX_SAMPLES 9000
