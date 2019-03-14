@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     qDebug() << "app dir = " << app.applicationDirPath() ;
     qDebug() << "working dir = " << QDir::currentPath() ;
 
-#if 1 // for hardware_passwd:
+#if 0 // for hardware_passwd:
     QString hpass,arg1;
     hpass = HARDWARE_PASSWD;
     arg1 = "";

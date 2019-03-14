@@ -172,10 +172,11 @@ string NodeID::getLicPath()
 #if  !defined(WIN32) 
        str = QString("/tmp/") +  LIC_FILE;
 #else
-       str = QString("c:\\") + LIC_FILE;
+       str =   + LIC_FILE;
 
 #endif
    }
+   qDebug() << "lic File = " << str;
    return qToStr(str);
 }
 map<string,string> NodeID::getLicInfoFromFile()
@@ -252,6 +253,7 @@ map<string,string> NodeID::getLicInfoFromFile()
    listS = getListFromFile(qstr);
    int size;
    size =  listS.size();
+   qDebug() << "licfile size = " <<size;
    for (i = 0; i < size; i++)
    {
        qstr = listS[i];

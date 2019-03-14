@@ -34,6 +34,7 @@
 #define LIC_KEY "key"
 using namespace std;
 #include <QFile>
+#include <QDebug>
 #include <QString>
 #include <QDateTime>
 #include "comfun.h"

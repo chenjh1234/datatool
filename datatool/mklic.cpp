@@ -51,6 +51,7 @@ main(int argc ,char **argv)
    //
     mp[LIC_START] = qToStr(nid.today());
     mp[LIC_END] = qToStr(nid.next15Day());
+    qDebug() << "to tmp lic=====";
     
     nid. licToFile(mp[LIC_USER], mp[LIC_MID], mp[LIC_START],mp[LIC_END]);
     //nid.licToFile();

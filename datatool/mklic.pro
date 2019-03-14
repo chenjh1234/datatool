@@ -12,7 +12,7 @@ QT += testlib
 HEADERS += \
         comfun.h\
         md5.h\
-	 ckUser.h
+        ckUser.h
  
 
 SOURCES +=  \ 
